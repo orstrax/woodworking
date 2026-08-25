@@ -8,12 +8,12 @@ export const TOOL_GROUPS: ToolGroup[] = [
   {
     id: "cabinets",
     title: "Cabinets",
-    blurb: "Doors, overlays, shaker frames, hinges, and drawers — with measured shop drawings.",
+    blurb: "Doors, overlays, shaker frames, hinges, and drawers — with picture-book shop drawings.",
   },
-  { id: "lumber", title: "Lumber", blurb: "What to buy and what it will weigh." },
-  { id: "layout", title: "Layout", blurb: "Tape math, spacing, and circles." },
-  { id: "joinery", title: "Joinery", blurb: "Saws, miters, and dovetails." },
-  { id: "seasoning", title: "Seasoning", blurb: "How much a panel will move." },
+  { id: "lumber", title: "Lumber", blurb: "What to buy and what it will weigh, drawn to size." },
+  { id: "layout", title: "Layout", blurb: "Tape math, spacing, and circles you can see on the board." },
+  { id: "joinery", title: "Joinery", blurb: "Saws, miters, and dovetails with pins and tails labeled." },
+  { id: "seasoning", title: "Seasoning", blurb: "How much a panel will move — and where to leave room." },
 ];
 
 export type Tool = {
@@ -31,16 +31,16 @@ export const TOOLS: Tool[] = [
     name: "Cabinet doors",
     tag: "Cabinets",
     group: "cabinets",
-    summary: "Full overlay, 1/16 or 1/8 reveal, inset — door size and hinge plan from the face frame.",
+    summary: "Full overlay, 1/16 or 1/8 reveal, inset — door size, hinge plan, and labeled pictures.",
     description:
-      "Enter the opening and stile width. Pick how the door sits on the frame. Get door size, overlay, hinge count, and a measured elevation.",
+      "Enter the opening and stile width. Pick how the door sits on the frame. Get door size, overlay, hinge count, and pictures of the front, the overlay, and the cups.",
   },
   {
     slug: "shaker-door",
     name: "Shaker door",
     tag: "Cabinets",
     group: "cabinets",
-    summary: "Micro or classic shaker: stile, rail, and center panel cut list from the finished door.",
+    summary: "Micro or classic shaker: stile, rail, and center panel — drawn assembled and exploded.",
     description:
       "A 24\" micro shaker with a 3/4\" frame is a 22-1/2\" visible panel — plus groove stock if you cope-and-stick.",
   },

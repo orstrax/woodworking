@@ -1,6 +1,7 @@
 "use client";
 
 import { Field, NumberInput, Result, TextInput, ToolFrame } from "@/components/Fields";
+import { MiterPicture } from "@/components/plans/ShopPictures";
 import { formatInches, formatNumber, parseInches } from "@/lib/measure";
 import { useMemo, useState } from "react";
 
@@ -44,6 +45,16 @@ export function MiterCalc() {
         ) : (
           <Result label="Need sizes" value="—" />
         )
+      }
+      plan={
+        result ? (
+          <MiterPicture
+            sides={result.n}
+            miter={result.miter}
+            outside={parseInches(outside) ?? 0}
+            inside={result.inside}
+          />
+        ) : null
       }
     >
       <Field label="Number of sides">

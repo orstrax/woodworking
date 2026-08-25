@@ -1,6 +1,7 @@
 "use client";
 
 import { Field, NumberInput, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
+import { DovetailPicture } from "@/components/plans/ShopPictures";
 import { formatInches, parseInches } from "@/lib/measure";
 import { useMemo, useState } from "react";
 
@@ -63,6 +64,11 @@ export function DovetailCalc() {
         ) : (
           <Result label="Need a width" value="—" />
         )
+      }
+      plan={
+        result ? (
+          <DovetailPicture width={parseInches(width) ?? 0} marks={result.marks} slope={result.slope} />
+        ) : null
       }
     >
       <Field label="Board width">

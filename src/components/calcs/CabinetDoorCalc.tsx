@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { CabinetPictures } from "@/components/plans/CabinetPictures";
 import { Field, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
-import { CutList, HDim, ShopDrawing, VDim } from "@/components/ShopDrawing";
+import { CutList } from "@/components/ShopDrawing";
 import { doorPlan, hingeAdvice, type FitStyle } from "@/lib/cabinet";
 import { formatInches, parseInches } from "@/lib/measure";
 import { useMemo, useState } from "react";
@@ -101,7 +102,7 @@ export function CabinetDoorCalc() {
       plan={
         plan && hinges ? (
           <>
-            <DoorElevation plan={plan} hinges={hinges.centers} />
+            <CabinetPictures plan={plan} hinges={hinges} />
             <CutList
               rows={[
                 ...plan.doors.map((door, index) => ({
@@ -196,100 +197,5 @@ export function CabinetDoorCalc() {
         ) : null}
       </div>
     </ToolFrame>
-  );
-}
-
-function DoorElevation({
-  plan,
-  hinges,
-}: {
-  plan: NonNullable<ReturnType<typeof doorPlan>>;
-  hinges: number[];
-}) {
-  const s = Math.min(12, 220 / plan.overallW, 280 / plan.overallH);
-  const ox = 58;
-  const oy = 36;
-  const fw = plan.overallW * s;
-  const fh = plan.overallH * s;
-  const viewW = fw + 110;
-  const viewH = fh + 72;
-
-  const openingX = ox + plan.stile * s;
-  const openingY = oy + plan.rail * s;
-  const inset = plan.doorW < plan.openingW;
-  const doorY = oy + (inset ? plan.rail + plan.revealY : plan.revealY) * s;
-  const leftDoorX = ox + (inset ? plan.stile + plan.revealX : plan.revealX) * s;
-
-  return (
-    <ShopDrawing title="Face-frame elevation" viewBox={`0 0 ${viewW} ${viewH}`}>
-      <g>
-        <rect x={ox} y={oy} width={fw} height={fh} fill="#c8a36a" stroke="#6b3a1f" strokeWidth="1.2" />
-        <rect
-          x={openingX}
-          y={openingY}
-          width={plan.openingW * s}
-          height={plan.openingH * s}
-          fill="#f3ead7"
-          stroke="#5c4633"
-          strokeDasharray="3 2"
-          strokeWidth="0.8"
-        />
-        {plan.doors.map((door, index) => {
-          const x = leftDoorX + index * (door.width * s + plan.midGap * s);
-          const w = door.width * s;
-          const h = door.height * s;
-          const hingeSide = index === 0 ? "left" : "right";
-          return (
-            <g key={index}>
-              <rect x={x} y={doorY} width={w} height={h} fill="#efe3cc" stroke="#24180f" strokeWidth="1.1" />
-              <rect
-                x={x + 4}
-                y={doorY + 4}
-                width={Math.max(0, w - 8)}
-                height={Math.max(0, h - 8)}
-                fill="none"
-                stroke="#c45c26"
-                strokeWidth="0.4"
-                opacity="0.35"
-              />
-              {hinges.map((cy) => {
-                const cx = hingeSide === "left" ? x + 5 : x + w - 5;
-                return (
-                  <circle
-                    key={`${index}-${cy}`}
-                    cx={cx}
-                    cy={doorY + cy * s}
-                    r={3.2}
-                    fill="none"
-                    stroke="#6b3a1f"
-                    strokeWidth="0.9"
-                  />
-                );
-              })}
-            </g>
-          );
-        })}
-        <HDim x={ox} y={oy} w={fw} label={`frame ${formatInches(plan.overallW)}`} />
-        <HDim
-          x={leftDoorX}
-          y={oy + fh}
-          w={plan.doorW * s}
-          label={`door ${formatInches(plan.doorW)}`}
-          side="bottom"
-        />
-        <VDim x={ox} y={oy} h={fh} label={formatInches(plan.overallH)} />
-        <VDim x={ox + fw} y={doorY} h={plan.doorH * s} label={formatInches(plan.doorH)} side="right" />
-        <text
-          x={ox + fw / 2}
-          y={oy + fh + 32}
-          textAnchor="middle"
-          fill="#5c4633"
-          fontSize="9"
-          fontFamily="ui-monospace, monospace"
-        >
-          {formatInches(plan.overlayX)} overlay · {formatInches(plan.revealX)} reveal
-        </text>
-      </g>
-    </ShopDrawing>
   );
 }

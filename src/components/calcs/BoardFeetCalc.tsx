@@ -1,6 +1,7 @@
 "use client";
 
 import { Field, NumberInput, Result, TextInput, ToolFrame } from "@/components/Fields";
+import { BoardPicture } from "@/components/plans/ShopPictures";
 import { boardFeet, formatNumber, parseInches } from "@/lib/measure";
 import { useMemo, useState } from "react";
 
@@ -41,6 +42,17 @@ export function BoardFeetCalc() {
         ) : (
           <Result label="Need dimensions" value="—" note="Use fractions like 4/4 or 7 1/4." />
         )
+      }
+      plan={
+        result ? (
+          <BoardPicture
+            thickness={result.t}
+            width={result.w}
+            lengthFt={Number(length)}
+            bf={result.bf}
+            qty={qty}
+          />
+        ) : null
       }
     >
       <Field label="Thickness" hint='4/4, 5/4, or inches'>

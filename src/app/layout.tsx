@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s — Story Stick",
   },
   description:
-    "Online woodworking calculators for board feet, layout, joinery, and wood movement. Digital tools for the bench.",
+    "Woodworking calculators with labeled pictures: cabinet doors, shaker frames, board feet, layout, and joinery.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

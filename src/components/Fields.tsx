@@ -125,7 +125,19 @@ export function ToolFrame({
           <div className="mt-4">{results}</div>
         </aside>
       </div>
-      {plan ? <div className="grid gap-4">{plan}</div> : null}
+      {plan ? (
+        <section className="grid gap-5">
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-shellac">Pictures & plans</p>
+            <h2 className="mt-1 font-display text-3xl tracking-tight">See it before you cut it.</h2>
+            <p className="mt-2 max-w-2xl text-base leading-7 text-ink-soft">
+              Orange numbers match the key under each picture. Orange chips are the sizes to cut.
+              Change the numbers above and the pictures move with them.
+            </p>
+          </div>
+          {plan}
+        </section>
+      ) : null}
     </div>
   );
 }

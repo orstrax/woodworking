@@ -1,6 +1,7 @@
 "use client";
 
 import { Field, NumberInput, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
+import { MovementPicture } from "@/components/plans/ShopPictures";
 import { formatInches, formatNumber, parseInches } from "@/lib/measure";
 import { movementInches, SPECIES } from "@/lib/species";
 import { useMemo, useState } from "react";
@@ -45,6 +46,7 @@ export function MovementCalc() {
           <Result label="Need a width" value="—" />
         )
       }
+      plan={result ? <MovementPicture width={parseInches(width) ?? 0} change={result.change} /> : null}
     >
       <Field label="Species">
         <SelectInput value={speciesId} onChange={setSpeciesId}>

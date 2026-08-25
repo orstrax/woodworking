@@ -26,7 +26,7 @@ export function SiteHeader() {
           </span>
         </Link>
         <p className="hidden max-w-xs text-right text-sm text-ink-soft sm:block">
-          Fractions, board feet, and layout math — kept next to the bench.
+          Labeled pictures for doors, lumber, and layout — kept next to the bench.
         </p>
       </div>
     </header>

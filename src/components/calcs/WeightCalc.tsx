@@ -1,6 +1,7 @@
 "use client";
 
 import { Field, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
+import { WeightPicture } from "@/components/plans/ShopPictures";
 import { boardFeet, formatNumber, parseInches } from "@/lib/measure";
 import { SPECIES, weightLb } from "@/lib/species";
 import { useMemo, useState } from "react";
@@ -40,6 +41,17 @@ export function WeightCalc() {
         ) : (
           <Result label="Need dimensions" value="—" />
         )
+      }
+      plan={
+        result ? (
+          <WeightPicture
+            thickness={parseInches(thickness) ?? 0}
+            width={parseInches(width) ?? 0}
+            length={parseInches(length) ?? 0}
+            pounds={result.pounds}
+            species={species.name}
+          />
+        ) : null
       }
     >
       <Field label="Species">

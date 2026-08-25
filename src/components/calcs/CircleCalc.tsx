@@ -1,6 +1,7 @@
 "use client";
 
 import { Field, NumberInput, Result, TextInput, ToolFrame } from "@/components/Fields";
+import { CirclePicture } from "@/components/plans/ShopPictures";
 import { formatInches, formatNumber, parseInches } from "@/lib/measure";
 import { useMemo, useState } from "react";
 
@@ -49,6 +50,16 @@ export function CircleCalc() {
         ) : (
           <Result label="Need a diameter" value="—" />
         )
+      }
+      plan={
+        result ? (
+          <CirclePicture
+            diameter={parseInches(diameter) ?? 0}
+            segments={Math.max(3, Math.round(segments))}
+            chord={result.chord}
+            miter={result.miter}
+          />
+        ) : null
       }
     >
       <Field label="Diameter">

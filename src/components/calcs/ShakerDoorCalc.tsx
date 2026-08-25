@@ -3,7 +3,8 @@
 import { Suspense, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Field, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
-import { CutList, HDim, ShopDrawing, VDim } from "@/components/ShopDrawing";
+import { ShakerPictures } from "@/components/plans/ShakerPictures";
+import { CutList } from "@/components/ShopDrawing";
 import { shakerPlan, type ShakerBuild } from "@/lib/cabinet";
 import { formatInches, parseInches } from "@/lib/measure";
 
@@ -99,7 +100,7 @@ function ShakerDoorInner() {
       plan={
         plan ? (
           <>
-            <ShakerElevation plan={plan} build={build} />
+            <ShakerPictures plan={plan} build={build} />
             <CutList
               rows={plan.parts.map((part) => ({
                 name: part.name,
@@ -174,81 +175,5 @@ function ShakerDoorInner() {
         </Field>
       )}
     </ToolFrame>
-  );
-}
-
-function ShakerElevation({
-  plan,
-  build,
-}: {
-  plan: NonNullable<ReturnType<typeof shakerPlan>>;
-  build: ShakerBuild;
-}) {
-  const s = Math.min(12, 240 / plan.doorW, 300 / plan.doorH);
-  const ox = 58;
-  const oy = 36;
-  const dw = plan.doorW * s;
-  const dh = plan.doorH * s;
-  const st = plan.stileW * s;
-  const ra = plan.railW * s;
-
-  return (
-    <ShopDrawing title="Door elevation" viewBox={`0 0 ${dw + 110} ${dh + 72}`}>
-      <rect x={ox} y={oy} width={dw} height={dh} fill="#efe3cc" stroke="#24180f" strokeWidth="1.2" />
-      <rect x={ox} y={oy} width={st} height={dh} fill="#c8a36a" stroke="#6b3a1f" strokeWidth="0.9" />
-      <rect x={ox + dw - st} y={oy} width={st} height={dh} fill="#c8a36a" stroke="#6b3a1f" strokeWidth="0.9" />
-      <rect x={ox + st} y={oy} width={dw - st * 2} height={ra} fill="#d4b07a" stroke="#6b3a1f" strokeWidth="0.9" />
-      <rect
-        x={ox + st}
-        y={oy + dh - ra}
-        width={dw - st * 2}
-        height={ra}
-        fill="#d4b07a"
-        stroke="#6b3a1f"
-        strokeWidth="0.9"
-      />
-      <rect
-        x={ox + st}
-        y={oy + ra}
-        width={Math.max(0, dw - st * 2)}
-        height={Math.max(0, dh - ra * 2)}
-        fill="#f3ead7"
-        stroke="#8a6a3a"
-        strokeWidth="0.7"
-      />
-      {build === "cope" ? (
-        <rect
-          x={ox + st - plan.grooveDepth * s}
-          y={oy + ra - plan.grooveDepth * s}
-          width={plan.panelW * s}
-          height={plan.panelH * s}
-          fill="none"
-          stroke="#c45c26"
-          strokeDasharray="3 2"
-          strokeWidth="0.7"
-        />
-      ) : null}
-      <HDim x={ox} y={oy} w={dw} label={formatInches(plan.doorW)} />
-      <HDim
-        x={ox + st}
-        y={oy + dh}
-        w={plan.visibleW * s}
-        label={`center ${formatInches(plan.visibleW)}`}
-        side="bottom"
-      />
-      <VDim x={ox} y={oy} h={dh} label={formatInches(plan.doorH)} />
-      <VDim x={ox + dw} y={oy} h={ra} label={formatInches(plan.railW)} side="right" />
-      <text
-        x={ox + 6}
-        y={oy + dh / 2}
-        fill="#24180f"
-        fontSize="8"
-        fontFamily="ui-monospace, monospace"
-        transform={`rotate(-90 ${ox + 6} ${oy + dh / 2})`}
-        textAnchor="middle"
-      >
-        {formatInches(plan.stileW)}
-      </text>
-    </ShopDrawing>
   );
 }

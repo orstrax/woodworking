@@ -1,7 +1,8 @@
 "use client";
 
 import { Field, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
-import { CutList, HDim, ShopDrawing, VDim } from "@/components/ShopDrawing";
+import { DrawerPictures } from "@/components/plans/DrawerPictures";
+import { CutList } from "@/components/ShopDrawing";
 import { drawerPlan, type FitStyle } from "@/lib/cabinet";
 import { formatInches, parseInches } from "@/lib/measure";
 import { useMemo, useState } from "react";
@@ -68,7 +69,7 @@ export function DrawerCalc() {
       plan={
         plan ? (
           <>
-            <DrawerElevation plan={plan} />
+            <DrawerPictures plan={plan} />
             <CutList
               rows={[
                 ...plan.fronts.map((front) => ({
@@ -135,46 +136,5 @@ export function DrawerCalc() {
         </Field>
       </div>
     </ToolFrame>
-  );
-}
-
-function DrawerElevation({ plan }: { plan: NonNullable<ReturnType<typeof drawerPlan>> }) {
-  const s = Math.min(12, 240 / Math.max(plan.overallW, 8), 220 / Math.max(plan.overallH, 6));
-  const ox = 58;
-  const oy = 36;
-  const fw = plan.overallW * s;
-  const fh = plan.overallH * s;
-  const inset = plan.fit === "inset";
-  const frontX = ox + (inset ? plan.stile + plan.reveal : plan.reveal) * s;
-  const stackTop = oy + (inset ? plan.stile + plan.reveal : plan.reveal) * s;
-
-  return (
-    <ShopDrawing title="Drawer stack elevation" viewBox={`0 0 ${fw + 110} ${fh + 72}`}>
-      <rect x={ox} y={oy} width={fw} height={fh} fill="#c8a36a" stroke="#6b3a1f" strokeWidth="1.1" />
-      {plan.fronts.map((front, index) => {
-        const y = stackTop + index * (front.height * s + plan.gap * s);
-        return (
-          <rect
-            key={front.label}
-            x={frontX}
-            y={y}
-            width={front.width * s}
-            height={front.height * s}
-            fill="#efe3cc"
-            stroke="#24180f"
-            strokeWidth="1"
-          />
-        );
-      })}
-      <HDim x={ox} y={oy} w={fw} label={formatInches(plan.overallW)} />
-      <HDim
-        x={frontX}
-        y={oy + fh}
-        w={plan.frontW * s}
-        label={`front ${formatInches(plan.frontW)}`}
-        side="bottom"
-      />
-      <VDim x={ox + fw} y={stackTop} h={plan.frontH * s} label={formatInches(plan.frontH)} side="right" />
-    </ShopDrawing>
   );
 }

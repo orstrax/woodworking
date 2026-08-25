@@ -1,6 +1,7 @@
 "use client";
 
 import { Field, Result, TextInput, ToolFrame } from "@/components/Fields";
+import { MeasurePicture } from "@/components/plans/ShopPictures";
 import { formatInches, formatNumber, parseInches, toFraction } from "@/lib/measure";
 import { useMemo, useState } from "react";
 
@@ -30,6 +31,7 @@ export function MeasureCalc() {
           </>
         )
       }
+      plan={inches !== null && inches > 0 ? <MeasurePicture inches={inches} /> : null}
     >
       <Field label="Measurement" hint='1 7/16, 19mm, 5/4'>
         <TextInput

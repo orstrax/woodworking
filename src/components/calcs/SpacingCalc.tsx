@@ -1,6 +1,7 @@
 "use client";
 
 import { Field, NumberInput, Result, TextInput, ToolFrame } from "@/components/Fields";
+import { SpacingPicture } from "@/components/plans/ShopPictures";
 import { formatInches, formatNumber, parseInches } from "@/lib/measure";
 import { useMemo, useState } from "react";
 
@@ -50,6 +51,11 @@ export function SpacingCalc() {
         ) : (
           <Result label="Need a span" value="—" />
         )
+      }
+      plan={
+        result ? (
+          <SpacingPicture span={parseInches(span) ?? 0} inset={parseInches(inset) ?? 0} centers={result.centers} oc={result.oc} />
+        ) : null
       }
     >
       <Field label="Overall span" hint="outside to outside">
