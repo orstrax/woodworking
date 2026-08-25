@@ -74,6 +74,7 @@ export function MovementCalc() {
             ]
           : undefined
       }
+      printFigures={result ? <MovementPicture width={parseInches(width) ?? 0} change={result.change} /> : undefined}
       plan={
         result ? (
           <>

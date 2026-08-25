@@ -1,4 +1,4 @@
-import { Callout, Caption, Chip, DimH, DimV, Picture, WoodDefs } from "@/components/Visuals";
+import { Callout, Caption, Chip, DimH, DimV, Picture, WoodDefs, useBlueprint } from "@/components/Visuals";
 import type { CabinetBoxPlan, FaceCell } from "@/lib/cabinetBox";
 import { formatInches } from "@/lib/measure";
 
@@ -75,15 +75,25 @@ function FaceDrawing({
   drawing: ReturnType<typeof faceMetrics>;
   compact?: boolean;
 }) {
+  const blueprint = useBlueprint();
   const { ox, oy, w, h, toe, stile, rail, s } = drawing;
   return (
     <>
-      {!compact ? <rect width="100%" height="100%" fill="url(#paper-grid)" /> : (
-        <rect width="100%" height="100%" fill="#f7eedc" />
+      {!compact ? <rect width="100%" height="100%" fill={blueprint ? "url(#bp-grid)" : "url(#paper-grid)"} /> : (
+        <rect width="100%" height="100%" fill={blueprint ? "#fff" : "#f7eedc"} />
       )}
-      <rect x={ox} y={oy} width={w} height={h} fill="url(#grain-frame)" stroke="#24180f" strokeWidth="1.6" />
+      <rect x={ox} y={oy} width={w} height={h} fill={blueprint ? "#fff" : "url(#grain-frame)"} stroke={blueprint ? "#000" : "#24180f"} strokeWidth="1.6" />
       {toe > 0 ? (
-        <rect x={ox} y={oy + h - toe} width={w} height={toe} fill="#6b3a1f" opacity="0.85" />
+        <rect
+          x={ox}
+          y={oy + h - toe}
+          width={w}
+          height={toe}
+          fill={blueprint ? "#fff" : "#6b3a1f"}
+          stroke={blueprint ? "#000" : "none"}
+          strokeWidth={blueprint ? 1 : 0}
+          opacity={blueprint ? 1 : 0.85}
+        />
       ) : null}
       {plan.cells.map((cell, index) => {
         const y =
@@ -92,7 +102,7 @@ function FaceDrawing({
           plan.cells.slice(0, index).reduce((sum, earlier) => sum + earlier.height, 0) * s;
         const showFace =
           cell.kind === "doors" ? plan.includeDoorFaces : plan.includeDrawerFaces;
-        return cellFace(cell, index + 1, ox + stile, y, w - stile * 2, cell.height * s, showFace, compact);
+        return cellFace(cell, index + 1, ox + stile, y, w - stile * 2, cell.height * s, showFace, compact, blueprint);
       })}
       {compact ? null : (
         <>
@@ -150,12 +160,24 @@ function cellFace(
   h: number,
   showFace: boolean,
   compact?: boolean,
+  blueprint?: boolean,
 ) {
   const gap = 4;
+  const stroke = blueprint ? "#000" : "#24180f";
+  const doorFill = blueprint ? "#fff" : "url(#grain-door)";
   if (!showFace) {
     return (
       <g key={cell.id}>
-        <rect x={x} y={y} width={w} height={h} fill="#6d5a46" stroke="#4a3424" strokeWidth="0.9" />
+        <rect
+          x={x}
+          y={y}
+          width={w}
+          height={h}
+          fill={blueprint ? "#fff" : "#6d5a46"}
+          stroke={blueprint ? "#000" : "#4a3424"}
+          strokeWidth="0.9"
+          strokeDasharray={blueprint ? "3 2" : undefined}
+        />
         {compact ? null : <Callout n={n} x={x + w / 2} y={y + h / 2} />}
       </g>
     );
@@ -172,8 +194,8 @@ function cellFace(
             y={y}
             width={dw}
             height={h}
-            fill="url(#grain-door)"
-            stroke="#24180f"
+            fill={doorFill}
+            stroke={stroke}
             strokeWidth="1.1"
           />
         ))}
@@ -183,11 +205,19 @@ function cellFace(
   }
   return (
     <g key={cell.id}>
-      <rect x={x} y={y} width={w} height={h} fill="url(#grain-door)" stroke="#24180f" strokeWidth="1.1" />
+      <rect x={x} y={y} width={w} height={h} fill={doorFill} stroke={stroke} strokeWidth="1.1" />
       {cell.kind === "drawer" ? (
-        <rect x={x + w / 2 - 12} y={y + h / 2 - 3} width="24" height="6" rx="1" fill="#6b3a1f" />
+        <rect
+          x={x + w / 2 - 12}
+          y={y + h / 2 - 3}
+          width="24"
+          height="6"
+          rx="1"
+          fill={blueprint ? "#fff" : "#6b3a1f"}
+          stroke={blueprint ? "#000" : "none"}
+        />
       ) : (
-        <rect x={x + 8} y={y + h / 2 - 1} width={w - 16} height="2" fill="#c45c26" opacity="0.7" />
+        <rect x={x + 8} y={y + h / 2 - 1} width={w - 16} height="2" fill={blueprint ? "#000" : "#c45c26"} opacity={blueprint ? 1 : 0.7} />
       )}
       {compact ? null : <Callout n={n} x={x + w / 2} y={y + h / 2} />}
     </g>

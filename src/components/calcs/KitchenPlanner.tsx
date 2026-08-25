@@ -152,6 +152,7 @@ export function KitchenPlanner() {
         { text: "Check the list against the kitchen so no opening is missing a door." },
       ]}
       note={`${totals.doors} doors · ${totals.drawers} drawer fronts · ${totals.openings} openings`}
+      printFigures={<KitchenPictures results={results} />}
       plan={
         <>
           <div className="print:hidden">

@@ -99,6 +99,11 @@ export function DovetailCalc() {
             ]
           : undefined
       }
+      printFigures={
+        result ? (
+          <DovetailPicture width={parseInches(width) ?? 0} marks={result.marks} slope={result.slope} />
+        ) : undefined
+      }
       plan={
         result ? (
           <>

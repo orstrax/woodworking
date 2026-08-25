@@ -83,6 +83,16 @@ export function GlueUpCalc() {
             ]
           : undefined
       }
+      printFigures={
+        result && finishedIn && boardIn ? (
+          <GluePicture
+            count={result.count}
+            boardWidth={boardIn}
+            finished={finishedIn}
+            extra={result.extra}
+          />
+        ) : undefined
+      }
       plan={
         result && finishedIn && boardIn ? (
           <>

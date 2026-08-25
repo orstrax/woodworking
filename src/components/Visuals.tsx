@@ -1,4 +1,16 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { createContext, useContext, type ReactNode } from "react";
+
+const BlueprintContext = createContext(false);
+
+export function Blueprint({ children }: { children: ReactNode }) {
+  return <BlueprintContext.Provider value={true}>{children}</BlueprintContext.Provider>;
+}
+
+export function useBlueprint() {
+  return useContext(BlueprintContext);
+}
 
 export function WoodDefs() {
   return (
@@ -67,15 +79,25 @@ export function Chip({
   fill?: string;
   color?: string;
 }) {
+  const blueprint = useBlueprint();
   const width = Math.max(44, text.length * 6.5 + 14);
   return (
     <g>
-      <rect x={x - width / 2} y={y - 10} width={width} height={20} rx="10" fill={fill} />
+      <rect
+        x={x - width / 2}
+        y={y - 10}
+        width={width}
+        height={20}
+        rx="10"
+        fill={blueprint ? "#fff" : fill}
+        stroke={blueprint ? "#000" : "none"}
+        strokeWidth={blueprint ? 1 : 0}
+      />
       <text
         x={x}
         y={y + 4}
         textAnchor="middle"
-        fill={color}
+        fill={blueprint ? "#000" : color}
         stroke="none"
         fontSize="10.5"
         fontFamily="ui-monospace, 'IBM Plex Mono', monospace"
@@ -95,14 +117,22 @@ export function Callout({
   x: number;
   y: number;
 }) {
+  const blueprint = useBlueprint();
   return (
     <g>
-      <circle cx={x} cy={y} r="9" fill="#c45c26" stroke="#24180f" strokeWidth="0.9" />
+      <circle
+        cx={x}
+        cy={y}
+        r="9"
+        fill={blueprint ? "#fff" : "#c45c26"}
+        stroke={blueprint ? "#000" : "#24180f"}
+        strokeWidth={blueprint ? 1.2 : 0.9}
+      />
       <text
         x={x}
         y={y + 4}
         textAnchor="middle"
-        fill="#f3ead7"
+        fill={blueprint ? "#000" : "#f3ead7"}
         stroke="none"
         fontSize="11"
         fontWeight="700"
@@ -127,11 +157,12 @@ export function Arrow({
   y2: number;
   color?: string;
 }) {
+  const ink = useBlueprint() ? "#000" : color;
   const angle = Math.atan2(y2 - y1, x2 - x1);
   const hx = x2 - Math.cos(angle) * 7;
   const hy = y2 - Math.sin(angle) * 7;
   return (
-    <g fill={color} stroke={color} strokeWidth="1.5">
+    <g fill={ink} stroke={ink} strokeWidth="1.5">
       <line x1={x1} y1={y1} x2={hx} y2={hy} />
       <polygon
         points={`${x2},${y2} ${hx - Math.sin(angle) * 3.2},${hy + Math.cos(angle) * 3.2} ${hx + Math.sin(angle) * 3.2},${hy - Math.cos(angle) * 3.2}`}
@@ -153,24 +184,25 @@ export function DimH({
   label: string;
   side?: "top" | "bottom";
 }) {
+  const ink = useBlueprint() ? "#000" : "#5c4633";
   const dir = side === "top" ? -1 : 1;
   const ly = y + dir * 16;
   const mid = x + w / 2;
   return (
     <g>
-      <line x1={x} y1={y} x2={x} y2={ly} stroke="#5c4633" strokeWidth="0.8" />
-      <line x1={x + w} y1={y} x2={x + w} y2={ly} stroke="#5c4633" strokeWidth="0.8" />
-      <line x1={x} y1={ly} x2={x + w} y2={ly} stroke="#5c4633" strokeWidth="0.9" />
-      <polygon points={`${x},${ly} ${x + 4},${ly - 2} ${x + 4},${ly + 2}`} fill="#5c4633" />
+      <line x1={x} y1={y} x2={x} y2={ly} stroke={ink} strokeWidth="0.8" />
+      <line x1={x + w} y1={y} x2={x + w} y2={ly} stroke={ink} strokeWidth="0.8" />
+      <line x1={x} y1={ly} x2={x + w} y2={ly} stroke={ink} strokeWidth="0.9" />
+      <polygon points={`${x},${ly} ${x + 4},${ly - 2} ${x + 4},${ly + 2}`} fill={ink} />
       <polygon
         points={`${x + w},${ly} ${x + w - 4},${ly - 2} ${x + w - 4},${ly + 2}`}
-        fill="#5c4633"
+        fill={ink}
       />
       <text
         x={mid}
         y={ly + dir * 12}
         textAnchor="middle"
-        fill="#24180f"
+        fill={ink}
         stroke="none"
         fontSize="11"
         fontFamily="ui-monospace, 'IBM Plex Mono', monospace"
@@ -194,24 +226,25 @@ export function DimV({
   label: string;
   side?: "left" | "right";
 }) {
+  const ink = useBlueprint() ? "#000" : "#5c4633";
   const dir = side === "left" ? -1 : 1;
   const lx = x + dir * 16;
   const mid = y + h / 2;
   return (
     <g>
-      <line x1={x} y1={y} x2={lx} y2={y} stroke="#5c4633" strokeWidth="0.8" />
-      <line x1={x} y1={y + h} x2={lx} y2={y + h} stroke="#5c4633" strokeWidth="0.8" />
-      <line x1={lx} y1={y} x2={lx} y2={y + h} stroke="#5c4633" strokeWidth="0.9" />
-      <polygon points={`${lx},${y} ${lx - 2},${y + 4} ${lx + 2},${y + 4}`} fill="#5c4633" />
+      <line x1={x} y1={y} x2={lx} y2={y} stroke={ink} strokeWidth="0.8" />
+      <line x1={x} y1={y + h} x2={lx} y2={y + h} stroke={ink} strokeWidth="0.8" />
+      <line x1={lx} y1={y} x2={lx} y2={y + h} stroke={ink} strokeWidth="0.9" />
+      <polygon points={`${lx},${y} ${lx - 2},${y + 4} ${lx + 2},${y + 4}`} fill={ink} />
       <polygon
         points={`${lx},${y + h} ${lx - 2},${y + h - 4} ${lx + 2},${y + h - 4}`}
-        fill="#5c4633"
+        fill={ink}
       />
       <text
         x={lx + dir * 10}
         y={mid + 4}
         textAnchor={side === "left" ? "end" : "start"}
-        fill="#24180f"
+        fill={ink}
         stroke="none"
         fontSize="11"
         fontFamily="ui-monospace, 'IBM Plex Mono', monospace"
@@ -233,12 +266,13 @@ export function Caption({
   text: string;
   anchor?: "start" | "middle" | "end";
 }) {
+  const ink = useBlueprint() ? "#000" : "#5c4633";
   return (
     <text
       x={x}
       y={y}
       textAnchor={anchor}
-      fill="#5c4633"
+      fill={ink}
       stroke="none"
       fontSize="11"
       fontFamily="ui-sans-serif, system-ui, sans-serif"
@@ -249,6 +283,19 @@ export function Caption({
 }
 
 export function Legend({ items }: { items: { n: number; label: string; hint?: string }[] }) {
+  const blueprint = useBlueprint();
+  if (blueprint) {
+    return (
+      <ol className="grid gap-x-4 gap-y-0.5 text-[10px] leading-4 sm:grid-cols-2">
+        {items.map((item) => (
+          <li key={item.n}>
+            <span className="font-mono">{item.n}.</span> {item.label}
+            {item.hint ? ` — ${item.hint}` : ""}
+          </li>
+        ))}
+      </ol>
+    );
+  }
   return (
     <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((item) => (
@@ -279,15 +326,43 @@ export function Picture({
   children: ReactNode;
   legend?: { n: number; label: string; hint?: string }[];
 }) {
+  const blueprint = useBlueprint();
+  if (blueprint) {
+    return (
+      <figure className="blueprint-figure mb-3 break-inside-avoid border border-black text-black">
+        <figcaption className="border-b border-black px-2 py-1">
+          <p className="text-[9px] uppercase tracking-[0.16em]">Blueprint</p>
+          <h3 className="font-display text-base leading-tight tracking-tight">{title}</h3>
+        </figcaption>
+        <div className="px-1 py-1">
+          <svg viewBox={viewBox} className="mx-auto h-auto w-full max-h-[2.7in]" role="img" aria-label={title}>
+            <defs>
+              <pattern id="bp-grid" width="16" height="16" patternUnits="userSpaceOnUse">
+                <rect width="16" height="16" fill="#fff" />
+                <path d="M16 0 L16 16 M0 16 L16 16" stroke="#d0d0d0" strokeWidth="0.5" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#bp-grid)" />
+            {children}
+          </svg>
+        </div>
+        {legend ? (
+          <div className="border-t border-black px-2 py-1">
+            <Legend items={legend} />
+          </div>
+        ) : null}
+      </figure>
+    );
+  }
   return (
-    <figure className="print-break overflow-hidden rounded-sm border border-rule bg-[#fbf6eb] shadow-[4px_4px_0_rgba(36,24,15,0.06)] print:overflow-visible print:shadow-none">
-      <figcaption className="border-b border-rule px-4 py-4 sm:px-6 print:px-3 print:py-2">
+    <figure className="print-break overflow-hidden rounded-sm border border-rule bg-[#fbf6eb] shadow-[4px_4px_0_rgba(36,24,15,0.06)]">
+      <figcaption className="border-b border-rule px-4 py-4 sm:px-6">
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-shellac">Picture</p>
-        <h3 className="mt-1 font-display text-2xl tracking-tight sm:text-3xl print:text-xl">{title}</h3>
-        <p className="mt-2 max-w-2xl text-base leading-7 text-ink-soft print:mt-1 print:text-sm print:leading-5">{caption}</p>
+        <h3 className="mt-1 font-display text-2xl tracking-tight sm:text-3xl">{title}</h3>
+        <p className="mt-2 max-w-2xl text-base leading-7 text-ink-soft">{caption}</p>
       </figcaption>
-      <div className="px-2 py-6 sm:px-5 print:px-1 print:py-2">
-        <svg viewBox={viewBox} className="mx-auto h-auto w-full max-w-4xl print:max-h-[3.4in]" role="img" aria-label={title}>
+      <div className="px-2 py-6 sm:px-5">
+        <svg viewBox={viewBox} className="mx-auto h-auto w-full max-w-4xl" role="img" aria-label={title}>
           <WoodDefs />
           <rect width="100%" height="100%" fill="url(#paper-grid)" />
           {children}

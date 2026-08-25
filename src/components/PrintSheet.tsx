@@ -1,5 +1,6 @@
 "use client";
 
+import { Blueprint } from "@/components/Visuals";
 import type { ReactNode } from "react";
 
 export type PrintFact = { label: string; value: string; note?: string };
@@ -13,6 +14,7 @@ export function PrintSheet({
   rows,
   steps,
   sections,
+  figures,
   note,
 }: {
   title: string;
@@ -20,6 +22,7 @@ export function PrintSheet({
   rows?: PrintRow[];
   steps?: PrintStep[];
   sections?: PrintSection[];
+  figures?: ReactNode;
   note?: string;
 }) {
   return (
@@ -39,6 +42,12 @@ export function PrintSheet({
             </div>
           ))}
         </dl>
+      ) : null}
+      {figures ? (
+        <section className="blueprint-art mb-3">
+          <h2 className="mb-1 text-[9px] uppercase tracking-[0.16em]">Assembly — line art</h2>
+          <Blueprint>{figures}</Blueprint>
+        </section>
       ) : null}
       {rows && rows.length > 0 ? <CutTable heading="Cut list" rows={rows} /> : null}
       {sections?.map((section) => (
