@@ -121,25 +121,42 @@ function CutTable({ heading, rows }: { heading: string; rows: PrintRow[] }) {
 }
 
 export function PrintButton({
-  children = "Print shop copy",
+  children = "Print Shop Copy",
   className,
+  subtitle,
 }: {
   children?: ReactNode;
   className?: string;
+  subtitle?: string;
 }) {
+  const caption = subtitle ?? (className ? undefined : "Pictures & plans");
   return (
     <button
       type="button"
       className={
         className ??
-        "mt-4 rounded-full bg-paper px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-iron"
+        "inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-[12px] bg-walnut px-4 py-3 text-paper transition hover:bg-walnut-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-walnut"
       }
       onClick={() => window.print()}
     >
-      {children}
+      <PrinterIcon />
+      <span className={caption ? "text-left" : undefined}>
+        <span className="block text-sm font-semibold tracking-wide">{children}</span>
+        {caption ? <span className="block text-xs font-normal opacity-80">{caption}</span> : null}
+      </span>
     </button>
   );
 }
 
+function PrinterIcon() {
+  return (
+    <svg viewBox="0 0 20 20" className="h-5 w-5 shrink-0" fill="none" aria-hidden>
+      <path d="M6 8.5V3.5h8V8.5" stroke="currentColor" strokeWidth="1.5" />
+      <rect x="4" y="8.5" width="12" height="7" rx="1.2" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M7 12.5h6M7 15.5h6V18H7v-2.5Z" stroke="currentColor" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
 export const paperPrintButtonClass =
-  "rounded-full border border-rule bg-paper px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-walnut hover:border-walnut/50";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] border border-rule bg-surface px-4 py-2.5 text-sm font-semibold text-ink hover:border-walnut/50";

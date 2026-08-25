@@ -3,9 +3,19 @@
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { BuildSheet } from "@/components/BuildSheet";
-import { Field, OptionToggle, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
+import {
+  AccordionSection,
+  ChoiceCard,
+  Field,
+  OptionToggle,
+  Result,
+  SectionCard,
+  SelectInput,
+  TextInput,
+  ToolFrame,
+} from "@/components/Fields";
 import { InfoTip } from "@/components/InfoTip";
-import { CabinetBoxPictures, StickyFace } from "@/components/plans/CabinetBoxPictures";
+import { CabinetBoxPictures, LiveFace } from "@/components/plans/CabinetBoxPictures";
 import { LayoutThumb } from "@/components/plans/LayoutThumb";
 import {
   TipDado,
@@ -106,6 +116,7 @@ function CabinetBoxInner() {
   const [includeToeSkin, setIncludeToeSkin] = useState(true);
   const [includeNailer, setIncludeNailer] = useState(true);
   const [includeFaceFrame, setIncludeFaceFrame] = useState(true);
+  const [showCabinet, setShowCabinet] = useState(false);
 
   const available = layoutsFor(kind);
   const layout = getLayout(layoutId) ?? available[0] ?? CABINET_LAYOUTS[0];
@@ -202,21 +213,36 @@ function CabinetBoxInner() {
   ].filter(Boolean);
 
   return (
-    <>
-      {plan ? (
-        <div className="lg:hidden sticky top-[var(--site-header-h)] z-20 -mx-5 mb-4 border-b border-rule bg-[#f6efe4] px-5 py-1.5 print:hidden sm:-mx-8 sm:px-8">
-          <StickyFace plan={plan} />
-        </div>
-      ) : null}
-      <ToolFrame
+    <ToolFrame
         title="Cabinet box"
         description="Pick a typical layout — a 36″ drawer base, a sink, an upper — then change any measurement. Uncheck the faces if you are only cutting the box today."
         ticketClassName="print:hidden"
+        preview={plan ? <LiveFace plan={plan} /> : undefined}
+        mobileSummary={
+          plan ? (
+            <div className="rounded-[12px] border border-rule bg-surface p-4 shadow-[var(--shadow-sm)]">
+              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-shellac">Live picture</p>
+              <p className="mt-1 font-display text-2xl tracking-tight">{plan.layout.label}</p>
+              <p className="mt-0.5 font-mono text-sm text-ink-soft">
+                {formatInches(plan.overallW)} W × {formatInches(plan.overallH)} H × {formatInches(plan.overallD)} D
+              </p>
+              <button
+                type="button"
+                className="mt-3 inline-flex min-h-11 w-full items-center justify-center rounded-[10px] border border-rule bg-surface text-sm font-semibold"
+                onClick={() => setShowCabinet((value) => !value)}
+                aria-expanded={showCabinet}
+              >
+                {showCabinet ? "Hide cabinet" : "View cabinet"}
+              </button>
+              {showCabinet ? <div className="mt-3"><LiveFace plan={plan} compact /></div> : null}
+            </div>
+          ) : null
+        }
         results={
           plan ? (
             <>
               <Result
-                label="The box"
+                label="Box"
                 value={`${formatInches(plan.boxW)} × ${formatInches(plan.boxH)} × ${formatInches(plan.boxD)}`}
                 note={
                   plan.construction === "face-frame"
@@ -230,7 +256,7 @@ function CabinetBoxInner() {
                 note={`Useful depth ${formatInches(plan.interiorD)}. Face opening height ${formatInches(plan.faceH)}.`}
               />
               <Result
-                label="This layout"
+                label="Layout"
                 value={`${doorOpenings} door${doorOpenings === 1 ? "" : "s"} · ${drawerOpenings} drawer${drawerOpenings === 1 ? "" : "s"}`}
                 note={laterBits.length ? laterBits.join(" · ") : plan.layout.blurb}
               />
@@ -285,57 +311,67 @@ function CabinetBoxInner() {
           ) : null
         }
       >
-        <div className="grid gap-4 print:hidden">
-          <Field
-            label="Cabinet"
-            tip={
-              <InfoTip
-                title="Where it lives"
-                body="Base cabinets sit on the floor with a toe kick. Uppers hang on the wall. Tall / pantry is a full-height box, usually next to a fridge or at the end of a run."
-              />
-            }
-          >
-            <SelectInput value={kind} onChange={(value) => changeKind(value as CabinetKind)}>
-              <option value="base">Base (sits on the floor)</option>
-              <option value="upper">Upper (hangs on the wall)</option>
-              <option value="tall">Tall / pantry</option>
-            </SelectInput>
-          </Field>
-          <div>
-            <p className="text-sm font-medium">Typical layout</p>
-            <p className="mt-1 text-sm text-ink-soft">Start here, then change any number below.</p>
-            <div className="mt-3 grid gap-2 sm:grid-cols-2">
-              {available.map((item) => (
-                <button
-                  type="button"
-                  key={item.id}
-                  onClick={() => pickLayout(item.id)}
-                  className={`flex items-center gap-3 rounded-sm border px-3 py-3 text-left ${
-                    item.id === layout.id
-                      ? "border-walnut bg-paper shadow-[3px_3px_0_rgba(107,58,31,0.15)]"
-                      : "border-rule bg-paper/70 hover:border-walnut/40"
-                  }`}
-                >
-                  <LayoutThumb layout={item} className="h-14 w-10 shrink-0" />
-                  <span className="min-w-0">
-                    <span className="block font-display text-lg tracking-tight">{item.label}</span>
-                    <span className="mt-1 block text-sm leading-5 text-ink-soft">{item.blurb}</span>
-                  </span>
-                </button>
-              ))}
-            </div>
+        <SectionCard>
+          <div className="flex items-center gap-1.5">
+            <p className="text-[15px] font-semibold">Cabinet</p>
+            <InfoTip
+              title="Where it lives"
+              body="Base cabinets sit on the floor with a toe kick. Uppers hang on the wall. Tall / pantry is a full-height box, usually next to a fridge or at the end of a run."
+            />
           </div>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="mt-3 grid gap-2">
+            <ChoiceCard
+              selected={kind === "base"}
+              onSelect={() => changeKind("base")}
+              title="Base"
+              hint="Sits on the floor with a toe kick"
+            />
+            <ChoiceCard
+              selected={kind === "upper"}
+              onSelect={() => changeKind("upper")}
+              title="Upper"
+              hint="Hangs on the wall"
+            />
+            <ChoiceCard
+              selected={kind === "tall"}
+              onSelect={() => changeKind("tall")}
+              title="Tall / pantry"
+              hint="Full-height box, usually next to a fridge"
+            />
+          </div>
+        </SectionCard>
+        <SectionCard>
+          <p className="text-[15px] font-semibold">Typical layout</p>
+          <p className="mt-1 text-sm text-ink-soft">Start here, then change any number below.</p>
+          <div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-1">
+            {available.map((item) => (
+              <ChoiceCard
+                key={item.id}
+                selected={item.id === layout.id}
+                onSelect={() => pickLayout(item.id)}
+                title={item.label}
+                hint={<span className="hidden lg:block">{item.blurb}</span>}
+                visual={<LayoutThumb layout={item} className="h-12 w-9 shrink-0 sm:h-14 sm:w-10" />}
+              />
+            ))}
+          </div>
+        </SectionCard>
+        <SectionCard>
+          <p className="text-[15px] font-semibold">Dimensions</p>
+          <p className="mt-1 text-sm text-ink-soft">Fractions like 34 1/2 are fine.</p>
+          <div className="mt-4 grid gap-4 sm:grid-cols-3">
             <Field label="Overall width">
-              <TextInput value={width} onChange={setWidth} />
+              <TextInput value={width} onChange={setWidth} unit="in" />
             </Field>
             <Field label="Overall height">
-              <TextInput value={height} onChange={setHeight} />
+              <TextInput value={height} onChange={setHeight} unit="in" />
             </Field>
             <Field label="Overall depth">
-              <TextInput value={depth} onChange={setDepth} />
+              <TextInput value={depth} onChange={setDepth} unit="in" />
             </Field>
           </div>
+        </SectionCard>
+        <SectionCard>
           <Field
             label="Box construction"
             tip={
@@ -351,32 +387,35 @@ function CabinetBoxInner() {
               <option value="frameless">Frameless (Euro / full overlay)</option>
             </SelectInput>
           </Field>
-          <Field
-            label="How the box goes together"
-            tip={
-              <InfoTip
-                title="Joinery is a choice"
-                body="Dados and a rabbet are traditional and strong. Pocket holes skip the router table. Screws through the sides are the simplest butt joint. The cut list and steps follow what you pick."
-                picture={<TipPocket />}
-              />
-            }
-          >
-            <SelectInput value={assembly} onChange={(value) => setAssembly(value as AssemblyJoin)}>
-              <option value="dado">Dados and a rabbet (traditional)</option>
-              <option value="pocket">Pocket holes (no dados)</option>
-              <option value="screws">Screws through the sides (butt joints)</option>
-            </SelectInput>
-          </Field>
-          <div>
+          <div className="mt-4">
+            <Field
+              label="How the box goes together"
+              tip={
+                <InfoTip
+                  title="Joinery is a choice"
+                  body="Dados and a rabbet are traditional and strong. Pocket holes skip the router table. Screws through the sides are the simplest butt joint. The cut list and steps follow what you pick."
+                  picture={<TipPocket />}
+                />
+              }
+            >
+              <SelectInput value={assembly} onChange={(value) => setAssembly(value as AssemblyJoin)}>
+                <option value="dado">Dados and a rabbet (traditional)</option>
+                <option value="pocket">Pocket holes (no dados)</option>
+                <option value="screws">Screws through the sides (butt joints)</option>
+              </SelectInput>
+            </Field>
+          </div>
+        </SectionCard>
+        <SectionCard>
             <span className="flex items-center gap-1.5">
-              <span className="text-sm font-medium">Cut now, or later</span>
+              <span className="text-[15px] font-semibold">Cut now, or later</span>
               <InfoTip
                 title="Skip the pretty parts"
                 body="The box can go together without doors, drawer fronts, or even the face frame. Uncheck anything you want to size later — openings stay in the picture as empty holes."
                 picture={<TipFaces />}
               />
             </span>
-            <p className="mt-1 text-sm text-ink-soft">Uncheck anything you are not building today.</p>
+            <p className="mt-1 text-sm text-ink-soft">Uncheck anything you are not building today. The whole row is tappable.</p>
             <div className="mt-3 grid gap-2">
               {construction === "face-frame" ? (
                 <OptionToggle
@@ -427,9 +466,9 @@ function CabinetBoxInner() {
                 />
               ) : null}
             </div>
-          </div>
+        </SectionCard>
           {wantAnyFaces ? (
-            <>
+            <SectionCard>
               <Field
                 label="How the faces sit"
                 tip={
@@ -468,7 +507,7 @@ function CabinetBoxInner() {
                     </SelectInput>
                   </Field>
                   <Field label="Amount">
-                    <TextInput value={customAmount} onChange={setCustomAmount} />
+                    <TextInput value={customAmount} onChange={setCustomAmount} unit="in" />
                   </Field>
                 </div>
               ) : null}
@@ -511,17 +550,18 @@ function CabinetBoxInner() {
                   {doorStyle === "custom" ? (
                     <>
                       <Field label="Door stile">
-                        <TextInput value={shakerStile} onChange={setShakerStile} />
+                        <TextInput value={shakerStile} onChange={setShakerStile} unit="in" />
                       </Field>
                       <Field label="Door rail">
-                        <TextInput value={shakerRail} onChange={setShakerRail} />
+                        <TextInput value={shakerRail} onChange={setShakerRail} unit="in" />
                       </Field>
                     </>
                   ) : null}
                 </div>
               ) : null}
-            </>
+            </SectionCard>
           ) : null}
+          <SectionCard>
           <Field
             label="Shelves inside"
             hint="0 is fine"
@@ -534,10 +574,12 @@ function CabinetBoxInner() {
           >
             <TextInput value={shelves} onChange={setShelves} />
           </Field>
-          <details className="rounded-sm border border-rule bg-paper/60 px-4 py-3">
-            <summary className="cursor-pointer font-display text-lg tracking-tight">Shop details</summary>
-            <p className="mt-1 text-sm text-ink-soft">Plywood, toe kick, and stock sizes. Defaults are typical kitchen numbers.</p>
-            <div className="mt-4 grid gap-4">
+          </SectionCard>
+          <AccordionSection
+            title="Shop details"
+            summary="Typical kitchen defaults are being used."
+          >
+            <div className="grid gap-4">
               {construction === "face-frame" ? (
                 <div className="grid gap-4 sm:grid-cols-3">
                   <Field
@@ -551,7 +593,7 @@ function CabinetBoxInner() {
                       />
                     }
                   >
-                    <TextInput value={stile} onChange={setStile} />
+                    <TextInput value={stile} onChange={setStile} unit="in" />
                   </Field>
                   <Field
                     label="Rail"
@@ -564,7 +606,7 @@ function CabinetBoxInner() {
                       />
                     }
                   >
-                    <TextInput value={rail} onChange={setRail} />
+                    <TextInput value={rail} onChange={setRail} unit="in" />
                   </Field>
                   <Field
                     label="Frame overhang"
@@ -577,16 +619,16 @@ function CabinetBoxInner() {
                       />
                     }
                   >
-                    <TextInput value={overhang} onChange={setOverhang} />
+                    <TextInput value={overhang} onChange={setOverhang} unit="in" />
                   </Field>
                 </div>
               ) : null}
               <div className={`grid gap-4 ${assembly === "dado" ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
                 <Field label="Side / bottom plywood">
-                  <TextInput value={sideThick} onChange={setSideThick} />
+                  <TextInput value={sideThick} onChange={setSideThick} unit="in" />
                 </Field>
                 <Field label="Back">
-                  <TextInput value={backThick} onChange={setBackThick} />
+                  <TextInput value={backThick} onChange={setBackThick} unit="in" />
                 </Field>
                 {assembly === "dado" ? (
                   <Field
@@ -599,7 +641,7 @@ function CabinetBoxInner() {
                       />
                     }
                   >
-                    <TextInput value={dado} onChange={setDado} />
+                    <TextInput value={dado} onChange={setDado} unit="in" />
                   </Field>
                 ) : null}
               </div>
@@ -615,10 +657,10 @@ function CabinetBoxInner() {
                       />
                     }
                   >
-                    <TextInput value={toeH} onChange={setToeH} />
+                    <TextInput value={toeH} onChange={setToeH} unit="in" />
                   </Field>
                   <Field label="Toe kick depth">
-                    <TextInput value={toeD} onChange={setToeD} />
+                    <TextInput value={toeD} onChange={setToeD} unit="in" />
                   </Field>
                 </div>
               ) : (
@@ -632,7 +674,7 @@ function CabinetBoxInner() {
                     />
                   }
                 >
-                  <p className="rounded-sm border border-dashed border-rule px-3 py-2.5 text-sm text-ink-soft">
+                  <p className="rounded-[10px] border border-dashed border-rule px-3 py-2.5 text-sm text-ink-soft">
                     Uses the same 4″ stretcher width as the top rail inside.
                   </p>
                 </Field>
@@ -649,7 +691,7 @@ function CabinetBoxInner() {
                       />
                     }
                   >
-                    <TextInput value={midGap} onChange={setMidGap} />
+                    <TextInput value={midGap} onChange={setMidGap} unit="in" />
                   </Field>
                   {hasDrawerBoxes && includeDrawerBoxes ? (
                     <Field
@@ -669,34 +711,32 @@ function CabinetBoxInner() {
                     </Field>
                   ) : (
                     <Field label="Face stock" hint="doors & frame">
-                      <TextInput value={faceThick} onChange={setFaceThick} />
+                      <TextInput value={faceThick} onChange={setFaceThick} unit="in" />
                     </Field>
                   )}
                 </div>
               ) : (
                 <Field label="Face stock" hint="frame, if any">
-                  <TextInput value={faceThick} onChange={setFaceThick} />
+                  <TextInput value={faceThick} onChange={setFaceThick} unit="in" />
                 </Field>
               )}
               {wantAnyFaces && hasDrawerBoxes && includeDrawerBoxes ? (
                 <div className="grid gap-4 sm:grid-cols-2">
                   <Field label="Face stock" hint="doors & frame">
-                    <TextInput value={faceThick} onChange={setFaceThick} />
+                    <TextInput value={faceThick} onChange={setFaceThick} unit="in" />
                   </Field>
                   <Field label="Drawer-box stock">
-                    <TextInput value={drawerStock} onChange={setDrawerStock} />
+                    <TextInput value={drawerStock} onChange={setDrawerStock} unit="in" />
                   </Field>
                 </div>
               ) : hasDrawerBoxes && includeDrawerBoxes ? (
                 <Field label="Drawer-box stock">
-                  <TextInput value={drawerStock} onChange={setDrawerStock} />
+                  <TextInput value={drawerStock} onChange={setDrawerStock} unit="in" />
                 </Field>
               ) : null}
             </div>
-          </details>
-        </div>
+          </AccordionSection>
       </ToolFrame>
-    </>
   );
 }
 

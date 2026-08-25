@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, NumberInput, Result, TextInput, ToolFrame } from "@/components/Fields";
+import { Field, NumberInput, Result, TextInput, ToolFrame, summaryLabelClass } from "@/components/Fields";
 import { SpacingPicture } from "@/components/plans/ShopPictures";
 import { formatInches, formatNumber, parseInches } from "@/lib/measure";
 import { useMemo, useState } from "react";
@@ -36,7 +36,7 @@ export function SpacingCalc() {
               note={`${formatNumber(result.usable, 3)}″ between the insets.`}
             />
             <div className="pt-3">
-              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ticket-tan">
+              <p className={summaryLabelClass}>
                 Centers from left
               </p>
               <ol className="mt-2 space-y-1 font-mono text-sm">

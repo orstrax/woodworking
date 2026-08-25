@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, NumberInput, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
+import { Field, NumberInput, Result, SelectInput, TextInput, ToolFrame, summaryLabelClass } from "@/components/Fields";
 import { DovetailPicture } from "@/components/plans/ShopPictures";
 import { BuildSheet } from "@/components/BuildSheet";
 import { formatInches, parseInches } from "@/lib/measure";
@@ -50,7 +50,7 @@ export function DovetailCalc() {
               note={`${result.angle.toFixed(1)}° off square.`}
             />
             <div className="pt-3">
-              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ticket-tan">
+              <p className={summaryLabelClass}>
                 Marks from edge
               </p>
               <ol className="mt-2 space-y-1 font-mono text-sm">
