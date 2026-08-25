@@ -248,7 +248,7 @@ function CabinetDoorInner() {
           : undefined
       }
       printRows={cutRows}
-      printSteps={steps.map(({ text, detail }) => ({ text, detail }))}
+      printSteps={steps.map(({ id, text, detail }) => ({ id, text, detail }))}
       printFigures={
         plan && hinges ? (
           <>

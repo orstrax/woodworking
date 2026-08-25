@@ -100,13 +100,14 @@ export function DrawerCalc() {
       printSteps={
         plan
           ? [
-              { text: "Cut the pretty fronts first so they match the doors in the same run." },
-              { text: "Build the boxes smaller than the fronts. Groove the bottom so it can float." },
+              { text: "Cut the pretty fronts first so they match the doors in the same run.", id: "drawers" },
+              { text: "Build the boxes smaller than the fronts. Groove the bottom so it can float.", id: "cut-panels" },
               {
+                id: "hang",
                 text: "Install slides in the cabinet, then the boxes, then overlay the fronts last.",
                 detail: slide === "side" ? "Side-mount: 1/2″ each side." : "Undermount: opening minus about 3/8″.",
               },
-              { text: "Number from the top. Drawer 1 is the highest front." },
+              { text: "Number from the top. Drawer 1 is the highest front.", id: "label" },
             ]
           : undefined
       }

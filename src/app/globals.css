@@ -63,7 +63,28 @@ input[type="number"] {
 @media print {
   @page {
     size: letter;
-    margin: 0.5in;
+    margin: 0;
+  }
+
+  @page {
+    @top-left {
+      content: none;
+    }
+    @top-center {
+      content: none;
+    }
+    @top-right {
+      content: none;
+    }
+    @bottom-left {
+      content: none;
+    }
+    @bottom-center {
+      content: none;
+    }
+    @bottom-right {
+      content: none;
+    }
   }
 
   html,
@@ -85,8 +106,28 @@ input[type="number"] {
   .print-sheet {
     color: #000 !important;
     background: #fff !important;
+    padding: 0.5in;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+  }
+
+  .print-sheet:has(.print-page) {
+    padding: 0;
+  }
+
+  .print-page {
+    box-sizing: border-box;
+    padding: 0.5in;
+  }
+
+  .print-page + .print-page {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .print-step {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .print-sheet table {

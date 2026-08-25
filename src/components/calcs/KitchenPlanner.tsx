@@ -147,9 +147,9 @@ export function KitchenPlanner() {
           rows: result.parts.map(({ name, qty, size, note }) => ({ name, qty, size, note })),
         }))}
       printSteps={[
-        { text: "Gang matching sizes from the shop summary — all matching stiles in one stack." },
-        { text: "Keep a painter’s-tape label on each bundle with the cabinet names from the note column." },
-        { text: "Check the list against the kitchen so no opening is missing a door." },
+        { id: "gang", text: "Gang matching sizes from the shop summary — all matching stiles in one stack." },
+        { id: "label", text: "Keep a painter’s-tape label on each bundle with the cabinet names from the note column." },
+        { id: "check", text: "Check the list against the kitchen so no opening is missing a door." },
       ]}
       note={`${totals.doors} doors · ${totals.drawers} drawer fronts · ${totals.openings} openings`}
       printFigures={<KitchenPictures results={results} />}
