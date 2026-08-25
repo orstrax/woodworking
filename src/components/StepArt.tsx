@@ -1,7 +1,9 @@
 function inferArt(id: string | undefined, text: string) {
-  if (id) return id;
   const t = text.toLowerCase();
-  if (t.includes("pocket") || t.includes("dado") || t.includes("rabbet") || t.includes("screw through")) return "dados";
+  if (t.includes("pocket")) return "pocket";
+  if (t.includes("screw through") || t.includes("screws through")) return "screws";
+  if (id) return id;
+  if (t.includes("dado") || t.includes("rabbet")) return "dados";
   if (t.includes("dry-fit") || t.includes("diagonals")) return "dry-fit";
   if (t.includes("face frame") || t.includes("stiles run")) return "face-frame";
   if (t.includes("hinge") || t.includes("35mm") || t.includes("cups")) return "cups";
@@ -20,12 +22,25 @@ function inferArt(id: string | undefined, text: string) {
 export function StepArt({ id, text }: { id?: string; text: string }) {
   const kind = inferArt(id, text);
   return (
-    <svg viewBox="0 0 80 64" className="h-[3.4rem] w-[4.25rem] shrink-0" aria-hidden>
-      <rect x="0.5" y="0.5" width="79" height="63" fill="#fff" stroke="#000" strokeWidth="0.6" />
-      <g fill="none" stroke="#000" strokeWidth="1.3" strokeLinejoin="round" strokeLinecap="round">
+    <svg viewBox="0 0 160 112" className="h-[5.6rem] w-[8rem] shrink-0" aria-hidden>
+      <g fill="#fff" stroke="#000" strokeWidth="1.6" strokeLinejoin="round" strokeLinecap="round">
         {drawing(kind)}
       </g>
     </svg>
+  );
+}
+
+function Arrow({ x1, y1, x2, y2 }: { x1: number; y1: number; x2: number; y2: number }) {
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  const hx = x2 - Math.cos(angle) * 8;
+  const hy = y2 - Math.sin(angle) * 8;
+  return (
+    <g fill="#000" stroke="#000" strokeWidth="1.5">
+      <line x1={x1} y1={y1} x2={hx} y2={hy} />
+      <polygon
+        points={`${x2},${y2} ${hx - Math.sin(angle) * 3.4},${hy + Math.cos(angle) * 3.4} ${hx + Math.sin(angle) * 3.4},${hy - Math.cos(angle) * 3.4}`}
+      />
+    </g>
   );
 }
 
@@ -34,102 +49,142 @@ function drawing(kind: string) {
     case "cut-sides":
       return (
         <>
-          <rect x="14" y="10" width="18" height="44" />
-          <rect x="48" y="10" width="18" height="44" />
-          <path d="M8 40 H26" />
-          <path d="M54 40 H72" />
+          <polygon points="22,18 58,10 58,86 22,94" />
+          <polygon points="102,18 138,10 138,86 102,94" />
+          <path d="M22,70 L58,62" strokeDasharray="3 2" fill="none" />
+          <path d="M102,70 L138,62" strokeDasharray="3 2" fill="none" />
+          <path d="M70,40 L86,32 L86,48 Z" fill="#000" stroke="none" />
         </>
       );
     case "dados":
       return (
         <>
-          <rect x="18" y="8" width="22" height="48" />
-          <path d="M18 22 H40 M18 38 H40 M40 14 H58 V50 H40" />
-          <path d="M46 18 L54 22 L46 26" />
+          <polygon points="28,14 72,6 72,96 28,104" />
+          <path d="M28,40 L72,32" fill="none" />
+          <path d="M28,44 L72,36" fill="none" />
+          <path d="M28,78 L72,70" fill="none" />
+          <rect x="90" y="28" width="44" height="10" />
+          <Arrow x1={112} y1={38} x2={68} y2={42} />
+        </>
+      );
+    case "pocket":
+      return (
+        <>
+          <polygon points="24,20 70,12 70,92 24,100" />
+          <rect x="88" y="48" width="48" height="12" />
+          <path d="M70,54 L88,54" fill="none" />
+          <circle cx="64" cy="54" r="3" />
+          <circle cx="64" cy="70" r="3" />
+          <Arrow x1={112} y1={48} x2={74} y2={52} />
+        </>
+      );
+    case "screws":
+      return (
+        <>
+          <polygon points="22,18 64,10 64,90 22,98" />
+          <rect x="86" y="42" width="50" height="14" />
+          <path d="M64,49 L86,49" fill="none" />
+          <path d="M118,36 L118,42 M114,39 L122,39" fill="none" />
+          <Arrow x1={108} y1={42} x2={68} y2={48} />
         </>
       );
     case "cut-panels":
       return (
         <>
-          <rect x="10" y="14" width="36" height="10" />
-          <rect x="10" y="28" width="36" height="10" />
-          <rect x="52" y="14" width="18" height="36" />
+          <rect x="14" y="18" width="70" height="16" />
+          <rect x="14" y="42" width="70" height="12" />
+          <rect x="14" y="62" width="70" height="12" />
+          <polygon points="102,16 142,22 142,96 102,90" />
+          <path d="M88,26 L100,26" fill="none" />
         </>
       );
     case "dry-fit":
       return (
         <>
-          <rect x="28" y="18" width="24" height="28" />
-          <path d="M12 20 L26 26 M12 44 L26 38 M66 20 L54 26 M66 44 L54 38" />
+          <polygon points="18,28 40,20 40,84 18,92" />
+          <polygon points="120,28 142,20 142,84 120,92" />
+          <rect x="52" y="78" width="56" height="14" />
+          <rect x="58" y="22" width="44" height="10" />
+          <Arrow x1={44} y1={52} x2={56} y2={52} />
+          <Arrow x1={116} y1={52} x2={104} y2={52} />
+          <Arrow x1={80} y1={74} x2={80} y2={62} />
         </>
       );
     case "glue-box":
       return (
         <>
-          <path d="M22 18 H58 L66 26 V50 H22 Z" />
-          <path d="M22 18 L30 12 H66 L58 18" />
-          <path d="M66 26 L74 20 V44 L66 50" />
-          <path d="M34 8 V18 M48 8 V18" />
+          <polygon points="28,30 70,18 128,30 128,86 70,98 28,86" />
+          <path d="M70,18 L70,98" fill="none" />
+          <path d="M28,30 L70,42 L128,30" fill="none" />
+          <rect x="48" y="44" width="52" height="36" fill="#fff" />
+          <Arrow x1={74} y1={8} x2={74} y2={24} />
         </>
       );
     case "face-frame":
     case "face-later":
       return (
         <>
-          <rect x="18" y="12" width="44" height="40" />
-          <rect x="26" y="20" width="28" height="24" />
+          <polygon points="18,34 86,22 138,36 138,92 86,104 18,90" />
+          <rect x="44" y="14" width="14" height="78" />
+          <rect x="108" y="18" width="14" height="78" />
+          <rect x="58" y="14" width="50" height="12" />
+          <rect x="58" y="80" width="50" height="12" />
+          <Arrow x1={72} y1={48} x2={56} y2={48} />
         </>
       );
     case "doors":
       return (
         <>
-          <rect x="16" y="10" width="48" height="44" />
-          <rect x="22" y="16" width="18" height="32" />
-          <rect x="42" y="16" width="16" height="32" />
-          <circle cx="38" cy="32" r="1.6" fill="#000" stroke="none" />
+          <polygon points="22,24 92,14 92,98 22,88" />
+          <rect x="102" y="22" width="36" height="70" />
+          <path d="M92,36 A18,18 0 0 1 102,50" fill="none" />
+          <circle cx="86" cy="40" r="3.2" />
+          <Arrow x1={118} y1={56} x2={96} y2={56} />
         </>
       );
     case "drawers":
     case "fronts-later":
       return (
         <>
-          <rect x="16" y="10" width="48" height="44" />
-          <rect x="22" y="16" width="28" height="10" />
-          <rect x="22" y="28" width="36" height="10" />
-          <rect x="22" y="40" width="28" height="8" />
+          <polygon points="18,22 86,12 86,96 18,86" />
+          <rect x="40" y="30" width="78" height="22" />
+          <rect x="48" y="36" width="18" height="6" />
+          <Arrow x1={132} y1={42} x2={118} y2={42} />
         </>
       );
     case "shelves":
       return (
         <>
-          <rect x="18" y="10" width="44" height="44" />
-          <path d="M22 24 H58 M22 36 H58 M22 48 H58" />
-          <circle cx="26" cy="24" r="1.4" fill="#000" stroke="none" />
-          <circle cx="26" cy="36" r="1.4" fill="#000" stroke="none" />
+          <polygon points="22,20 70,10 128,24 128,92 70,102 22,82" />
+          <path d="M22,48 L70,58 L128,52" fill="none" />
+          <rect x="40" y="44" width="72" height="10" />
+          <circle cx="36" cy="50" r="2.4" fill="#000" stroke="none" />
+          <circle cx="112" cy="54" r="2.4" fill="#000" stroke="none" />
+          <Arrow x1={80} y1={28} x2={80} y2={42} />
         </>
       );
     case "finish":
       return (
         <>
-          <rect x="16" y="14" width="32" height="36" />
-          <path d="M52 18 L64 30 M58 14 L70 26" />
-          <rect x="60" y="28" width="8" height="18" />
+          <polygon points="24,28 78,16 130,30 130,88 78,100 24,86" />
+          <path d="M78,16 L78,100" fill="none" />
+          <rect x="118" y="40" width="10" height="28" />
+          <path d="M118,40 L138,28" fill="none" />
         </>
       );
     case "measure":
       return (
         <>
-          <rect x="10" y="28" width="60" height="10" />
-          <path d="M18 28 V24 M30 28 V22 M42 28 V24 M54 28 V22" />
-          <path d="M22 16 H42 V20" />
+          <rect x="18" y="36" width="124" height="16" />
+          <path d="M34,36 V28 M58,36 V24 M82,36 V28 M106,36 V24 M130,36 V28" fill="none" />
+          <path d="M40,70 H90 V82 H40 Z" />
         </>
       );
     case "cut":
-    case "cut-panels-alt":
       return (
         <>
-          <rect x="12" y="26" width="56" height="12" />
-          <path d="M40 12 L52 26 L44 26 L56 42" />
+          <rect x="16" y="48" width="128" height="16" />
+          <path d="M86,18 L104,48 L92,48 L112,84" fill="#fff" />
         </>
       );
     case "slab":
@@ -138,19 +193,23 @@ function drawing(kind: string) {
     case "cope":
       return (
         <>
-          <rect x="22" y="8" width="36" height="48" />
-          <rect x="28" y="16" width="24" height="32" />
-          <path d="M22 8 L28 16 M58 8 L52 16 M22 56 L28 48 M58 56 L52 48" />
+          <rect x="44" y="10" width="72" height="92" />
+          <rect x="56" y="26" width="48" height="60" />
+          <path d="M44,10 L56,26 M116,10 L104,26 M44,102 L56,86 M116,102 L104,86" fill="none" />
+          <Arrow x1={28} y1={56} x2={42} y2={56} />
         </>
       );
     case "cups":
     case "hang":
       return (
         <>
-          <rect x="18" y="10" width="28" height="44" />
-          <circle cx="28" cy="22" r="5" />
-          <circle cx="28" cy="42" r="5" />
-          <rect x="50" y="20" width="16" height="24" />
+          <rect x="22" y="12" width="54" height="88" />
+          <circle cx="40" cy="32" r="8" />
+          <circle cx="40" cy="32" r="3" fill="#000" stroke="none" />
+          <circle cx="40" cy="74" r="8" />
+          <circle cx="40" cy="74" r="3" fill="#000" stroke="none" />
+          <rect x="96" y="28" width="40" height="56" />
+          <Arrow x1={88} y1={56} x2={76} y2={56} />
         </>
       );
     case "label":
@@ -158,18 +217,18 @@ function drawing(kind: string) {
     case "check":
       return (
         <>
-          <rect x="12" y="16" width="22" height="32" />
-          <rect x="30" y="16" width="22" height="32" />
-          <rect x="48" y="16" width="20" height="32" />
-          <path d="M18 12 H26 M54 12 H62" />
+          <rect x="16" y="24" width="36" height="64" />
+          <rect x="58" y="24" width="36" height="64" />
+          <rect x="100" y="24" width="36" height="64" />
+          <path d="M24,16 H44 M108,16 H128" fill="none" />
         </>
       );
     default:
       return (
         <>
-          <rect x="16" y="18" width="20" height="28" />
-          <rect x="44" y="18" width="20" height="28" />
-          <path d="M36 32 H44" />
+          <polygon points="20,30 52,18 52,86 20,98" />
+          <rect x="72" y="40" width="56" height="16" />
+          <Arrow x1={68} y1={48} x2={54} y2={48} />
         </>
       );
   }

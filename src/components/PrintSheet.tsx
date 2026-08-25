@@ -67,15 +67,17 @@ export function PrintSheet({
             {steps.map((step, index) => (
               <li
                 key={`${step.id ?? step.text}-${index}`}
-                className="print-step grid grid-cols-[4.5rem_1fr] items-start gap-3 border-b border-neutral-300 py-2"
+                className="print-step grid grid-cols-[9rem_1fr] items-center gap-4 border-b border-neutral-300 py-3"
               >
-                <div>
-                  <p className="mb-1 font-mono text-[10px]">{index + 1}</p>
+                <div className="flex items-start gap-2">
+                  <span className="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full border border-black font-mono text-[11px]">
+                    {index + 1}
+                  </span>
                   <StepArt id={step.id} text={step.text} />
                 </div>
-                <div className="pt-1 text-[12px] leading-5">
+                <div className="text-[13px] leading-5">
                   <p>{step.text}</p>
-                  {step.detail ? <p className="mt-0.5 text-[11px] text-neutral-600">{step.detail}</p> : null}
+                  {step.detail ? <p className="mt-1 text-[11px] text-neutral-600">{step.detail}</p> : null}
                 </div>
               </li>
             ))}
