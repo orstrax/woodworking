@@ -1,11 +1,12 @@
 "use client";
 
+import { StepArt } from "@/components/StepArt";
 import { Blueprint } from "@/components/Visuals";
 import type { ReactNode } from "react";
 
 export type PrintFact = { label: string; value: string; note?: string };
 export type PrintRow = { name: string; qty: number | string; size: string; note?: string };
-export type PrintStep = { text: string; detail?: string };
+export type PrintStep = { id?: string; text: string; detail?: string };
 export type PrintSection = { heading: string; rows: PrintRow[] };
 
 export function PrintSheet({
@@ -25,42 +26,59 @@ export function PrintSheet({
   figures?: ReactNode;
   note?: string;
 }) {
+  const hasCuts = Boolean((rows && rows.length) || (sections && sections.length));
   return (
     <article className="print-sheet hidden print:block text-black">
-      <div className="mb-3 border-b border-black pb-2">
-        <p className="text-[9px] uppercase tracking-[0.2em]">Story Stick · shop copy</p>
+      <section className="print-page">
+        <p className="text-[9px] uppercase tracking-[0.2em]">Story Stick · shop copy · overview</p>
         <h1 className="font-display text-2xl leading-tight tracking-tight">{title}</h1>
         {note ? <p className="mt-1 text-xs">{note}</p> : null}
-      </div>
-      {facts && facts.length > 0 ? (
-        <dl className="mb-3 grid grid-cols-2 gap-x-8 gap-y-1.5">
-          {facts.map((fact) => (
-            <div key={fact.label} className="border-b border-neutral-300 py-1">
-              <dt className="text-[9px] uppercase tracking-[0.14em] text-neutral-600">{fact.label}</dt>
-              <dd className="font-mono text-sm">{fact.value}</dd>
-              {fact.note ? <p className="text-[11px] text-neutral-700">{fact.note}</p> : null}
-            </div>
-          ))}
-        </dl>
-      ) : null}
+        {facts && facts.length > 0 ? (
+          <dl className="mt-3 grid grid-cols-2 gap-x-8 gap-y-1.5">
+            {facts.map((fact) => (
+              <div key={fact.label} className="border-b border-neutral-300 py-1">
+                <dt className="text-[9px] uppercase tracking-[0.14em] text-neutral-600">{fact.label}</dt>
+                <dd className="font-mono text-sm">{fact.value}</dd>
+                {fact.note ? <p className="text-[11px] text-neutral-700">{fact.note}</p> : null}
+              </div>
+            ))}
+          </dl>
+        ) : null}
+        {rows && rows.length > 0 ? <CutTable heading="Cut list" rows={rows} /> : null}
+        {sections?.map((section) => (
+          <CutTable key={section.heading} heading={section.heading} rows={section.rows} />
+        ))}
+        {!hasCuts && !(facts && facts.length) ? (
+          <p className="mt-3 text-xs">Fill the numbers on screen, then print.</p>
+        ) : null}
+      </section>
       {figures ? (
-        <section className="blueprint-art mb-3">
-          <h2 className="mb-1 text-[9px] uppercase tracking-[0.16em]">Assembly — line art</h2>
+        <section className="print-page blueprint-art">
+          <p className="text-[9px] uppercase tracking-[0.2em]">Story Stick · {title} · assembly</p>
+          <h2 className="mb-2 font-display text-xl leading-tight tracking-tight">Line art — how it goes together</h2>
           <Blueprint>{figures}</Blueprint>
         </section>
       ) : null}
-      {rows && rows.length > 0 ? <CutTable heading="Cut list" rows={rows} /> : null}
-      {sections?.map((section) => (
-        <CutTable key={section.heading} heading={section.heading} rows={section.rows} />
-      ))}
       {steps && steps.length > 0 ? (
-        <section className="mt-3">
-          <h2 className="mb-1 text-[9px] uppercase tracking-[0.16em]">Bench steps</h2>
-          <ol className="list-decimal space-y-1 pl-5 text-[12px] leading-5">
+        <section className="print-page">
+          <p className="text-[9px] uppercase tracking-[0.2em]">Story Stick · {title} · bench steps</p>
+          <h2 className="mb-2 font-display text-xl leading-tight tracking-tight">Put it together</h2>
+          <ol className="m-0 list-none p-0">
             {steps.map((step, index) => (
-              <li key={index}>
-                {step.text}
-                {step.detail ? <span className="block text-[11px] text-neutral-600">{step.detail}</span> : null}
+              <li
+                key={`${step.id ?? step.text}-${index}`}
+                className="print-step grid grid-cols-[9rem_1fr] items-center gap-4 border-b border-neutral-300 py-3"
+              >
+                <div className="flex items-start gap-2">
+                  <span className="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full border border-black font-mono text-[11px]">
+                    {index + 1}
+                  </span>
+                  <StepArt id={step.id} text={step.text} />
+                </div>
+                <div className="text-[13px] leading-5">
+                  <p>{step.text}</p>
+                  {step.detail ? <p className="mt-1 text-[11px] text-neutral-600">{step.detail}</p> : null}
+                </div>
               </li>
             ))}
           </ol>
@@ -72,7 +90,7 @@ export function PrintSheet({
 
 function CutTable({ heading, rows }: { heading: string; rows: PrintRow[] }) {
   return (
-    <section className="mb-3">
+    <section className="mt-3">
       <h2 className="mb-1 text-[9px] uppercase tracking-[0.16em]">{heading}</h2>
       <table className="w-full border-collapse text-[11px]">
         <thead>

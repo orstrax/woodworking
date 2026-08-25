@@ -269,7 +269,7 @@ function CabinetBoxInner() {
         }
         printFigures={plan ? <CabinetBoxPictures plan={plan} /> : undefined}
         printRows={plan?.parts.map(({ name, qty, size, note }) => ({ name, qty, size, note }))}
-        printSteps={plan?.steps.map(({ text, detail }) => ({ text, detail }))}
+        printSteps={plan?.steps.map(({ id, text, detail }) => ({ id, text, detail }))}
         note={plan ? `${formatInches(plan.overallW)} ${plan.layout.label}` : undefined}
         plan={
           plan ? (
