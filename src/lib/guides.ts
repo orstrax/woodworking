@@ -140,6 +140,22 @@ export type ToolGuide = {
 
 export const TOOL_GUIDES: ToolGuide[] = [
   {
+    slug: "kitchen-plan",
+    firstTime:
+      "Walk the kitchen with a tape. Each hole inside a face frame is one opening. Write the name on the cabinet (Sink base, Upper L1) so the cut list matches the room.",
+    shopHabit:
+      "Same overlay on every door so the kitchen reads as one. Pair doors need a mid-gap. Print the shop summary and gang matching stile lengths, then cut cabinet by cabinet so parts do not wander.",
+    finePoint:
+      "Applied-miter frames: long-point length is the finished door width or height. Cope-and-stick rails are shorter — they sit between the stiles. Do not mix those two lists.",
+    mistakes: [
+      "Measuring the outside of the box instead of the opening.",
+      "Putting doors and a drawer stack in one height without a separate drawer-stack measurement.",
+      "Cutting every stile to the first door on the list.",
+    ],
+    words: ["Opening", "Face frame", "Overlay", "Reveal", "Stile", "Rail", "Story stick"],
+    related: ["cabinet-doors", "shaker-door", "drawers"],
+  },
+  {
     slug: "cabinet-doors",
     firstTime:
       "Measure the hole inside the face frame (opening), not the whole cabinet. Then pick how the door should sit: covering the frame (overlay), showing a strip of frame (reveal), or tucked in the hole (inset).",
@@ -153,7 +169,7 @@ export const TOOL_GUIDES: ToolGuide[] = [
       "Ordering frameless hinges for a face-frame cabinet.",
     ],
     words: ["Opening", "Face frame", "Overlay", "Reveal", "Inset", "Cup hinge (35mm)", "Stile", "Rail"],
-    related: ["shaker-door", "drawers", "square"],
+    related: ["kitchen-plan", "shaker-door", "drawers", "square"],
   },
   {
     slug: "shaker-door",
@@ -169,7 +185,7 @@ export const TOOL_GUIDES: ToolGuide[] = [
       "Applied-miter rails cut to short-point instead of long-point.",
     ],
     words: ["Stile", "Rail", "Cope-and-stick", "Story stick"],
-    related: ["cabinet-doors", "movement", "glue-up"],
+    related: ["kitchen-plan", "cabinet-doors", "movement", "glue-up"],
   },
   {
     slug: "drawers",
@@ -185,7 +201,7 @@ export const TOOL_GUIDES: ToolGuide[] = [
       "Numbering stacked fronts from the bottom. This site numbers top as 1.",
     ],
     words: ["Overlay", "Reveal", "Inset", "Undermount slide", "Opening"],
-    related: ["cabinet-doors", "square", "spacing"],
+    related: ["kitchen-plan", "cabinet-doors", "square", "spacing"],
   },
   {
     slug: "board-feet",

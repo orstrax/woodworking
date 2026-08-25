@@ -9,7 +9,7 @@ export function ShopGuide({ slug }: { slug: string }) {
   const words = guide.words.map((term) => getWord(term)).filter(Boolean);
 
   return (
-    <section className="mt-14 grid gap-8">
+    <section className="mt-14 grid gap-8 print:hidden">
       <div>
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-shellac">Shop notes</p>
         <h2 className="mt-1 font-display text-3xl tracking-tight">From first project to fine furniture.</h2>

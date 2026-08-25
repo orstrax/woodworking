@@ -58,3 +58,19 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+@media print {
+  body {
+    background: #fff !important;
+    color: #24180f;
+  }
+
+  .print-break {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  a[href]::after {
+    content: none !important;
+  }
+}

@@ -28,6 +28,12 @@ export default function Home() {
                 Start here
               </Link>
               <Link
+                href="/tools/kitchen-plan"
+                className="rounded-full border border-rule bg-paper/80 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-walnut"
+              >
+                Kitchen planner
+              </Link>
+              <Link
                 href="#tools"
                 className="rounded-full border border-rule bg-paper/80 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-walnut"
               >

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-8 border-t border-rule/80 bg-[#efe4cc]/50">
+    <footer className="mt-8 border-t border-rule/80 bg-[#efe4cc]/50 print:hidden">
       <div className="mx-auto grid max-w-6xl gap-6 px-5 py-10 text-sm text-ink-soft sm:grid-cols-3 sm:px-8">
         <div>
           <p className="font-display text-lg text-ink">Story Stick</p>
@@ -12,6 +12,9 @@ export function SiteFooter() {
           </p>
         </div>
         <div className="grid gap-1">
+          <Link href="/tools/kitchen-plan" className="hover:text-walnut">
+            Kitchen planner
+          </Link>
           <Link href="/#tools" className="hover:text-walnut">
             All tools
           </Link>

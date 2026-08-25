@@ -9,6 +9,7 @@ import { DovetailCalc } from "@/components/calcs/DovetailCalc";
 import { DrawerCalc } from "@/components/calcs/DrawerCalc";
 import { GlueUpCalc } from "@/components/calcs/GlueUpCalc";
 import { KerfCalc } from "@/components/calcs/KerfCalc";
+import { KitchenPlanner } from "@/components/calcs/KitchenPlanner";
 import { MeasureCalc } from "@/components/calcs/MeasureCalc";
 import { MiterCalc } from "@/components/calcs/MiterCalc";
 import { MovementCalc } from "@/components/calcs/MovementCalc";
@@ -33,6 +34,7 @@ export async function generateMetadata({ params }: PageProps<"/tools/[slug]">) {
 }
 
 const CALCS: Record<string, ComponentType> = {
+  "kitchen-plan": KitchenPlanner,
   "cabinet-doors": CabinetDoorCalc,
   "shaker-door": ShakerDoorCalc,
   drawers: DrawerCalc,
@@ -57,7 +59,7 @@ export default async function ToolPage({ params }: PageProps<"/tools/[slug]">) {
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
-      <div className="flex flex-wrap items-center gap-4">
+      <div className="flex flex-wrap items-center gap-4 print:hidden">
         <Link
           href="/#tools"
           className="font-mono text-[11px] uppercase tracking-[0.18em] text-walnut hover:text-shellac"

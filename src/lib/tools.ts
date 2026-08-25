@@ -44,6 +44,15 @@ export type Tool = {
 
 export const TOOLS: Tool[] = [
   {
+    slug: "kitchen-plan",
+    name: "Kitchen planner",
+    tag: "Cabinets",
+    group: "cabinets",
+    summary: "Measure every opening, then print a cut list grouped by cabinet and rolled up for the shop.",
+    description:
+      "Plan the kitchen: doors, pairs, and drawer stacks. Each hole keeps its own parts, then a summary gangs matching sizes.",
+  },
+  {
     slug: "cabinet-doors",
     name: "Cabinet doors",
     tag: "Cabinets",
