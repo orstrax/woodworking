@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #f3ead7;
+  --paper-2: #e9dcc3;
+  --ink: #24180f;
+  --ink-soft: #5c4633;
+  --rule: #cbb896;
+  --walnut: #6b3a1f;
+  --shellac: #c45c26;
+  --iron: #2f2a26;
+  --sawdust: #d8c39a;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-rule: var(--rule);
+  --color-walnut: var(--walnut);
+  --color-shellac: var(--shellac);
+  --color-iron: var(--iron);
+  --color-sawdust: var(--sawdust);
+  --font-sans: var(--font-source);
+  --font-display: var(--font-fraunces);
+  --font-mono: var(--font-ibm);
+}
+
+html {
+  background: var(--paper);
+}
+
+body {
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(196, 92, 38, 0.08), transparent 50%),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 47px,
+      rgba(36, 24, 15, 0.035) 47px,
+      rgba(36, 24, 15, 0.035) 48px
+    ),
+    var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), "Segoe UI", sans-serif;
+}
+
+::selection {
+  background: #e2b48a;
+  color: var(--ink);
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}

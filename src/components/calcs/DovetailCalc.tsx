@@ -1,0 +1,82 @@
+"use client";
+
+import { Field, NumberInput, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
+import { formatInches, parseInches } from "@/lib/measure";
+import { useMemo, useState } from "react";
+
+export function DovetailCalc() {
+  const [width, setWidth] = useState("6 1/2");
+  const [tails, setTails] = useState(3);
+  const [ratio, setRatio] = useState("1:8");
+
+  const result = useMemo(() => {
+    const board = parseInches(width);
+    const n = Math.max(1, Math.round(tails));
+    if (!board) return null;
+    const pins = n + 1;
+    const units = n * 2 + pins * 1;
+    const unit = board / units;
+    const tailW = unit * 2;
+    const pinW = unit;
+    const slope = ratio === "1:6" ? 6 : 8;
+    const angle = (Math.atan(1 / slope) * 180) / Math.PI;
+    const marks: { kind: "pin" | "tail"; start: number; end: number }[] = [];
+    let cursor = 0;
+    for (let i = 0; i < pins; i += 1) {
+      marks.push({ kind: "pin", start: cursor, end: cursor + pinW });
+      cursor += pinW;
+      if (i < n) {
+        marks.push({ kind: "tail", start: cursor, end: cursor + tailW });
+        cursor += tailW;
+      }
+    }
+    return { tailW, pinW, angle, slope, marks };
+  }, [width, tails, ratio]);
+
+  return (
+    <ToolFrame
+      title="Dovetail layout"
+      description="Half pins on both ends, even tails in between. Mark from the baseline along the board width. Hardwood often uses 1:8; softwood 1:6."
+      results={
+        result ? (
+          <>
+            <Result label="Tail width" value={formatInches(result.tailW)} />
+            <Result label="Pin / half-pin" value={formatInches(result.pinW)} />
+            <Result
+              label="Slope"
+              value={`1:${result.slope}`}
+              note={`${result.angle.toFixed(1)}° off square.`}
+            />
+            <div className="pt-3">
+              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-sawdust">
+                Marks from edge
+              </p>
+              <ol className="mt-2 space-y-1 font-mono text-sm">
+                {result.marks.map((mark, index) => (
+                  <li key={index}>
+                    {mark.kind} {formatInches(mark.start)} – {formatInches(mark.end)}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </>
+        ) : (
+          <Result label="Need a width" value="—" />
+        )
+      }
+    >
+      <Field label="Board width">
+        <TextInput value={width} onChange={setWidth} />
+      </Field>
+      <Field label="Number of tails">
+        <NumberInput value={tails} min={1} step="1" onChange={setTails} />
+      </Field>
+      <Field label="Slope">
+        <SelectInput value={ratio} onChange={setRatio}>
+          <option value="1:8">1:8 hardwood</option>
+          <option value="1:6">1:6 softwood</option>
+        </SelectInput>
+      </Field>
+    </ToolFrame>
+  );
+}
