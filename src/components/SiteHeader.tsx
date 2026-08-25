@@ -4,11 +4,10 @@ import Link from "next/link";
 import { useEffect, useId, useState } from "react";
 
 const LINKS = [
-  { href: "/tools/kitchen-plan", label: "Kitchen planner" },
-  { href: "/tools/cabinet-box", label: "Box builder" },
-  { href: "/#tools", label: "Tools" },
-  { href: "/#start", label: "Start here" },
-  { href: "/shop-words", label: "Shop words" },
+  { href: "/#start", label: "Start Here" },
+  { href: "/tools/kitchen-plan", label: "Kitchen Planner" },
+  { href: "/#tools", label: "All Tools" },
+  { href: "/shop-words", label: "Shop Words" },
 ];
 
 export function SiteHeader() {
@@ -25,32 +24,36 @@ export function SiteHeader() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-30 bg-[#f6efe4]/95 print:hidden">
-      <div className="mx-auto flex h-[var(--site-header-h)] max-w-6xl items-center justify-between gap-3 border-b border-rule/70 px-5 sm:px-8">
-        <Link href="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
+    <header className="sticky top-0 z-30 border-b border-rule/80 bg-paper/95 print:hidden backdrop-blur-sm">
+      <div className="mx-auto flex h-[var(--site-header-h)] max-w-6xl items-center justify-between gap-3 px-5 sm:px-8">
+        <Link href="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
           <span
             aria-hidden
-            className="grid h-6 w-6 place-items-center rounded-md border border-walnut/30 bg-iron text-paper"
+            className="grid h-8 w-8 place-items-center rounded-[8px] bg-walnut text-paper"
           >
-            <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
               <path d="M2 14.5h14" stroke="currentColor" strokeWidth="1.4" />
-              <path d="M3 14.5V4.5h2.2v10" stroke="currentColor" strokeWidth="1.4" />
-              <path d="M8 14.5V7h2.2v7.5" stroke="currentColor" strokeWidth="1.4" />
-              <path d="M13 14.5V5.5h2.2V14.5" stroke="currentColor" strokeWidth="1.4" />
+              <path d="M3 14.5V4.5h2.2v10" stroke="currentColor" strokeWidth="1.5" />
+              <path d="M8 14.5V7h2.2v7.5" stroke="currentColor" strokeWidth="1.5" />
+              <path d="M13 14.5V5.5h2.2V14.5" stroke="currentColor" strokeWidth="1.5" />
             </svg>
           </span>
-          <span className="font-display text-base leading-none tracking-tight">Story Stick</span>
+          <span className="font-display text-lg leading-none tracking-tight">Story Stick</span>
         </Link>
-        <nav className="hidden items-center gap-4 font-mono text-[11px] uppercase tracking-[0.16em] text-walnut md:flex">
+        <nav className="hidden items-center gap-1 text-sm font-medium text-walnut md:flex">
           {LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className="hover:text-shellac">
+            <Link
+              key={link.href}
+              href={link.href}
+              className="rounded-[8px] px-3 py-2 hover:bg-paper-2/80 hover:text-ink"
+            >
               {link.label}
             </Link>
           ))}
         </nav>
         <button
           type="button"
-          className="grid h-8 w-8 place-items-center text-walnut md:hidden"
+          className="grid h-11 w-11 place-items-center rounded-[10px] text-walnut md:hidden"
           aria-expanded={open}
           aria-controls={menuId}
           aria-label={open ? "Close menu" : "Open menu"}
@@ -60,13 +63,13 @@ export function SiteHeader() {
         </button>
       </div>
       {open ? (
-        <div id={menuId} className="border-b border-rule/70 bg-[#f6efe4] px-5 py-3 md:hidden">
-          <nav className="grid gap-0.5 font-mono text-sm uppercase tracking-[0.14em] text-walnut">
+        <div id={menuId} className="border-t border-rule/80 bg-paper px-5 py-3 md:hidden">
+          <nav className="grid gap-1 text-base font-medium text-ink">
             {LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-md px-2 py-2 hover:bg-paper"
+                className="min-h-11 rounded-[10px] px-3 py-3 hover:bg-paper-2"
                 onClick={() => setOpen(false)}
               >
                 {link.label}

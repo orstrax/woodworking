@@ -355,9 +355,9 @@ export function Picture({
     );
   }
   return (
-    <figure className="print-break overflow-hidden rounded-sm border border-rule bg-[#fbf6eb] shadow-[4px_4px_0_rgba(36,24,15,0.06)]">
+    <figure className="print-break overflow-hidden rounded-[12px] border border-rule bg-surface shadow-[var(--shadow-sm)]">
       <figcaption className="border-b border-rule px-4 py-4 sm:px-6">
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-shellac">Picture</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-shellac">Picture</p>
         <h3 className="mt-1 font-display text-2xl tracking-tight sm:text-3xl">{title}</h3>
         <p className="mt-2 max-w-2xl text-base leading-7 text-ink-soft">{caption}</p>
       </figcaption>

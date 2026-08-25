@@ -58,22 +58,22 @@ export default async function ToolPage({ params }: PageProps<"/tools/[slug]">) {
   if (!tool || !Calc) notFound();
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14 print:max-w-none print:p-0">
-      <div className="flex flex-wrap items-center gap-4 print:hidden">
+    <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12 print:max-w-none print:p-0">
+      <div className="flex flex-wrap items-center gap-3 print:hidden">
         <Link
           href="/#tools"
-          className="font-mono text-[11px] uppercase tracking-[0.18em] text-walnut hover:text-shellac"
+          className="inline-flex min-h-11 items-center text-sm font-semibold text-walnut hover:text-ink"
         >
           ← All tools
         </Link>
         <Link
           href="/shop-words"
-          className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft hover:text-shellac"
+          className="inline-flex min-h-11 items-center text-sm font-medium text-ink-soft hover:text-ink"
         >
           Shop words
         </Link>
       </div>
-      <div className="mt-6 print:mt-0">
+      <div className="mt-4 print:mt-0">
         <Calc />
       </div>
       <ShopGuide slug={slug} />

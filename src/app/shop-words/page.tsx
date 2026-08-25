@@ -12,10 +12,10 @@ export default function ShopWordsPage() {
   return (
     <div className="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-16 print:max-w-none print:p-0">
       <div className="print:hidden">
-      <Link href="/" className="font-mono text-[11px] uppercase tracking-[0.18em] text-walnut hover:text-shellac">
+      <Link href="/" className="inline-flex min-h-11 items-center text-sm font-semibold text-walnut hover:text-ink">
         ← Home
       </Link>
-      <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.2em] text-shellac">Glossary</p>
+      <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.2em] text-shellac">Glossary</p>
       <h1 className="mt-2 font-display text-5xl tracking-tight">Shop words</h1>
       <p className="mt-4 max-w-xl text-lg leading-8 text-ink-soft">
         Nothing here is a secret handshake. These are the names on the pictures, said the way a

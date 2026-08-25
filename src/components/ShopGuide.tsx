@@ -24,7 +24,7 @@ export function ShopGuide({ slug }: { slug: string }) {
         <NoteCard kicker="The fussy bit" title="Experienced" body={guide.finePoint} />
       </div>
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="rounded-xl border border-rule bg-paper/70 p-5">
+        <div className="rounded-[12px] border border-rule bg-surface p-5 shadow-[var(--shadow-sm)]">
           <h3 className="font-display text-xl tracking-tight">Easy to get wrong</h3>
           <ul className="mt-3 grid gap-2 text-sm leading-6 text-ink-soft">
             {guide.mistakes.map((item) => (
@@ -35,7 +35,7 @@ export function ShopGuide({ slug }: { slug: string }) {
             ))}
           </ul>
         </div>
-        <div className="rounded-xl border border-rule bg-paper/70 p-5">
+        <div className="rounded-[12px] border border-rule bg-surface p-5 shadow-[var(--shadow-sm)]">
           <h3 className="font-display text-xl tracking-tight">Words on this page</h3>
           <ul className="mt-3 grid gap-3">
             {words.map((word) =>
@@ -48,7 +48,7 @@ export function ShopGuide({ slug }: { slug: string }) {
             )}
           </ul>
           <p className="mt-4">
-            <Link href="/shop-words" className="font-mono text-[11px] uppercase tracking-[0.16em] text-walnut">
+            <Link href="/shop-words" className="text-sm font-semibold text-walnut">
               All shop words →
             </Link>
           </p>
@@ -63,7 +63,7 @@ export function ShopGuide({ slug }: { slug: string }) {
                 <Link
                   key={tool.slug}
                   href={`/tools/${tool.slug}`}
-                  className="rounded-full border border-rule bg-paper px-3 py-1.5 text-sm text-ink hover:border-walnut/50"
+                  className="inline-flex min-h-11 items-center rounded-[10px] border border-rule bg-surface px-3 text-sm font-semibold text-ink hover:border-walnut/50"
                 >
                   {tool.name}
                 </Link>
@@ -78,7 +78,7 @@ export function ShopGuide({ slug }: { slug: string }) {
 
 function NoteCard({ kicker, title, body }: { kicker: string; title: string; body: string }) {
   return (
-    <article className="rounded-xl border border-rule bg-gradient-to-b from-[#fbf6eb] to-paper/80 p-5">
+    <article className="rounded-[12px] border border-rule bg-surface p-5 shadow-[var(--shadow-sm)]">
       <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-shellac">{kicker}</p>
       <h3 className="mt-1 font-display text-2xl tracking-tight">{title}</h3>
       <p className="mt-3 text-sm leading-7 text-ink-soft">{body}</p>

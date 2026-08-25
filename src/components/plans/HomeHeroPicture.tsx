@@ -1,6 +1,6 @@
 export function HomeHeroPicture() {
   return (
-    <figure className="overflow-hidden rounded-2xl border border-rule/80 bg-[#fbf6eb] shadow-[0_24px_50px_-28px_rgba(36,24,15,0.55)]">
+    <figure className="overflow-hidden rounded-[16px] border border-rule bg-surface shadow-[var(--shadow-sm)]">
       <svg viewBox="0 0 560 380" className="block w-full" role="img" aria-label="A labeled kitchen cabinet wall">
         <defs>
           <pattern id="hero-oak" width="18" height="12" patternUnits="userSpaceOnUse">

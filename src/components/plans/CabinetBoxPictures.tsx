@@ -25,12 +25,54 @@ export function StickyFace({ plan }: { plan: CabinetBoxPlan }) {
         <FaceDrawing plan={plan} drawing={drawing} compact />
       </svg>
       <div className="min-w-0">
-        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-shellac">Live picture</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-shellac">Live picture</p>
         <p className="truncate font-display text-lg leading-tight tracking-tight">{plan.layout.label}</p>
-        <p className="font-mono text-[11px] text-ink-soft">
-          {formatInches(plan.overallW)} × {formatInches(plan.overallH)}
+        <p className="font-mono text-[13px] text-ink-soft">
+          {formatInches(plan.overallW)} × {formatInches(plan.overallH)} × {formatInches(plan.overallD)}
         </p>
       </div>
+    </div>
+  );
+}
+
+export function LiveFace({ plan, compact }: { plan: CabinetBoxPlan; compact?: boolean }) {
+  const drawing = faceMetrics(plan, compact);
+  return (
+    <div className="overflow-hidden rounded-[12px] border border-rule bg-surface shadow-[var(--shadow-sm)]">
+      {compact ? null : (
+        <div className="px-4 pt-4">
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-shellac">Live picture</p>
+          <p className="mt-1 font-display text-2xl tracking-tight">{plan.layout.label}</p>
+          <p className="mt-0.5 font-mono text-sm text-ink-soft">
+            {formatInches(plan.overallW)} × {formatInches(plan.overallH)} × {formatInches(plan.overallD)}
+          </p>
+        </div>
+      )}
+      <svg
+        viewBox={drawing.viewBox}
+        className={`w-full ${compact ? "max-h-56 px-3 py-2" : "mt-1"}`}
+        role="img"
+        aria-label={`${plan.layout.label} ${formatInches(plan.overallW)} wide by ${formatInches(plan.overallH)} high`}
+      >
+        <WoodDefs />
+        <FaceDrawing plan={plan} drawing={drawing} compact={compact} />
+      </svg>
+      {compact ? null : (
+        <dl className="grid grid-cols-3 border-t border-rule text-center">
+          <LiveDim label="Width" value={formatInches(plan.overallW)} />
+          <LiveDim label="Height" value={formatInches(plan.overallH)} />
+          <LiveDim label="Depth" value={formatInches(plan.overallD)} />
+        </dl>
+      )}
+    </div>
+  );
+}
+
+function LiveDim({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border-r border-rule px-2 py-3 last:border-r-0">
+      <dt className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-soft">{label}</dt>
+      <dd className="mt-0.5 font-mono text-sm font-medium sm:text-base">{value}</dd>
     </div>
   );
 }

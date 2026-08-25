@@ -73,86 +73,128 @@ export function BuildSheet({
   }));
   const doneParts = items.filter((row, index) => checks[`p-${index}-${row.name}`]).length;
   const doneSteps = (steps ?? []).filter((step) => checks[`s-${step.id}`]).length;
+  const stepTotal = steps?.length ?? 0;
+  const stepPct = stepTotal ? Math.round((doneSteps / stepTotal) * 100) : 0;
 
   return (
     <div className="grid gap-5 print:hidden">
       {items.length > 0 ? (
-        <div className="print-break overflow-x-auto border border-rule">
-          <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-rule bg-paper-2/60 px-3 py-2">
+        <div className="print-break rounded-[12px] border border-rule bg-surface shadow-[var(--shadow-sm)]">
+          <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-rule px-4 py-3">
             <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-soft">{title}</p>
-            <p className="font-mono text-[11px] text-ink-soft print:hidden">
-              {doneParts}/{items.length} parts checked
+            <p className="text-sm text-ink-soft print:hidden">
+              {doneParts} of {items.length} parts checked
             </p>
           </div>
-          <table className="w-full text-left text-sm">
-            <thead className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-soft">
-              <tr>
-                <th className="w-10 px-3 py-2 font-medium print:w-8"> </th>
-                <th className="w-14 px-1 py-2 font-medium"> </th>
-                <th className="px-3 py-2 font-medium">Part</th>
-                <th className="px-3 py-2 font-medium">Qty</th>
-                <th className="px-3 py-2 font-medium">Cut</th>
-                <th className="px-3 py-2 font-medium">Note</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((row, index) => {
-                const id = `p-${index}-${row.name}`;
-                const on = Boolean(checks[id]);
-                return (
-                  <tr key={id} className={`border-t border-rule/70 ${on ? "bg-paper-2/40 text-ink-soft" : ""}`}>
-                    <td className="px-3 py-2 align-middle">
-                      <CheckBox
-                        checked={on}
-                        label={`Mark ${row.name} cut`}
-                        onChange={() => toggle(storageKey, id)}
-                      />
-                    </td>
-                    <td className="px-1 py-2 align-middle">
-                      <PartThumb kind={row.kind} />
-                    </td>
-                    <td className={`px-3 py-2 font-medium ${on ? "line-through" : ""}`}>{row.name}</td>
-                    <td className="px-3 py-2 font-mono">{row.qty}</td>
-                    <td className="px-3 py-2 font-mono">{row.size}</td>
-                    <td className="px-3 py-2 text-ink-soft">{row.note}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <ul className="divide-y divide-rule/80 sm:hidden">
+            {items.map((row, index) => {
+              const id = `p-${index}-${row.name}`;
+              const on = Boolean(checks[id]);
+              return (
+                <li key={id}>
+                  <button
+                    type="button"
+                    onClick={() => toggle(storageKey, id)}
+                    className={`flex min-h-14 w-full items-start gap-3 px-4 py-3 text-left ${on ? "text-ink-soft" : ""}`}
+                  >
+                    <CheckBox checked={on} label={`Mark ${row.name} cut`} />
+                    <PartThumb kind={row.kind} />
+                    <span className="min-w-0 flex-1">
+                      <span className={`block text-base font-semibold ${on ? "line-through" : ""}`}>{row.name}</span>
+                      <span className="mt-0.5 block font-mono text-base">
+                        {row.qty} × {row.size}
+                      </span>
+                      {row.note ? <span className="mt-0.5 block text-sm text-ink-soft">{row.note}</span> : null}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="hidden overflow-x-auto sm:block">
+            <table className="w-full text-left text-sm">
+              <thead className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-soft">
+                <tr>
+                  <th className="w-12 px-4 py-2 font-medium print:w-8"> </th>
+                  <th className="w-14 px-1 py-2 font-medium"> </th>
+                  <th className="px-3 py-2 font-medium">Part</th>
+                  <th className="px-3 py-2 font-medium">Qty</th>
+                  <th className="px-3 py-2 font-medium">Cut</th>
+                  <th className="px-3 py-2 font-medium">Note</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((row, index) => {
+                  const id = `p-${index}-${row.name}`;
+                  const on = Boolean(checks[id]);
+                  return (
+                    <tr key={id} className={`border-t border-rule/70 ${on ? "bg-paper-2/40 text-ink-soft" : ""}`}>
+                      <td className="px-4 py-3 align-middle">
+                        <CheckBox
+                          checked={on}
+                          label={`Mark ${row.name} cut`}
+                          onChange={() => toggle(storageKey, id)}
+                        />
+                      </td>
+                      <td className="px-1 py-3 align-middle">
+                        <PartThumb kind={row.kind} />
+                      </td>
+                      <td className={`px-3 py-3 text-base font-semibold ${on ? "line-through" : ""}`}>{row.name}</td>
+                      <td className="px-3 py-3 font-mono text-base">{row.qty}</td>
+                      <td className="px-3 py-3 font-mono text-base">{row.size}</td>
+                      <td className="px-3 py-3 text-ink-soft">{row.note}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       ) : null}
       {steps && steps.length > 0 ? (
-        <div className="print-break border border-rule bg-paper/80">
-          <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-rule px-4 py-3">
-            <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-shellac">On the bench</p>
-              <h3 className="mt-1 font-display text-xl tracking-tight">Steps — check them off as you go</h3>
+        <div className="print-break rounded-[12px] border border-rule bg-surface shadow-[var(--shadow-sm)]">
+          <div className="border-b border-rule px-4 py-4">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-shellac">On the bench</p>
+                <h3 className="mt-1 font-display text-2xl tracking-tight">Steps — check them off as you go</h3>
+              </div>
+              <p className="text-base font-semibold print:hidden">
+                {doneSteps} of {steps.length} complete
+              </p>
             </div>
-            <p className="font-mono text-[11px] text-ink-soft print:hidden">
-              {doneSteps}/{steps.length} done
-            </p>
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-paper-2 print:hidden" aria-hidden>
+              <div className="h-full rounded-full bg-walnut transition-[width]" style={{ width: `${stepPct}%` }} />
+            </div>
           </div>
-          <ol className="divide-y divide-rule/70">
+          <ol className="divide-y divide-rule/80">
             {steps.map((step, index) => {
               const id = `s-${step.id}`;
               const on = Boolean(checks[id]);
               return (
-                <li key={step.id} className="flex gap-3 px-4 py-3">
-                  <CheckBox
-                    checked={on}
-                    label={`Mark step ${index + 1} done`}
-                    onChange={() => toggle(storageKey, id)}
-                  />
-                  <div className={on ? "text-ink-soft" : ""}>
-                    <p className={`text-sm font-medium ${on ? "line-through" : ""}`}>
-                      <span className="mr-2 font-mono text-[11px] text-shellac">
-                        {String(index + 1).padStart(2, "0")}
+                <li key={step.id}>
+                  <button
+                    type="button"
+                    onClick={() => toggle(storageKey, id)}
+                    className="flex min-h-16 w-full items-start gap-4 px-4 py-4 text-left"
+                  >
+                    <CheckBox checked={on} label={`Mark step ${index + 1} done`} />
+                    <span
+                      className={`grid h-8 w-8 shrink-0 place-items-center rounded-full border text-sm font-semibold ${
+                        on ? "border-rule text-ink-soft" : "border-walnut bg-walnut text-paper"
+                      }`}
+                    >
+                      {index + 1}
+                    </span>
+                    <span className={`min-w-0 flex-1 ${on ? "text-ink-soft" : ""}`}>
+                      <span className={`block text-lg font-semibold leading-snug ${on ? "line-through" : ""}`}>
+                        {step.text}
                       </span>
-                      {step.text}
-                    </p>
-                    {step.detail ? <p className="mt-1 text-sm leading-6 text-ink-soft">{step.detail}</p> : null}
-                  </div>
+                      {step.detail ? (
+                        <span className="mt-1 block text-base leading-7 text-ink-soft">{step.detail}</span>
+                      ) : null}
+                    </span>
+                  </button>
                 </li>
               );
             })}
@@ -170,31 +212,33 @@ function CheckBox({
 }: {
   checked: boolean;
   label: string;
-  onChange: () => void;
+  onChange?: () => void;
 }) {
+  const className = `mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-[6px] border-2 print:border-ink ${
+    checked ? "border-walnut bg-walnut text-paper" : "border-walnut/45 bg-paper"
+  }`;
+  const mark = checked ? (
+    <svg viewBox="0 0 12 12" className="h-3.5 w-3.5" aria-hidden>
+      <path d="M2 6.2 L4.8 9 L10 3.2" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  ) : null;
+  if (onChange) {
+    return (
+      <button type="button" role="checkbox" aria-checked={checked} aria-label={label} onClick={onChange} className={className}>
+        {mark}
+      </button>
+    );
+  }
   return (
-    <button
-      type="button"
-      role="checkbox"
-      aria-checked={checked}
-      aria-label={label}
-      onClick={onChange}
-      className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-sm border print:border-ink ${
-        checked ? "border-walnut bg-walnut text-paper" : "border-walnut/50 bg-paper"
-      }`}
-    >
-      {checked ? (
-        <svg viewBox="0 0 12 12" className="h-3 w-3" aria-hidden>
-          <path d="M2 6.2 L4.8 9 L10 3.2" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-        </svg>
-      ) : null}
-    </button>
+    <span aria-hidden className={className}>
+      {mark}
+    </span>
   );
 }
 
 export function PartThumb({ kind }: { kind: PartKind }) {
   return (
-    <svg viewBox="0 0 40 28" className="h-7 w-10" aria-hidden>
+    <svg viewBox="0 0 40 28" className="h-7 w-10 shrink-0" aria-hidden>
       {thumb(kind)}
     </svg>
   );

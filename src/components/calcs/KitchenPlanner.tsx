@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useSyncExternalStore } from "react";
 import { BuildSheet } from "@/components/BuildSheet";
-import { Field, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
+import { Field, Result, SelectInput, TextInput, ToolFrame, btnGhost, btnPrimary } from "@/components/Fields";
 import { KitchenPictures } from "@/components/plans/KitchenPictures";
 import type { FitStyle, ShakerBuild } from "@/lib/cabinet";
 import { layoutFromOpening } from "@/lib/cabinetBox";
@@ -125,7 +125,7 @@ export function KitchenPlanner() {
           )}
           <button
             type="button"
-            className="mt-4 rounded-full border border-ticket-tan/40 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-ticket-tan"
+            className={`${btnGhost} mt-4 w-full`}
             onClick={() => writeKitchen(defaultKitchen())}
           >
             Reset sample
@@ -167,7 +167,7 @@ export function KitchenPlanner() {
               </p>
             </div>
             {results.map((result) => (
-              <article key={result.id} className="print-break rounded-sm border border-rule bg-paper/70 p-4 sm:p-5">
+              <article key={result.id} className="print-break rounded-[12px] border border-rule bg-surface p-4 sm:p-5">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <h4 className="font-display text-xl tracking-tight">{result.name}</h4>
                   <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-soft">{result.row}</p>
@@ -214,7 +214,7 @@ export function KitchenPlanner() {
                 )}
               </article>
             ))}
-            <article className="print-break rounded-sm border border-iron bg-[#fbf6eb] p-4 sm:p-5">
+            <article className="print-break rounded-[12px] border border-rule bg-surface p-4 sm:p-5">
               <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-shellac">Whole kitchen</p>
               <h3 className="mt-1 font-display text-2xl tracking-tight">Shop summary — gang the cuts</h3>
               <p className="mt-1 mb-3 max-w-2xl text-sm leading-6 text-ink-soft">
@@ -334,7 +334,7 @@ export function KitchenPlanner() {
           </div>
           <button
             type="button"
-            className="rounded-full bg-iron px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-ticket-tan"
+            className={btnPrimary}
             onClick={() =>
               setState((current) => ({
                 ...current,
@@ -414,15 +414,15 @@ function OpeningCard({
   const overall = openingW ? formatInches(openingW + stileN * 2).replace(/"/g, "") : opening.openingW;
   const boxHref = `/tools/cabinet-box?kind=${opening.row}&layout=${layoutFromOpening(opening.row, opening.doorCount, opening.drawerCount)}&w=${encodeURIComponent(overall)}`;
   return (
-    <div className="rounded-sm border border-rule bg-paper/80 p-4">
+    <div className="rounded-[12px] border border-rule bg-surface p-4 shadow-[var(--shadow-sm)] sm:p-5">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-soft">
+        <p className="text-sm font-semibold text-ink-soft">
           Opening {String(index + 1).padStart(2, "0")}
         </p>
         <div className="flex gap-2">
           <button
             type="button"
-            className="font-mono text-[11px] uppercase tracking-[0.14em] text-walnut hover:text-shellac"
+            className="inline-flex min-h-11 items-center px-2 text-sm font-semibold text-walnut hover:text-ink"
             onClick={onDuplicate}
           >
             Duplicate
@@ -430,7 +430,7 @@ function OpeningCard({
           {canRemove ? (
             <button
               type="button"
-              className="font-mono text-[11px] uppercase tracking-[0.14em] text-walnut hover:text-shellac"
+              className="inline-flex min-h-11 items-center px-2 text-sm font-semibold text-walnut hover:text-ink"
               onClick={onRemove}
             >
               Remove
@@ -452,13 +452,13 @@ function OpeningCard({
       </div>
       <div className="mt-4 grid gap-4 sm:grid-cols-3">
         <Field label="Opening width">
-          <TextInput value={opening.openingW} onChange={(openingW) => onChange({ openingW })} />
+          <TextInput value={opening.openingW} onChange={(openingW) => onChange({ openingW })} unit="in" />
         </Field>
         <Field label="Opening height" hint="doors">
-          <TextInput value={opening.openingH} onChange={(openingH) => onChange({ openingH })} />
+          <TextInput value={opening.openingH} onChange={(openingH) => onChange({ openingH })} unit="in" />
         </Field>
         <Field label="Cabinet depth">
-          <TextInput value={opening.openingD} onChange={(openingD) => onChange({ openingD })} />
+          <TextInput value={opening.openingD} onChange={(openingD) => onChange({ openingD })} unit="in" />
         </Field>
       </div>
       <div className="mt-4 grid gap-4 sm:grid-cols-3">

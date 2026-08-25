@@ -1,18 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #f3ead7;
-  --paper-2: #e9dcc3;
-  --ink: #24180f;
-  --ink-soft: #5c4633;
-  --rule: #cbb896;
-  --walnut: #6b3a1f;
+  --paper: #fffbf7;
+  --paper-2: #f4ebdc;
+  --ink: #1c1410;
+  --ink-soft: #5c4638;
+  --rule: #d9cbb8;
+  --walnut: #5d4037;
+  --walnut-deep: #3e2a24;
   --shellac: #c45c26;
-  --iron: #2f2a26;
-  --sawdust: #d8c39a;
+  --iron: #2a221c;
+  --sawdust: #e4d4b8;
   --ticket-tan: #f6edd8;
   --ticket-muted: #ead9b4;
-  --site-header-h: 2.5rem;
+  --success: #2f6b3a;
+  --warning: #9a5b12;
+  --surface: #fffdf9;
+  --site-header-h: 3.75rem;
+  --radius: 12px;
+  --radius-sm: 10px;
+  --shadow-sm: 0 1px 2px rgba(28, 20, 16, 0.06);
+  --shadow-md: 0 6px 20px rgba(28, 20, 16, 0.07);
+  --control-h: 48px;
 }
 
 @theme inline {
@@ -22,11 +31,15 @@
   --color-ink-soft: var(--ink-soft);
   --color-rule: var(--rule);
   --color-walnut: var(--walnut);
+  --color-walnut-deep: var(--walnut-deep);
   --color-shellac: var(--shellac);
   --color-iron: var(--iron);
   --color-sawdust: var(--sawdust);
   --color-ticket-tan: var(--ticket-tan);
   --color-ticket-muted: var(--ticket-muted);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-surface: var(--surface);
   --font-sans: var(--font-source);
   --font-display: var(--font-fraunces);
   --font-mono: var(--font-ibm);
@@ -37,10 +50,7 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(900px 480px at 88% -8%, rgba(196, 92, 38, 0.1), transparent 55%),
-    radial-gradient(700px 420px at 0% 12%, rgba(107, 58, 31, 0.07), transparent 50%),
-    linear-gradient(180deg, #f7f0e3 0%, #f3ead7 42%, #efe3cc 100%);
+  background: var(--paper);
   color: var(--ink);
   font-family: var(--font-sans), "Segoe UI", sans-serif;
 }
@@ -58,6 +68,14 @@ input[type="number"]::-webkit-inner-spin-button {
 
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+details > summary {
+  list-style: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
 }
 
 @media print {
