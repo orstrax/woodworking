@@ -12,6 +12,7 @@ import { formatInches } from "@/lib/measure";
 
 export type CabinetKind = "base" | "upper" | "tall";
 export type Construction = "face-frame" | "frameless";
+export type AssemblyJoin = "dado" | "pocket" | "screws";
 export type PartKind =
   | "side"
   | "bottom"
@@ -238,6 +239,7 @@ export type CabinetBoxInput = {
   shakerRail: number;
   faceThick: number;
   drawerStock: number;
+  assembly?: AssemblyJoin;
   includeDoorFaces: boolean;
   includeDrawerFaces: boolean;
   includeDrawerBoxes: boolean;
@@ -272,6 +274,7 @@ export type CabinetBoxPlan = {
   includeDoorFaces: boolean;
   includeDrawerFaces: boolean;
   includeDrawerBoxes: boolean;
+  assembly: AssemblyJoin;
 };
 
 function cut(
@@ -323,6 +326,8 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
     includeDrawerBoxes,
     includeToeSkin,
   } = input;
+  const assembly: AssemblyJoin = input.assembly ?? "dado";
+  const dadoUse = assembly === "dado" ? dado : 0;
   if ([overallW, overallH, overallD, sideThick, stile, rail].some((n) => !Number.isFinite(n) || n <= 0)) {
     return null;
   }
@@ -334,7 +339,7 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
   const boxW = faceFrame ? Math.max(overallW - overhang * 2, sideThick * 2 + 2) : overallW;
   const boxH = overallH;
   const boxD = overallD;
-  const interiorW = boxW - sideThick * 2 + dado * 2;
+  const interiorW = boxW - sideThick * 2 + dadoUse * 2;
   const interiorD = Math.max(1, boxD - backThick - 0.125);
   const faceH = Math.max(2, boxH - toeH);
   const interiorH = Math.max(1, faceH - (faceFrame ? rail : 0) - 0.75);
@@ -374,8 +379,14 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
     ),
   );
 
-  const bottomW = boxW - sideThick * 2 + dado * 2;
+  const bottomW = boxW - sideThick * 2 + dadoUse * 2;
   const bottomD = boxD - backThick;
+  const bottomNote =
+    assembly === "dado"
+      ? `Sits in a ${formatInches(dado)} dado. Width includes the dados.`
+      : assembly === "pocket"
+        ? "Fits between the sides. Pocket-screw from the underside into each side."
+        : "Fits between the sides. Screw through the sides into this panel.";
   if (layout.id !== "base-sink") {
     parts.push(
       cut(
@@ -384,7 +395,7 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
         tSide,
         bottomD,
         bottomW,
-        `Sits in a ${formatInches(dado)} dado. Width includes the dados.`,
+        bottomNote,
         "bottom",
       ),
     );
@@ -396,7 +407,9 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
         tSide,
         bottomD,
         bottomW,
-        "Still cut a bottom. Plumbing goes through the back, not this panel.",
+        assembly === "dado"
+          ? "Still cut a bottom. Plumbing goes through the back, not this panel."
+          : `${bottomNote} Plumbing goes through the back, not this panel.`,
         "bottom",
       ),
     );
@@ -404,44 +417,46 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
 
   if (kind === "upper" || kind === "tall") {
     parts.push(
-      cut("Top", 1, tSide, bottomD, bottomW, "Same size as the bottom. Dados in the sides.", "top"),
-    );
-  } else {
-    parts.push(
       cut(
-        "Front stretcher",
+        "Top",
         1,
         tSide,
-        stretcherW,
-        boxW - sideThick * 2,
-        "Fits between the sides at the top front. Counter screws down into this.",
-        "stretcher",
+        bottomD,
+        bottomW,
+        assembly === "dado" ? "Same size as the bottom. Dados in the sides." : "Same size as the bottom.",
+        "top",
       ),
+    );
+  } else {
+    const stretchNote =
+      assembly === "pocket"
+        ? "Fits between the sides. Pocket-screw at the top."
+        : assembly === "screws"
+          ? "Fits between the sides. Screw through the sides into the end grain."
+          : "Fits between the sides at the top front. Counter screws down into this.";
+    parts.push(
+      cut("Front stretcher", 1, tSide, stretcherW, boxW - sideThick * 2, stretchNote, "stretcher"),
       cut(
         "Back stretcher",
         1,
         tSide,
         stretcherW,
         boxW - sideThick * 2,
-        "Top back. Pairs with the front stretcher so the box cannot rack.",
+        assembly === "dado"
+          ? "Top back. Pairs with the front stretcher so the box cannot rack."
+          : "Top back. Same join as the front stretcher.",
         "stretcher",
       ),
     );
   }
 
   const backH = boxH - toeH;
-  const backW = boxW - 2 * Math.max(0, sideThick - dado);
-  parts.push(
-    cut(
-      "Back",
-      1,
-      tBack,
-      backH,
-      backW,
-      `¼″ plywood in a ${formatInches(dado)} rabbet. Squares the box.`,
-      "back",
-    ),
-  );
+  const backW = assembly === "dado" ? boxW - 2 * Math.max(0, sideThick - dado) : boxW;
+  const backNote =
+    assembly === "dado"
+      ? `¼″ plywood in a ${formatInches(dado)} rabbet. Squares the box.`
+      : "Screw or staple onto the back edges. This is still what squares the box.";
+  parts.push(cut("Back", 1, tBack, backH, backW, backNote, "back"));
 
   if (toeH > 0 && includeToeSkin) {
     parts.push(
@@ -640,6 +655,7 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
     includeDrawerFaces,
     includeDrawerBoxes,
     includeFaceFrame,
+    assembly,
   });
 
   return {
@@ -668,6 +684,7 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
     includeDoorFaces,
     includeDrawerFaces,
     includeDrawerBoxes,
+    assembly,
   };
 }
 
@@ -684,6 +701,7 @@ function buildSteps(input: {
   includeDrawerFaces: boolean;
   includeDrawerBoxes: boolean;
   includeFaceFrame: boolean;
+  assembly: AssemblyJoin;
 }): BuildStep[] {
   const steps: BuildStep[] = [
     {
@@ -693,8 +711,16 @@ function buildSteps(input: {
     },
     {
       id: "dados",
-      text: "Cut matching dados for the bottom (and top, on uppers) and a rabbet for the back.",
-      detail: "Both sides must be mirrored. Stack them and mark with a square so the dados line up.",
+      text:
+        input.assembly === "pocket"
+          ? "Pocket-screw the bottom and stretchers between the sides. No dados."
+          : input.assembly === "screws"
+            ? "Screw through the sides into the bottom and stretchers. Butt joints — no dados."
+            : "Cut matching dados for the bottom (and top, on uppers) and a rabbet for the back.",
+      detail:
+        input.assembly === "dado"
+          ? "Both sides must be mirrored. Stack them and mark with a square so the dados line up."
+          : "Keep the pocket holes or screws ¾″ in from the front and back so they hide. Check the diagonals before the glue sets.",
     },
     {
       id: "cut-panels",
@@ -706,7 +732,10 @@ function buildSteps(input: {
     },
     {
       id: "glue-box",
-      text: "Glue and clamp the carcass. Pin or screw the stretchers. Square it, then add the back.",
+      text:
+        input.assembly === "dado"
+          ? "Glue and clamp the carcass. Pin or screw the stretchers. Square it, then add the back."
+          : "Assemble the carcass, square it, then screw the back on. The back is still what keeps it from racking.",
       detail: "The back is what keeps the box from turning into a parallelogram.",
     },
   ];

@@ -148,7 +148,7 @@ export function ToolFrame({
     <div className="grid gap-8">
       <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
         <section>
-          <h1 className="font-display text-4xl tracking-tight sm:text-5xl">
+        <h1 className="font-display text-4xl tracking-tight sm:text-5xl print:text-2xl">
             {title}
           </h1>
           <p className="mt-3 max-w-xl text-base leading-7 text-ink-soft">{description}</p>
@@ -160,7 +160,7 @@ export function ToolFrame({
         </aside>
       </div>
       {plan ? (
-        <section className="grid gap-5">
+        <section className="grid gap-5 print:gap-3">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-shellac">Pictures & plans</p>
             <h2 className="mt-1 font-display text-3xl tracking-tight">See it before you cut it.</h2>
