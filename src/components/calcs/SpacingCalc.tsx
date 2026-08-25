@@ -36,7 +36,7 @@ export function SpacingCalc() {
               note={`${formatNumber(result.usable, 3)}″ between the insets.`}
             />
             <div className="pt-3">
-              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-sawdust">
+              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ticket-tan">
                 Centers from left
               </p>
               <ol className="mt-2 space-y-1 font-mono text-sm">

@@ -89,10 +89,10 @@ export function SelectInput({
 
 export function Result({ label, value, note }: { label: string; value: string; note?: string }) {
   return (
-    <div className="border-b border-rule/70 py-3 last:border-b-0">
-      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-soft">{label}</p>
-      <p className="mt-1 font-display text-3xl tracking-tight">{value}</p>
-      {note ? <p className="mt-1 text-sm text-ink-soft">{note}</p> : null}
+    <div className="border-b border-ticket-tan/25 py-3 last:border-b-0">
+      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ticket-tan">{label}</p>
+      <p className="mt-1 font-display text-3xl tracking-tight text-paper">{value}</p>
+      {note ? <p className="mt-1 text-sm text-ticket-muted">{note}</p> : null}
     </div>
   );
 }
@@ -121,7 +121,7 @@ export function ToolFrame({
           <div className="mt-8 grid gap-4">{children}</div>
         </section>
         <aside className="h-fit border border-iron bg-iron text-paper p-6 shadow-[8px_8px_0_rgba(107,58,31,0.25)]">
-          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-sawdust">Ticket</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-ticket-tan">Ticket</p>
           <div className="mt-4">{results}</div>
         </aside>
       </div>

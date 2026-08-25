@@ -38,7 +38,7 @@ export function MovementCalc() {
               value={`${result.change >= 0 ? "+" : "−"}${formatNumber(result.abs, 3)}"`}
               note={`${species.name}, ${grain === "flat" ? "flat-sawn" : "quarter-sawn"}. ΔMC ${result.delta > 0 ? "+" : ""}${result.delta}%.`}
             />
-            <p className="pt-3 text-sm leading-6 text-sawdust">
+            <p className="pt-3 text-sm leading-6 text-ticket-muted">
               Rule of thumb: allow this much play on each wide panel. Quarter-sawn stock moves less.
             </p>
           </>

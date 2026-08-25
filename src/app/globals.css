@@ -10,6 +10,8 @@
   --shellac: #c45c26;
   --iron: #2f2a26;
   --sawdust: #d8c39a;
+  --ticket-tan: #f6edd8;
+  --ticket-muted: #ead9b4;
 }
 
 @theme inline {
@@ -22,6 +24,8 @@
   --color-shellac: var(--shellac);
   --color-iron: var(--iron);
   --color-sawdust: var(--sawdust);
+  --color-ticket-tan: var(--ticket-tan);
+  --color-ticket-muted: var(--ticket-muted);
   --font-sans: var(--font-source);
   --font-display: var(--font-fraunces);
   --font-mono: var(--font-ibm);

@@ -49,7 +49,7 @@ export function DovetailCalc() {
               note={`${result.angle.toFixed(1)}° off square.`}
             />
             <div className="pt-3">
-              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-sawdust">
+              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ticket-tan">
                 Marks from edge
               </p>
               <ol className="mt-2 space-y-1 font-mono text-sm">

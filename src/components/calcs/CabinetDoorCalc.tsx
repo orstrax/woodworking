@@ -90,7 +90,7 @@ export function CabinetDoorCalc() {
               note={hinges.euro}
             />
             <p className="pt-4">
-              <Link href={shakerHref} className="font-mono text-[11px] uppercase tracking-[0.16em] text-sawdust underline decoration-sawdust/40 underline-offset-4">
+              <Link href={shakerHref} className="font-mono text-[11px] uppercase tracking-[0.16em] text-ticket-tan underline decoration-ticket-tan/50 underline-offset-4">
                 Build this as a shaker door →
               </Link>
             </p>
