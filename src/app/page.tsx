@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HomeHeroPicture } from "@/components/plans/HomeHeroPicture";
+import { PrintButton, paperPrintButtonClass } from "@/components/PrintSheet";
 import { ToolCard } from "@/components/ToolCard";
 import { SHOP_WORDS } from "@/lib/guides";
 import { START_HERE, TOOL_GROUPS, TOOLS } from "@/lib/tools";
@@ -7,6 +8,7 @@ import { START_HERE, TOOL_GROUPS, TOOLS } from "@/lib/tools";
 export default function Home() {
   return (
     <div>
+      <div className="print:hidden">
       <section className="mx-auto max-w-6xl px-5 pb-6 pt-10 sm:px-8 sm:pt-16">
         <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="max-w-xl">
@@ -45,6 +47,7 @@ export default function Home() {
               >
                 All tools
               </Link>
+              <PrintButton className={paperPrintButtonClass} />
             </div>
             <div className="mt-8 grid grid-cols-3 gap-3 text-sm">
               <Stat kicker="New to this" label="Pictures + shop words" />
@@ -119,6 +122,33 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </div>
+      <article className="print-sheet hidden print:block text-black">
+        <div className="mb-3 border-b border-black pb-2">
+          <p className="text-[9px] uppercase tracking-[0.2em]">Story Stick · shop copy</p>
+          <h1 className="font-display text-2xl leading-tight tracking-tight">Tool directory</h1>
+          <p className="mt-1 text-xs">Open a tool on the bench, then print that page for the cut list.</p>
+        </div>
+        {TOOL_GROUPS.map((group) => {
+          const tools = TOOLS.filter((tool) => tool.group === group.id);
+          if (tools.length === 0) return null;
+          return (
+            <section key={group.id} className="mb-3">
+              <h2 className="mb-1 text-[9px] uppercase tracking-[0.16em]">{group.title}</h2>
+              <table className="w-full border-collapse text-[11px]">
+                <tbody>
+                  {tools.map((tool) => (
+                    <tr key={tool.slug} className="border-b border-neutral-300 align-top">
+                      <td className="py-1 pr-3 font-medium">{tool.name}</td>
+                      <td className="py-1 text-neutral-700">{tool.summary}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </section>
+          );
+        })}
+      </article>
     </div>
   );
 }

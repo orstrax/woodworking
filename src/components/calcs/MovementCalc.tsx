@@ -47,6 +47,33 @@ export function MovementCalc() {
           <Result label="Need a width" value="—" />
         )
       }
+      printFacts={
+        result
+          ? [
+              {
+                label: result.delta >= 0 ? "Expected swell" : "Expected shrink",
+                value: formatInches(result.abs, 64),
+              },
+              {
+                label: "Change",
+                value: `${result.change >= 0 ? "+" : "−"}${formatNumber(result.abs, 3)}"`,
+                note: `${species.name}, ${grain === "flat" ? "flat-sawn" : "quarter-sawn"}. ΔMC ${result.delta > 0 ? "+" : ""}${result.delta}%.`,
+              },
+            ]
+          : undefined
+      }
+      printSteps={
+        result
+          ? [
+              {
+                text: `Leave about ${formatInches(result.abs, 64)} of play across this ${width}″ panel.`,
+                detail: "In a frame, that is float in the groove. On a tabletop, that is slotted fasteners or figure-8s.",
+              },
+              { text: "Do not glue a wide panel into a groove. Glue the frame joints only." },
+              { text: "Finish all faces, including the underside, so the panel moves evenly." },
+            ]
+          : undefined
+      }
       plan={
         result ? (
           <>

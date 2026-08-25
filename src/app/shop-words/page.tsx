@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PrintButton, paperPrintButtonClass } from "@/components/PrintSheet";
 import { SHOP_WORDS } from "@/lib/guides";
 
 export const metadata: Metadata = {
@@ -9,7 +10,8 @@ export const metadata: Metadata = {
 
 export default function ShopWordsPage() {
   return (
-    <div className="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-16">
+    <div className="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-16 print:max-w-none print:p-0">
+      <div className="print:hidden">
       <Link href="/" className="font-mono text-[11px] uppercase tracking-[0.18em] text-walnut hover:text-shellac">
         ← Home
       </Link>
@@ -19,6 +21,9 @@ export default function ShopWordsPage() {
         Nothing here is a secret handshake. These are the names on the pictures, said the way a
         patient shop teacher would say them.
       </p>
+      <div className="mt-6">
+        <PrintButton className={paperPrintButtonClass} />
+      </div>
       <dl className="mt-10 grid gap-8">
         {SHOP_WORDS.map((word) => (
           <div key={word.term} className="border-t border-rule/80 pt-6">
@@ -70,6 +75,31 @@ export default function ShopWordsPage() {
           </div>
         </div>
       </section>
+      </div>
+      <article className="print-sheet hidden print:block text-black">
+        <div className="mb-3 border-b border-black pb-2">
+          <p className="text-[9px] uppercase tracking-[0.2em]">Story Stick · shop copy</p>
+          <h1 className="font-display text-2xl leading-tight tracking-tight">Shop words</h1>
+        </div>
+        <dl>
+          {SHOP_WORDS.map((word) => (
+            <div key={word.term} className="border-b border-neutral-300 py-1.5">
+              <dt className="font-medium">
+                {word.term}{" "}
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-neutral-600">{word.say}</span>
+              </dt>
+              <dd className="text-[12px] leading-5">{word.meaning}</dd>
+            </div>
+          ))}
+        </dl>
+        <section className="mt-4">
+          <h2 className="mb-1 text-[9px] uppercase tracking-[0.16em]">Bench habits</h2>
+          <p className="text-[12px] leading-5">
+            Sand through grits without skipping more than one. Wipe glue before it skins. Mark from the
+            same edge every time. Trust matching diagonals over a square that disagrees.
+          </p>
+        </section>
+      </article>
     </div>
   );
 }

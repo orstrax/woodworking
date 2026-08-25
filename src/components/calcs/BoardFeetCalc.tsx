@@ -44,6 +44,32 @@ export function BoardFeetCalc() {
           <Result label="Need dimensions" value="—" note="Use fractions like 4/4 or 7 1/4." />
         )
       }
+      printFacts={
+        result
+          ? [
+              { label: "Net board feet", value: formatNumber(result.bf, 2) },
+              { label: "With waste", value: formatNumber(result.withWaste, 2), note: `${waste}% extra` },
+              { label: "Estimated cost", value: `$${formatNumber(result.cost, 2)}` },
+            ]
+          : undefined
+      }
+      printRows={
+        result
+          ? [
+              {
+                name: "Boards to buy",
+                qty,
+                size: `${thickness} × ${width} × ${length}′`,
+                note: `${formatNumber(result.withWaste, 2)} BF with ${waste}% waste · about $${formatNumber(result.cost, 2)}.`,
+              },
+            ]
+          : undefined
+      }
+      printSteps={[
+        { text: "Buy the waste number, not the net. Defects and milling eat the extra." },
+        { text: "Pay for rough thickness. 4/4 that finishes 13/16″ is still billed as 1″." },
+        { text: "Pick grain and color at the rack. The calculator cannot see the board." },
+      ]}
       plan={
         result ? (
           <>

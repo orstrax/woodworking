@@ -171,7 +171,7 @@ export const TOOL_GUIDES: ToolGuide[] = [
       "Cutting every stile to the first door on the list.",
     ],
     words: ["Opening", "Face frame", "Overlay", "Reveal", "Stile", "Rail", "Story stick"],
-    related: ["cabinet-box", "cabinet-doors", "shaker-door", "drawers"],
+    related: ["cabinet-box", "cabinet-doors", "drawers"],
   },
   {
     slug: "cabinet-box",
@@ -192,34 +192,19 @@ export const TOOL_GUIDES: ToolGuide[] = [
   {
     slug: "cabinet-doors",
     firstTime:
-      "Measure the hole inside the face frame (opening), not the whole cabinet. Then pick how the door should sit: covering the frame (overlay), showing a strip of frame (reveal), or tucked in the hole (inset).",
+      "Measure the hole inside the face frame (opening), not the whole cabinet. Then pick how the door should sit: covering the frame (overlay), showing a strip of frame (reveal), or tucked in the hole (inset). If it is a shaker, pick a frame width — micro is ¾″, classic is about 2¼″.",
     shopHabit:
-      "A ⅛″ reveal is a friendly American face-frame look. Inset needs a even gap all around or the door rubs. Pair doors need a ⅛″ gap between them so they do not click.",
+      "A ⅛″ reveal is a friendly American face-frame look. Inset needs an even gap all around or the door rubs. Pair doors need a ⅛″ gap. Applied miters on a slab are faster than cope-and-stick and still look right from the front.",
     finePoint:
-      "Euro 35mm cups: 3–6mm from the door edge, 13.5mm deep. Two hinges to 36″, three to 60″. Face-frame cabinets want a face-frame plate or COMPACT-style hinge, not a frameless full-overlay plate.",
+      "Euro 35mm cups: 3–6mm from the door edge, 13.5mm deep. Two hinges to 36″, three to 60″. Face-frame cabinets want a face-frame plate. A floating shaker panel must have groove + float — do not glue the panel in.",
     mistakes: [
       "Measuring overall instead of the opening (or the other way around).",
       "Forgetting the mid-gap on a pair, so the two doors overlap.",
       "Ordering frameless hinges for a face-frame cabinet.",
+      "Cutting a shaker panel to the visible size, then wondering why it rattles out of the groove.",
     ],
-    words: ["Opening", "Face frame", "Overlay", "Reveal", "Inset", "Cup hinge (35mm)", "Stile", "Rail"],
-    related: ["kitchen-plan", "cabinet-box", "shaker-door", "drawers", "square"],
-  },
-  {
-    slug: "shaker-door",
-    firstTime:
-      "A shaker door is a picture frame around a flat panel. Stiles are the tall sides. Rails are the top and bottom. The middle is the panel you see.",
-    shopHabit:
-      "Micro shaker (¾″ frame) looks modern. Classic shaker is about 2¼″. Cope-and-stick is the traditional five-piece. Applied frame on a slab is faster and still looks right from the front.",
-    finePoint:
-      "The floating panel must have room to swell. Groove depth plus float is why the cut panel is larger than the visible opening. Do not glue the panel in — only the frame joints.",
-    mistakes: [
-      "Cutting the panel to the visible size, then wondering why it rattles out of the groove.",
-      "Making rails the full door width on a cope-and-stick door (they sit between the stiles).",
-      "Applied-miter rails cut to short-point instead of long-point.",
-    ],
-    words: ["Stile", "Rail", "Cope-and-stick", "Story stick"],
-    related: ["kitchen-plan", "cabinet-box", "cabinet-doors", "movement", "glue-up"],
+    words: ["Opening", "Face frame", "Overlay", "Reveal", "Inset", "Cup hinge (35mm)", "Stile", "Rail", "Cope-and-stick"],
+    related: ["kitchen-plan", "cabinet-box", "drawers", "square", "movement"],
   },
   {
     slug: "drawers",
@@ -331,7 +316,7 @@ export const TOOL_GUIDES: ToolGuide[] = [
       "Using outdoor wet wood in a heated house.",
     ],
     words: ["Moisture content (MC)", "Flat-sawn / quarter-sawn"],
-    related: ["shaker-door", "glue-up", "weight"],
+    related: ["cabinet-doors", "glue-up", "weight"],
   },
   {
     slug: "circle",

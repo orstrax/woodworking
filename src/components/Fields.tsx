@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { PrintButton, PrintSheet, type PrintFact, type PrintRow, type PrintSection, type PrintStep } from "@/components/PrintSheet";
 
 export function Field({
   label,
@@ -136,6 +137,11 @@ export function ToolFrame({
   results,
   plan,
   ticketClassName,
+  printFacts,
+  printRows,
+  printSteps,
+  printSections,
+  note,
 }: {
   title: string;
   description: string;
@@ -143,35 +149,65 @@ export function ToolFrame({
   results: ReactNode;
   plan?: ReactNode;
   ticketClassName?: string;
+  printFacts?: PrintFact[];
+  printRows?: PrintRow[];
+  printSteps?: PrintStep[];
+  printSections?: PrintSection[];
+  note?: string;
 }) {
+  const canPrint = Boolean(
+    (printFacts && printFacts.length) ||
+      (printRows && printRows.length) ||
+      (printSteps && printSteps.length) ||
+      (printSections && printSections.length),
+  );
+
   return (
-    <div className="grid gap-8">
-      <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-        <section>
-        <h1 className="font-display text-4xl tracking-tight sm:text-5xl print:text-2xl">
-            {title}
-          </h1>
-          <p className="mt-3 max-w-xl text-base leading-7 text-ink-soft">{description}</p>
-          <div className="mt-8 grid gap-4">{children}</div>
-        </section>
-        <aside className={`h-fit border border-iron bg-iron text-paper p-6 shadow-[8px_8px_0_rgba(107,58,31,0.25)] ${ticketClassName ?? ""}`}>
-          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-ticket-tan">Ticket</p>
-          <div className="mt-4">{results}</div>
-        </aside>
+    <>
+      <div className="grid gap-8 print:hidden">
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+          <section>
+            <h1 className="font-display text-4xl tracking-tight sm:text-5xl">{title}</h1>
+            <p className="mt-3 max-w-xl text-base leading-7 text-ink-soft">{description}</p>
+            <div className="mt-8 grid gap-4">{children}</div>
+          </section>
+          <aside
+            className={`h-fit border border-iron bg-iron p-6 text-paper shadow-[8px_8px_0_rgba(107,58,31,0.25)] ${ticketClassName ?? ""}`}
+          >
+            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-ticket-tan">Ticket</p>
+            <div className="mt-4">{results}</div>
+            <PrintButton />
+          </aside>
+        </div>
+        {plan ? (
+          <section className="grid gap-5">
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-shellac">Pictures & plans</p>
+              <h2 className="mt-1 font-display text-3xl tracking-tight">See it before you cut it.</h2>
+              <p className="mt-2 max-w-2xl text-base leading-7 text-ink-soft">
+                Orange numbers match the key under each picture. Orange chips are the sizes to cut.
+                Change the numbers above and the pictures move with them.
+              </p>
+            </div>
+            {plan}
+          </section>
+        ) : null}
       </div>
-      {plan ? (
-        <section className="grid gap-5 print:gap-3">
-          <div>
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-shellac">Pictures & plans</p>
-            <h2 className="mt-1 font-display text-3xl tracking-tight">See it before you cut it.</h2>
-            <p className="mt-2 max-w-2xl text-base leading-7 text-ink-soft">
-              Orange numbers match the key under each picture. Orange chips are the sizes to cut.
-              Change the numbers above and the pictures move with them.
-            </p>
-          </div>
-          {plan}
-        </section>
-      ) : null}
-    </div>
+      {canPrint ? (
+        <PrintSheet
+          title={title}
+          facts={printFacts}
+          rows={printRows}
+          steps={printSteps}
+          sections={printSections}
+          note={note}
+        />
+      ) : (
+        <PrintSheet
+          title={title}
+          facts={[{ label: "Ticket", value: "Fill the numbers on screen, then print." }]}
+        />
+      )}
+    </>
   );
 }
