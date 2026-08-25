@@ -1,4 +1,4 @@
-import { Callout, Caption, Chip, DimH, DimV, Picture } from "@/components/Visuals";
+import { Callout, Caption, Chip, DimH, DimV, Picture, useBlueprint } from "@/components/Visuals";
 import type { DoorPlan, HingeAdvice } from "@/lib/cabinet";
 import { formatInches } from "@/lib/measure";
 
@@ -190,6 +190,7 @@ function CabinetFront({ plan, hinges }: { plan: DoorPlan; hinges: HingeAdvice })
 }
 
 function OverlayCutaway({ plan }: { plan: DoorPlan }) {
+  const blueprint = useBlueprint();
   const inset = plan.doorW < plan.openingW;
   const ox = 28;
   const oy = 62;
@@ -235,34 +236,52 @@ function OverlayCutaway({ plan }: { plan: DoorPlan }) {
             ]
       }
     >
-      <rect x={ox} y={oy} width={insideW} height={bodyH} fill="url(#hatch-box)" stroke="#8a7355" strokeWidth="1.1" />
-      <rect x={sideX} y={oy} width={sideW} height={bodyH} fill="url(#grain-panel)" stroke="#6b3a1f" strokeWidth="1.2" />
-      <rect x={frameX} y={oy} width={frameW} height={bodyH} fill="url(#grain-frame)" stroke="#6b3a1f" strokeWidth="1.5" />
+      <rect x={ox} y={oy} width={insideW} height={bodyH} fill={blueprint ? "#fff" : "url(#hatch-box)"} stroke={blueprint ? "#000" : "#8a7355"} strokeWidth="1.1" />
+      <rect x={sideX} y={oy} width={sideW} height={bodyH} fill={blueprint ? "#fff" : "url(#grain-panel)"} stroke={blueprint ? "#000" : "#6b3a1f"} strokeWidth="1.2" />
+      <rect x={frameX} y={oy} width={frameW} height={bodyH} fill={blueprint ? "#fff" : "url(#grain-frame)"} stroke={blueprint ? "#000" : "#6b3a1f"} strokeWidth="1.5" />
       {inset ? (
         <rect
           x={frameX + frameW}
           y={oy}
           width={gapW}
           height={bodyH}
-          fill="#f3ead7"
-          stroke="#c45c26"
+          fill={blueprint ? "#fff" : "#f3ead7"}
+          stroke={blueprint ? "#000" : "#c45c26"}
           strokeDasharray="3 2"
         />
       ) : revealW > 0.5 ? (
-        <rect x={frameX} y={oy} width={revealW} height={bodyH} fill="#c45c26" fillOpacity="0.22" />
+        <rect
+          x={frameX}
+          y={oy}
+          width={revealW}
+          height={bodyH}
+          fill={blueprint ? "none" : "#c45c26"}
+          fillOpacity={blueprint ? undefined : 0.22}
+          stroke={blueprint ? "#000" : "none"}
+          strokeDasharray={blueprint ? "4 2" : undefined}
+        />
       ) : null}
       <rect
         x={doorX}
         y={doorY}
         width={doorBodyW}
         height={doorBodyH}
-        fill="url(#grain-door)"
-        stroke="#24180f"
+        fill={blueprint ? "#fff" : "url(#grain-door)"}
+        stroke={blueprint ? "#000" : "#24180f"}
         strokeWidth="1.5"
-        filter="url(#lift)"
+        filter={blueprint ? undefined : "url(#lift)"}
       />
       {!inset && overlayW > 0.5 ? (
-        <rect x={doorX} y={doorY} width={overlayW} height={doorBodyH} fill="#c45c26" fillOpacity="0.2" />
+        <rect
+          x={doorX}
+          y={doorY}
+          width={overlayW}
+          height={doorBodyH}
+          fill={blueprint ? "none" : "#c45c26"}
+          fillOpacity={blueprint ? undefined : 0.2}
+          stroke={blueprint ? "#000" : "none"}
+          strokeDasharray={blueprint ? "4 2" : undefined}
+        />
       ) : null}
       <circle cx={cupX} cy={cupY} r="9" fill="#e8d7b5" stroke="#6b3a1f" strokeWidth="1.1" />
       <circle cx={cupX} cy={cupY} r="3" fill="#6b3a1f" />

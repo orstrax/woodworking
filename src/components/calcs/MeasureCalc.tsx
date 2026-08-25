@@ -42,6 +42,7 @@ export function MeasureCalc() {
               { label: "Quarter scale", value: `${toFraction(inches, 4)}`, note: "4/4 = 1″ rough" },
             ]
       }
+      printFigures={inches !== null && inches > 0 ? <MeasurePicture inches={inches} /> : undefined}
       plan={inches !== null && inches > 0 ? <MeasurePicture inches={inches} /> : null}
     >
       <Field label="Measurement" hint='1 7/16, 19mm, 5/4'>

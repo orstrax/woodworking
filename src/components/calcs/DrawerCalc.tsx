@@ -110,6 +110,7 @@ export function DrawerCalc() {
             ]
           : undefined
       }
+      printFigures={plan ? <DrawerPictures plan={plan} /> : undefined}
       plan={
         plan ? (
           <>

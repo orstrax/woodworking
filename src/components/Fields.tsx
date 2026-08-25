@@ -141,6 +141,7 @@ export function ToolFrame({
   printRows,
   printSteps,
   printSections,
+  printFigures,
   note,
 }: {
   title: string;
@@ -153,13 +154,15 @@ export function ToolFrame({
   printRows?: PrintRow[];
   printSteps?: PrintStep[];
   printSections?: PrintSection[];
+  printFigures?: ReactNode;
   note?: string;
 }) {
   const canPrint = Boolean(
     (printFacts && printFacts.length) ||
       (printRows && printRows.length) ||
       (printSteps && printSteps.length) ||
-      (printSections && printSections.length),
+      (printSections && printSections.length) ||
+      printFigures,
   );
 
   return (
@@ -200,6 +203,7 @@ export function ToolFrame({
           rows={printRows}
           steps={printSteps}
           sections={printSections}
+          figures={printFigures}
           note={note}
         />
       ) : (

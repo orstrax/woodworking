@@ -85,6 +85,8 @@ input[type="number"] {
   .print-sheet {
     color: #000 !important;
     background: #fff !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 
   .print-sheet table {
@@ -98,5 +100,54 @@ input[type="number"] {
 
   .print-sheet thead {
     display: table-header-group;
+  }
+
+  .print-sheet .blueprint-figure {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .print-sheet .blueprint-art svg [filter] {
+    filter: none !important;
+  }
+
+  .print-sheet .blueprint-art svg [fill^="url("]:not([fill="url(#bp-grid)"]) {
+    fill: #fff !important;
+  }
+
+  .print-sheet .blueprint-art svg [stroke="#6b3a1f"],
+  .print-sheet .blueprint-art svg [stroke="#24180f"],
+  .print-sheet .blueprint-art svg [stroke="#c45c26"],
+  .print-sheet .blueprint-art svg [stroke="#8a6a3a"],
+  .print-sheet .blueprint-art svg [stroke="#5c4633"],
+  .print-sheet .blueprint-art svg [stroke="#b08960"],
+  .print-sheet .blueprint-art svg [stroke="#8a7355"],
+  .print-sheet .blueprint-art svg [stroke="#8a7360"],
+  .print-sheet .blueprint-art svg [stroke="#4a3424"] {
+    stroke: #000 !important;
+  }
+
+  .print-sheet .blueprint-art svg [fill="#c45c26"],
+  .print-sheet .blueprint-art svg [fill="#6b3a1f"],
+  .print-sheet .blueprint-art svg [fill="#8b5a32"],
+  .print-sheet .blueprint-art svg [fill="#24180f"],
+  .print-sheet .blueprint-art svg [fill="#6d5a46"],
+  .print-sheet .blueprint-art svg [fill="#d8c4a0"],
+  .print-sheet .blueprint-art svg [fill="#d8c39a"],
+  .print-sheet .blueprint-art svg [fill="#e8d7b5"],
+  .print-sheet .blueprint-art svg [fill="#efe0c4"],
+  .print-sheet .blueprint-art svg [fill="#f3ead7"],
+  .print-sheet .blueprint-art svg [fill="#c4a06a"],
+  .print-sheet .blueprint-art svg [fill="#d4b07a"],
+  .print-sheet .blueprint-art svg [fill="#b88955"],
+  .print-sheet .blueprint-art svg [fill="#f7eedc"],
+  .print-sheet .blueprint-art svg [fill="#f6ecd6"] {
+    fill: #fff !important;
+    stroke: #000 !important;
+  }
+
+  .print-sheet .blueprint-art svg text {
+    fill: #000 !important;
+    stroke: none !important;
   }
 }

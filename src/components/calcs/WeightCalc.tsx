@@ -65,6 +65,17 @@ export function WeightCalc() {
             ]
           : undefined
       }
+      printFigures={
+        result ? (
+          <WeightPicture
+            thickness={parseInches(thickness) ?? 0}
+            width={parseInches(width) ?? 0}
+            length={parseInches(length) ?? 0}
+            pounds={result.pounds}
+            species={species.name}
+          />
+        ) : undefined
+      }
       plan={
         result ? (
           <>
