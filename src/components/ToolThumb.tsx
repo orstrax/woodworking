@@ -38,6 +38,29 @@ export function ToolThumb({ slug, className }: { slug: string; className?: strin
 function renderThumb(slug: string) {
   const f = fills(slug);
   switch (slug) {
+    case "cabinet-box":
+      return (
+        <Frame slug={slug} label="A cabinet box">
+          <rect x="70" y="22" width="180" height="46" fill={f.oak} stroke="#6b3a1f" />
+          <rect x="82" y="32" width="156" height="26" fill={f.maple} stroke="#24180f" />
+          <rect x="70" y="76" width="180" height="82" fill={f.oak} stroke="#6b3a1f" />
+          <line x1="160" y1="84" x2="160" y2="150" stroke="#6b3a1f" />
+          <rect x="70" y="158" width="180" height="12" fill="#6b3a1f" />
+        </Frame>
+      );
+    case "kitchen-plan":
+      return (
+        <Frame slug={slug} label="A kitchen of cabinets">
+          <rect x="36" y="28" width="70" height="52" fill={f.oak} stroke="#6b3a1f" />
+          <rect x="112" y="28" width="96" height="52" fill={f.oak} stroke="#6b3a1f" />
+          <rect x="214" y="28" width="70" height="52" fill={f.oak} stroke="#6b3a1f" />
+          <rect x="36" y="92" width="90" height="64" fill={f.maple} stroke="#24180f" />
+          <rect x="132" y="92" width="70" height="64" fill={f.maple} stroke="#24180f" />
+          <rect x="208" y="92" width="76" height="64" fill={f.oak} stroke="#6b3a1f" />
+          <line x1="81" y1="100" x2="81" y2="148" stroke="#6b3a1f" />
+          <line x1="246" y1="100" x2="246" y2="148" stroke="#6b3a1f" />
+        </Frame>
+      );
     case "shaker-door":
       return (
         <Frame slug={slug} label="Shaker door">

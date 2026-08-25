@@ -2,6 +2,7 @@
 
 import { Field, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
 import { WeightPicture } from "@/components/plans/ShopPictures";
+import { BuildSheet } from "@/components/BuildSheet";
 import { boardFeet, formatNumber, parseInches } from "@/lib/measure";
 import { SPECIES, weightLb } from "@/lib/species";
 import { useMemo, useState } from "react";
@@ -44,13 +45,24 @@ export function WeightCalc() {
       }
       plan={
         result ? (
-          <WeightPicture
-            thickness={parseInches(thickness) ?? 0}
-            width={parseInches(width) ?? 0}
-            length={parseInches(length) ?? 0}
-            pounds={result.pounds}
-            species={species.name}
-          />
+          <>
+            <WeightPicture
+              thickness={parseInches(thickness) ?? 0}
+              width={parseInches(width) ?? 0}
+              length={parseInches(length) ?? 0}
+              pounds={result.pounds}
+              species={species.name}
+            />
+            <BuildSheet
+              storageKey="storystick-cuts-weight"
+              rows={[]}
+              steps={[
+                { id: "hands", text: `Plan on about ${formatNumber(result.pounds, 0)} lb. Oak is heavy; pine is not.` },
+                { id: "hardware", text: "Check tabletop fasteners, casters, and wall cabinets against this number." },
+                { id: "lift", text: "A second pair of hands is cheaper than a cracked panel." },
+              ]}
+            />
+          </>
         ) : null
       }
     >

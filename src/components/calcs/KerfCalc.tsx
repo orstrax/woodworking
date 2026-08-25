@@ -2,6 +2,7 @@
 
 import { Field, NumberInput, Result, TextInput, ToolFrame } from "@/components/Fields";
 import { KerfPicture } from "@/components/plans/ShopPictures";
+import { BuildSheet } from "@/components/BuildSheet";
 import { formatInches, parseInches } from "@/lib/measure";
 import { crosscutWaste, ripPlan } from "@/lib/shop";
 import { useMemo, useState } from "react";
@@ -59,7 +60,37 @@ export function KerfCalc() {
       }
       plan={
         rips && rips.count > 0 ? (
-          <KerfPicture stock={rips.s} piece={rips.p} kerf={rips.k} count={rips.count} />
+          <>
+            <KerfPicture stock={rips.s} piece={rips.p} kerf={rips.k} count={rips.count} />
+            <BuildSheet
+              storageKey="storystick-cuts-kerf"
+              rows={[
+                {
+                  name: "Rip strips",
+                  qty: rips.count,
+                  size: formatInches(rips.p),
+                  note: `From ${formatInches(rips.s)} stock · leftover ${formatInches(rips.leftover)}.`,
+                  kind: "strip",
+                },
+                ...(cross
+                  ? [
+                      {
+                        name: "Crosscut stick",
+                        qty: 1,
+                        size: formatInches(cross.needed),
+                        note: `${pieces} @ ${formatInches(parseInches(length) ?? 0)} plus ${formatInches(cross.waste)} kerf.`,
+                        kind: "board" as const,
+                      },
+                    ]
+                  : []),
+              ]}
+              steps={[
+                { id: "count", text: "Count the rips before you start. Every cut eats a kerf." },
+                { id: "rip", text: "Rip the strips. Do not assume the last one equals the first." },
+                { id: "cross", text: "For crosscuts, use a stop block. Still add kerf to the stick you buy." },
+              ]}
+            />
+          </>
         ) : null
       }
     >

@@ -126,6 +126,24 @@ export const SHOP_WORDS: ShopWord[] = [
     meaning: "A rectangle whose diagonals match. If the diagonals differ, the box is a parallelogram.",
     hint: "Pull the long diagonal until both match. 3-4-5 also proves a right angle.",
   },
+  {
+    term: "Carcass",
+    say: "CAR-cuss",
+    meaning: "The plywood box of a cabinet — sides, bottom, back — before doors or a face frame go on.",
+    hint: "The pretty faces hang on the carcass. Square the box first.",
+  },
+  {
+    term: "Dado",
+    say: "DAY-doe",
+    meaning: "A groove cut across the grain that another panel sits in. Cabinet bottoms often live in dados in the sides.",
+    hint: "A rabbet is a dado on the edge. The back usually sits in a rabbet.",
+  },
+  {
+    term: "Toe kick",
+    say: "toe kick",
+    meaning: "The notch at the floor so your toes can go under the cabinet. Often 4″ high and 3″ deep.",
+    hint: "Cut it from both sides, same corner, mirrored.",
+  },
 ];
 
 export type ToolGuide = {
@@ -140,6 +158,38 @@ export type ToolGuide = {
 
 export const TOOL_GUIDES: ToolGuide[] = [
   {
+    slug: "kitchen-plan",
+    firstTime:
+      "Walk the kitchen with a tape. Each hole inside a face frame is one opening. Write the name on the cabinet (Sink base, Upper L1) so the cut list matches the room.",
+    shopHabit:
+      "Same overlay on every door so the kitchen reads as one. Pair doors need a mid-gap. Print the shop summary and gang matching stile lengths, then cut cabinet by cabinet so parts do not wander.",
+    finePoint:
+      "Applied-miter frames: long-point length is the finished door width or height. Cope-and-stick rails are shorter — they sit between the stiles. Do not mix those two lists.",
+    mistakes: [
+      "Measuring the outside of the box instead of the opening.",
+      "Putting doors and a drawer stack in one height without a separate drawer-stack measurement.",
+      "Cutting every stile to the first door on the list.",
+    ],
+    words: ["Opening", "Face frame", "Overlay", "Reveal", "Stile", "Rail", "Story stick"],
+    related: ["cabinet-box", "cabinet-doors", "shaker-door", "drawers"],
+  },
+  {
+    slug: "cabinet-box",
+    firstTime:
+      "A cabinet is a plywood box with a face on the front. Pick a typical layout (36″ drawer base, sink, upper), type the overall width, and read the sides, bottom, back, and doors from the pictures.",
+    shopHabit:
+      "Cut both sides together so the dados line up. Glue the box square, then the back — the back is what keeps it from racking. Face frame last, overhanging each side the same amount.",
+    finePoint:
+      "Face-frame boxes are usually ½″ narrower than the frame (¼″ overhang each side). Frameless boxes ARE the overall width; doors overlay the side thickness. Confirm slide specs before you cut drawer boxes.",
+    mistakes: [
+      "Using the opening width as the overall cabinet width.",
+      "Forgetting the toe-kick notch, so the sides sit 4″ too tall on the floor.",
+      "Cutting the back to the inside of the dados instead of the rabbet width.",
+    ],
+    words: ["Face frame", "Opening", "Stile", "Rail", "Square", "Story stick", "Carcass", "Dado", "Toe kick"],
+    related: ["kitchen-plan", "cabinet-doors", "drawers", "square"],
+  },
+  {
     slug: "cabinet-doors",
     firstTime:
       "Measure the hole inside the face frame (opening), not the whole cabinet. Then pick how the door should sit: covering the frame (overlay), showing a strip of frame (reveal), or tucked in the hole (inset).",
@@ -153,7 +203,7 @@ export const TOOL_GUIDES: ToolGuide[] = [
       "Ordering frameless hinges for a face-frame cabinet.",
     ],
     words: ["Opening", "Face frame", "Overlay", "Reveal", "Inset", "Cup hinge (35mm)", "Stile", "Rail"],
-    related: ["shaker-door", "drawers", "square"],
+    related: ["kitchen-plan", "cabinet-box", "shaker-door", "drawers", "square"],
   },
   {
     slug: "shaker-door",
@@ -169,7 +219,7 @@ export const TOOL_GUIDES: ToolGuide[] = [
       "Applied-miter rails cut to short-point instead of long-point.",
     ],
     words: ["Stile", "Rail", "Cope-and-stick", "Story stick"],
-    related: ["cabinet-doors", "movement", "glue-up"],
+    related: ["kitchen-plan", "cabinet-box", "cabinet-doors", "movement", "glue-up"],
   },
   {
     slug: "drawers",
@@ -185,7 +235,7 @@ export const TOOL_GUIDES: ToolGuide[] = [
       "Numbering stacked fronts from the bottom. This site numbers top as 1.",
     ],
     words: ["Overlay", "Reveal", "Inset", "Undermount slide", "Opening"],
-    related: ["cabinet-doors", "square", "spacing"],
+    related: ["kitchen-plan", "cabinet-box", "cabinet-doors", "square", "spacing"],
   },
   {
     slug: "board-feet",

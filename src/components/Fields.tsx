@@ -103,12 +103,14 @@ export function ToolFrame({
   children,
   results,
   plan,
+  ticketClassName,
 }: {
   title: string;
   description: string;
   children: ReactNode;
   results: ReactNode;
   plan?: ReactNode;
+  ticketClassName?: string;
 }) {
   return (
     <div className="grid gap-8">
@@ -120,7 +122,7 @@ export function ToolFrame({
           <p className="mt-3 max-w-xl text-base leading-7 text-ink-soft">{description}</p>
           <div className="mt-8 grid gap-4">{children}</div>
         </section>
-        <aside className="h-fit border border-iron bg-iron text-paper p-6 shadow-[8px_8px_0_rgba(107,58,31,0.25)]">
+        <aside className={`h-fit border border-iron bg-iron text-paper p-6 shadow-[8px_8px_0_rgba(107,58,31,0.25)] ${ticketClassName ?? ""}`}>
           <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-ticket-tan">Ticket</p>
           <div className="mt-4">{results}</div>
         </aside>

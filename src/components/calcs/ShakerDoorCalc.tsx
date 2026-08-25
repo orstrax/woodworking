@@ -4,7 +4,7 @@ import { Suspense, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Field, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
 import { ShakerPictures } from "@/components/plans/ShakerPictures";
-import { CutList } from "@/components/ShopDrawing";
+import { BuildSheet } from "@/components/BuildSheet";
 import { shakerPlan, type ShakerBuild } from "@/lib/cabinet";
 import { formatInches, parseInches } from "@/lib/measure";
 
@@ -101,13 +101,36 @@ function ShakerDoorInner() {
         plan ? (
           <>
             <ShakerPictures plan={plan} build={build} />
-            <CutList
+            <BuildSheet
+              storageKey="storystick-cuts-shaker-door"
               rows={plan.parts.map((part) => ({
                 name: part.name,
                 qty: part.qty,
                 size: `${part.thickness} × ${formatInches(part.width)} × ${formatInches(part.length)}`,
                 note: part.note,
               }))}
+              steps={
+                build === "applied-miter"
+                  ? [
+                      { id: "slab", text: "Cut the slab to the finished door size. This is the whole face under the frame." },
+                      { id: "frame", text: "Rip the stiles and rails. Cut 45° miters — long point is the full door width or height." },
+                      { id: "glue", text: "Glue the frame onto the slab. Tape or pin the corners. Check the diagonals." },
+                      { id: "hang", text: "Sand flush, finish, then hang." },
+                    ]
+                  : build === "applied-butt"
+                    ? [
+                        { id: "slab", text: "Cut the slab to the finished door size." },
+                        { id: "stiles", text: "Stiles run the full height. Rails fit between them." },
+                        { id: "glue", text: "Glue the frame onto the face. Clamp so the joints stay tight." },
+                        { id: "hang", text: "Sand, finish, hang." },
+                      ]
+                    : [
+                        { id: "stiles", text: "Cut two stiles the full door height. Stick (groove) the inside edge." },
+                        { id: "rails", text: "Cut two rails. Cope the ends to match the stile profile." },
+                        { id: "panel", text: "Cut the panel oversized for the groove, plus float so it can move. Do not glue the panel." },
+                        { id: "glue", text: "Glue only the frame joints. Check diagonals, then hang." },
+                      ]
+              }
             />
           </>
         ) : null

@@ -2,8 +2,8 @@
 
 import { Field, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
 import { DrawerPictures } from "@/components/plans/DrawerPictures";
-import { CutList } from "@/components/ShopDrawing";
-import { drawerPlan, type FitStyle } from "@/lib/cabinet";
+import { BuildSheet } from "@/components/BuildSheet";
+import { drawerBoxParts, drawerPlan, type FitStyle } from "@/lib/cabinet";
 import { formatInches, parseInches } from "@/lib/measure";
 import { useMemo, useState } from "react";
 
@@ -70,20 +70,28 @@ export function DrawerCalc() {
         plan ? (
           <>
             <DrawerPictures plan={plan} />
-            <CutList
+            <BuildSheet
+              storageKey="storystick-cuts-drawers"
               rows={[
                 ...plan.fronts.map((front) => ({
                   name: front.label,
                   qty: 1,
                   size: `${formatInches(front.width)} × ${formatInches(front.height)} × 3/4"`,
                   note: `${formatInches(plan.overlayX)} overlay`,
+                  kind: "drawer-fb" as const,
                 })),
-                {
-                  name: "Drawer box",
-                  qty: plan.count,
-                  size: `${formatInches(plan.boxW)} wide × ${formatInches(plan.boxD)} deep × ${formatInches(plan.boxH)} high`,
-                  note: slide === "side" ? "Side-mount slides" : "Undermount slides",
-                },
+                ...(drawerBoxParts(plan)?.parts.map((part) => ({
+                  name: part.name,
+                  qty: part.qty,
+                  size: `${part.thickness} × ${formatInches(part.width)} × ${formatInches(part.length)}`,
+                  note: part.note,
+                })) ?? []),
+              ]}
+              steps={[
+                { id: "fronts", text: "Cut the pretty fronts first so they match the doors in the same run." },
+                { id: "boxes", text: "Build the boxes smaller than the fronts. Groove the bottom so it can float." },
+                { id: "slides", text: "Install slides in the cabinet, then the boxes, then overlay the fronts last.", detail: slide === "side" ? "Side-mount: 1/2″ each side." : "Undermount: opening minus about 3/8″. Check the brand sheet." },
+                { id: "number", text: "Number from the top. Drawer 1 is the highest front." },
               ]}
             />
           </>

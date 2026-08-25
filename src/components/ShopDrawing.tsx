@@ -130,8 +130,8 @@ export function CutList({
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
-            <tr key={row.name} className="border-t border-rule/70">
+          {rows.map((row, index) => (
+            <tr key={`${row.name}-${row.size}-${row.qty}-${index}`} className="border-t border-rule/70">
               <td className="px-3 py-2 font-medium">{row.name}</td>
               <td className="px-3 py-2 font-mono">{row.qty}</td>
               <td className="px-3 py-2 font-mono">{row.size}</td>

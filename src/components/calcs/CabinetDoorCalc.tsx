@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { CabinetPictures } from "@/components/plans/CabinetPictures";
+import { BuildSheet } from "@/components/BuildSheet";
 import { Field, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
-import { CutList } from "@/components/ShopDrawing";
 import { doorPlan, hingeAdvice, type FitStyle } from "@/lib/cabinet";
 import { formatInches, parseInches } from "@/lib/measure";
 import { useMemo, useState } from "react";
@@ -103,20 +103,29 @@ export function CabinetDoorCalc() {
         plan && hinges ? (
           <>
             <CabinetPictures plan={plan} hinges={hinges} />
-            <CutList
+            <BuildSheet
+              storageKey="storystick-cuts-cabinet-doors"
               rows={[
                 ...plan.doors.map((door, index) => ({
                   name: plan.doorCount === 1 ? "Door" : `Door ${index === 0 ? "left" : "right"}`,
                   qty: 1,
                   size: `${formatInches(door.width)} × ${formatInches(door.height)} × 3/4"`,
                   note: `${formatInches(plan.overlayX)} overlay · ${formatInches(plan.revealX)} reveal`,
+                  kind: "door" as const,
                 })),
                 {
                   name: "Hinges",
                   qty: hinges.count * plan.doorCount,
                   size: hinges.cup,
                   note: `${hinges.tab}. ${hinges.traditional}.`,
+                  kind: "hinge" as const,
                 },
+              ]}
+              steps={[
+                { id: "measure", text: "Measure the opening twice. Write it on a story stick or painter’s tape." },
+                { id: "cut", text: "Cut the door(s). Leave the mid-gap on a pair — do not sneak up on it later." },
+                { id: "cups", text: "Bore 35mm cups 3–6mm from the hinge edge, 13.5mm deep.", detail: `Centers from the top: ${hinges.centers.map((y) => formatInches(y)).join(" · ")}` },
+                { id: "hang", text: "Hang on the face-frame plate. Split the overlay evenly, then set the mid-gap." },
               ]}
             />
             <div className="border border-rule px-4 py-3 text-sm leading-6 text-ink-soft">
