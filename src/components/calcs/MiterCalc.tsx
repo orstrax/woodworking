@@ -2,6 +2,7 @@
 
 import { Field, NumberInput, Result, TextInput, ToolFrame } from "@/components/Fields";
 import { MiterPicture } from "@/components/plans/ShopPictures";
+import { BuildSheet } from "@/components/BuildSheet";
 import { formatInches, formatNumber, parseInches } from "@/lib/measure";
 import { useMemo, useState } from "react";
 
@@ -48,12 +49,32 @@ export function MiterCalc() {
       }
       plan={
         result ? (
-          <MiterPicture
-            sides={result.n}
-            miter={result.miter}
-            outside={parseInches(outside) ?? 0}
-            inside={result.inside}
-          />
+          <>
+            <MiterPicture
+              sides={result.n}
+              miter={result.miter}
+              outside={parseInches(outside) ?? 0}
+              inside={result.inside}
+            />
+            <BuildSheet
+              storageKey="storystick-cuts-miter"
+              rows={[
+                {
+                  name: "Frame parts",
+                  qty: result.n,
+                  size: `${formatInches(parseInches(width) ?? 0)} wide · long point ${formatInches(parseInches(outside) ?? 0)}`,
+                  note: `Saw at ${formatNumber(result.miter, 2)}°. Inside ${formatInches(result.inside)}.`,
+                  kind: "rail",
+                },
+              ]}
+              steps={[
+                { id: "set", text: `Set the saw to ${formatNumber(result.miter, 2)}° — that is the miter, not the corner.` },
+                { id: "stop", text: "Cut one piece, then use a stop so every long point matches." },
+                { id: "dry", text: "Dry-fit the whole frame. Gaps at a corner mean the saw is off, not the length." },
+                { id: "glue", text: "Glue and strap. Check diagonals before the glue sets." },
+              ]}
+            />
+          </>
         ) : null
       }
     >

@@ -2,6 +2,7 @@
 
 import { Field, NumberInput, Result, TextInput, ToolFrame } from "@/components/Fields";
 import { BoardPicture } from "@/components/plans/ShopPictures";
+import { BuildSheet } from "@/components/BuildSheet";
 import { boardFeet, formatNumber, parseInches } from "@/lib/measure";
 import { useMemo, useState } from "react";
 
@@ -45,13 +46,32 @@ export function BoardFeetCalc() {
       }
       plan={
         result ? (
-          <BoardPicture
-            thickness={result.t}
-            width={result.w}
-            lengthFt={Number(length)}
-            bf={result.bf}
-            qty={qty}
-          />
+          <>
+            <BoardPicture
+              thickness={result.t}
+              width={result.w}
+              lengthFt={Number(length)}
+              bf={result.bf}
+              qty={qty}
+            />
+            <BuildSheet
+              storageKey="storystick-cuts-board-feet"
+              rows={[
+                {
+                  name: "Boards to buy",
+                  qty,
+                  size: `${thickness} × ${width} × ${length}′`,
+                  note: `${formatNumber(result.withWaste, 2)} BF with ${waste}% waste · about $${formatNumber(result.cost, 2)}.`,
+                  kind: "board",
+                },
+              ]}
+              steps={[
+                { id: "list", text: "Buy the waste number, not the net. Defects and milling eat the extra." },
+                { id: "scale", text: "Pay for rough thickness. 4/4 that finishes 13/16″ is still billed as 1″." },
+                { id: "pick", text: "Pick grain and color at the rack. The calculator cannot see the board." },
+              ]}
+            />
+          </>
         ) : null
       }
     >

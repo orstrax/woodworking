@@ -15,6 +15,9 @@ export function SiteFooter() {
           <Link href="/tools/kitchen-plan" className="hover:text-walnut">
             Kitchen planner
           </Link>
+          <Link href="/tools/cabinet-box" className="hover:text-walnut">
+            Cabinet box
+          </Link>
           <Link href="/#tools" className="hover:text-walnut">
             All tools
           </Link>

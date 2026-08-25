@@ -2,6 +2,7 @@
 
 import { Field, Result, TextInput, ToolFrame } from "@/components/Fields";
 import { GluePicture } from "@/components/plans/ShopPictures";
+import { BuildSheet } from "@/components/BuildSheet";
 import { formatInches, parseInches } from "@/lib/measure";
 import { glueUp } from "@/lib/shop";
 import { useMemo, useState } from "react";
@@ -49,12 +50,32 @@ export function GlueUpCalc() {
       }
       plan={
         result && finishedIn && boardIn ? (
-          <GluePicture
-            count={result.count}
-            boardWidth={boardIn}
-            finished={finishedIn}
-            extra={result.extra}
-          />
+          <>
+            <GluePicture
+              count={result.count}
+              boardWidth={boardIn}
+              finished={finishedIn}
+              extra={result.extra}
+            />
+            <BuildSheet
+              storageKey="storystick-cuts-glue-up"
+              rows={[
+                {
+                  name: "Jointed boards",
+                  qty: result.count,
+                  size: `${formatInches(boardIn)} after jointing`,
+                  note: `Glue into ${formatInches(result.panel)}, then flatten and rip to ${formatInches(finishedIn)}.`,
+                  kind: "board",
+                },
+              ]}
+              steps={[
+                { id: "joint", text: "Joint both edges straight. Dry-fit — no light should show in the joint." },
+                { id: "grain", text: "Alternate end-grain smile / frown so the panel fights cupping." },
+                { id: "glue", text: "Glue, clamp, and use cauls to keep it flat. Do not cut to finished width yet." },
+                { id: "flatten", text: `Flatten after a full cure, then rip to ${formatInches(finishedIn)}.` },
+              ]}
+            />
+          </>
         ) : null
       }
     >

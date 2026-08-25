@@ -2,6 +2,7 @@
 
 import { Field, NumberInput, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
 import { MovementPicture } from "@/components/plans/ShopPictures";
+import { BuildSheet } from "@/components/BuildSheet";
 import { formatInches, formatNumber, parseInches } from "@/lib/measure";
 import { movementInches, SPECIES } from "@/lib/species";
 import { useMemo, useState } from "react";
@@ -46,7 +47,26 @@ export function MovementCalc() {
           <Result label="Need a width" value="—" />
         )
       }
-      plan={result ? <MovementPicture width={parseInches(width) ?? 0} change={result.change} /> : null}
+      plan={
+        result ? (
+          <>
+            <MovementPicture width={parseInches(width) ?? 0} change={result.change} />
+            <BuildSheet
+              storageKey="storystick-cuts-movement"
+              rows={[]}
+              steps={[
+                {
+                  id: "room",
+                  text: `Leave about ${formatInches(result.abs, 64)} of play across this ${width}″ panel.`,
+                  detail: "In a frame, that is float in the groove. On a tabletop, that is slotted fasteners or figure-8s.",
+                },
+                { id: "glue", text: "Do not glue a wide panel into a groove. Glue the frame joints only." },
+                { id: "finish", text: "Finish all faces, including the underside, so the panel moves evenly." },
+              ]}
+            />
+          </>
+        ) : null
+      }
     >
       <Field label="Species">
         <SelectInput value={speciesId} onChange={setSpeciesId}>

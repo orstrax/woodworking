@@ -2,6 +2,7 @@
 
 import { Field, NumberInput, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
 import { DovetailPicture } from "@/components/plans/ShopPictures";
+import { BuildSheet } from "@/components/BuildSheet";
 import { formatInches, parseInches } from "@/lib/measure";
 import { useMemo, useState } from "react";
 
@@ -67,7 +68,25 @@ export function DovetailCalc() {
       }
       plan={
         result ? (
-          <DovetailPicture width={parseInches(width) ?? 0} marks={result.marks} slope={result.slope} />
+          <>
+            <DovetailPicture width={parseInches(width) ?? 0} marks={result.marks} slope={result.slope} />
+            <BuildSheet
+              storageKey="storystick-cuts-dovetail"
+              rows={result.marks.map((mark, index) => ({
+                name: `${mark.kind} ${index + 1}`,
+                qty: 1,
+                size: `${formatInches(mark.start)} – ${formatInches(mark.end)}`,
+                note: mark.kind === "pin" ? "Half-pins sit on both ends." : `Tail about ${formatInches(result.tailW)} wide.`,
+                kind: "board",
+              }))}
+              steps={[
+                { id: "gauge", text: "Mark the baseline with a gauge. Hardwood often 1:8, softwood 1:6." },
+                { id: "tails", text: "Saw the tails first. Stay on the waste side of every line." },
+                { id: "transfer", text: "Stand the tail board on the pin board and knife the pins from the tails." },
+                { id: "pins", text: "Saw and chop the pins. Pare to the knife line — do not sneak past it." },
+              ]}
+            />
+          </>
         ) : null
       }
     >

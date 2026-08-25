@@ -447,3 +447,49 @@ export function drawerPlan(input: {
     fronts,
   };
 }
+
+export type DrawerBoxParts = {
+  stock: number;
+  bottom: number;
+  parts: { name: string; qty: number; thickness: string; width: number; length: number; note: string }[];
+};
+
+export function drawerBoxParts(
+  plan: DrawerPlan,
+  stock = 0.625,
+  bottom = 0.25,
+): DrawerBoxParts | null {
+  if (stock <= 0 || plan.boxW <= stock * 2 || plan.boxH <= 0 || plan.boxD <= 0) return null;
+  const innerW = plan.boxW - stock * 2;
+  const groove = Math.min(0.25, stock / 2);
+  return {
+    stock,
+    bottom,
+    parts: [
+      {
+        name: "Drawer sides",
+        qty: 2 * plan.count,
+        thickness: formatInches(stock),
+        width: plan.boxH,
+        length: plan.boxD,
+        note: `${plan.count === 1 ? "One box" : `${plan.count} boxes`} · groove ${formatInches(groove)} for the bottom.`,
+      },
+      {
+        name: "Drawer front & back",
+        qty: 2 * plan.count,
+        thickness: formatInches(stock),
+        width: plan.boxH,
+        length: innerW,
+        note: "Fits between the sides. Same groove as the sides.",
+      },
+      {
+        name: "Drawer bottom",
+        qty: plan.count,
+        thickness: formatInches(bottom),
+        width: innerW + groove * 2 - 1 / 16,
+        length: plan.boxD - stock * 2 + groove * 2 - 1 / 16,
+        note: "¼″ plywood in a groove. Cut shy so it can float.",
+      },
+    ],
+  };
+}

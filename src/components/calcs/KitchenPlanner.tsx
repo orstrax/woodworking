@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useSyncExternalStore } from "react";
+import { BuildSheet } from "@/components/BuildSheet";
 import { Field, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
 import { KitchenPictures } from "@/components/plans/KitchenPictures";
-import { CutList } from "@/components/ShopDrawing";
 import type { FitStyle, ShakerBuild } from "@/lib/cabinet";
+import { layoutFromOpening } from "@/lib/cabinetBox";
 import {
   defaultKitchen,
   kitchenTotals,
@@ -15,7 +17,7 @@ import {
   type KitchenState,
   type KitchenRow,
 } from "@/lib/kitchen";
-import { formatInches } from "@/lib/measure";
+import { formatInches, parseInches } from "@/lib/measure";
 
 const STORAGE = "storystick-kitchen-v1";
 const EVENT = "storystick-kitchen";
@@ -187,7 +189,21 @@ export function KitchenPlanner() {
                       </p>
                     ) : null}
                     <div className="mt-3">
-                      <CutList rows={result.parts} />
+                      <BuildSheet
+                        storageKey={`storystick-cuts-kitchen-${result.id}`}
+                        rows={result.parts}
+                        steps={[
+                          {
+                            id: "cut",
+                            text: `Cut and label every part for ${result.name} before you move on.`,
+                          },
+                          {
+                            id: "box",
+                            text: "Build the plywood box (or open the cabinet box tool) so these faces have a home.",
+                          },
+                        ]}
+                        title={`${result.name} cut list`}
+                      />
                     </div>
                   </>
                 )}
@@ -199,7 +215,25 @@ export function KitchenPlanner() {
               <p className="mt-1 mb-3 max-w-2xl text-sm leading-6 text-ink-soft">
                 Same part name and size stacked. The note column lists every cabinet that uses that size.
               </p>
-              <CutList rows={summary} />
+              <BuildSheet
+                storageKey="storystick-cuts-kitchen-summary"
+                rows={summary}
+                steps={[
+                  {
+                    id: "gang",
+                    text: "Gang matching sizes from this summary — all 32 3/4″ stiles in one stack.",
+                  },
+                  {
+                    id: "label",
+                    text: "Keep a painter’s-tape label on each bundle with the cabinet names from the note column.",
+                  },
+                  {
+                    id: "check",
+                    text: "Check the list against the kitchen picture so no opening is missing a door.",
+                  },
+                ]}
+                title="Shop summary"
+              />
             </article>
           </div>
         </>
@@ -332,6 +366,7 @@ export function KitchenPlanner() {
               }))
             }
             canRemove={state.openings.length > 1}
+            stile={state.defaults.stile}
           />
         ))}
       </div>
@@ -359,6 +394,7 @@ function OpeningCard({
   onDuplicate,
   onRemove,
   canRemove,
+  stile,
 }: {
   opening: KitchenOpeningInput;
   index: number;
@@ -366,7 +402,12 @@ function OpeningCard({
   onDuplicate: () => void;
   onRemove: () => void;
   canRemove: boolean;
+  stile: string;
 }) {
+  const openingW = parseInches(opening.openingW);
+  const stileN = parseInches(stile) ?? 1.5;
+  const overall = openingW ? formatInches(openingW + stileN * 2).replace(/"/g, "") : opening.openingW;
+  const boxHref = `/tools/cabinet-box?kind=${opening.row}&layout=${layoutFromOpening(opening.row, opening.doorCount, opening.drawerCount)}&w=${encodeURIComponent(overall)}`;
   return (
     <div className="rounded-sm border border-rule bg-paper/80 p-4">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
@@ -450,6 +491,11 @@ function OpeningCard({
           <div />
         )}
       </div>
+      <p className="mt-3">
+        <Link href={boxHref} className="font-mono text-[11px] uppercase tracking-[0.14em] text-walnut hover:text-shellac">
+          Build this box →
+        </Link>
+      </p>
     </div>
   );
 }

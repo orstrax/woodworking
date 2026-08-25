@@ -2,6 +2,7 @@
 
 import { Field, NumberInput, Result, TextInput, ToolFrame } from "@/components/Fields";
 import { CirclePicture } from "@/components/plans/ShopPictures";
+import { BuildSheet } from "@/components/BuildSheet";
 import { formatInches, formatNumber, parseInches } from "@/lib/measure";
 import { useMemo, useState } from "react";
 
@@ -53,12 +54,31 @@ export function CircleCalc() {
       }
       plan={
         result ? (
-          <CirclePicture
-            diameter={parseInches(diameter) ?? 0}
-            segments={Math.max(3, Math.round(segments))}
-            chord={result.chord}
-            miter={result.miter}
-          />
+          <>
+            <CirclePicture
+              diameter={parseInches(diameter) ?? 0}
+              segments={Math.max(3, Math.round(segments))}
+              chord={result.chord}
+              miter={result.miter}
+            />
+            <BuildSheet
+              storageKey="storystick-cuts-circle"
+              rows={[
+                {
+                  name: "Ring segments",
+                  qty: Math.max(3, Math.round(segments)),
+                  size: `Chord ${formatInches(result.chord)} · miter ${formatNumber(result.miter, 2)}°`,
+                  note: "The chord is the inside face of each board before the miters.",
+                  kind: "segment",
+                },
+              ]}
+              steps={[
+                { id: "cut", text: "Cut every segment to the same chord. A stop block matters more than a tape here." },
+                { id: "miter", text: `Miter ${formatNumber(result.miter, 2)}° on both ends of each piece.` },
+                { id: "glue", text: "Dry-fit the ring. Glue in halves if it is large, then join the halves." },
+              ]}
+            />
+          </>
         ) : null
       }
     >

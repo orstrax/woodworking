@@ -38,6 +38,16 @@ export function ToolThumb({ slug, className }: { slug: string; className?: strin
 function renderThumb(slug: string) {
   const f = fills(slug);
   switch (slug) {
+    case "cabinet-box":
+      return (
+        <Frame slug={slug} label="A cabinet box">
+          <rect x="70" y="22" width="180" height="46" fill={f.oak} stroke="#6b3a1f" />
+          <rect x="82" y="32" width="156" height="26" fill={f.maple} stroke="#24180f" />
+          <rect x="70" y="76" width="180" height="82" fill={f.oak} stroke="#6b3a1f" />
+          <line x1="160" y1="84" x2="160" y2="150" stroke="#6b3a1f" />
+          <rect x="70" y="158" width="180" height="12" fill="#6b3a1f" />
+        </Frame>
+      );
     case "kitchen-plan":
       return (
         <Frame slug={slug} label="A kitchen of cabinets">

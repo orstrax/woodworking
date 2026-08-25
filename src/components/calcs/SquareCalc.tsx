@@ -2,6 +2,7 @@
 
 import { Field, Result, TextInput, ToolFrame } from "@/components/Fields";
 import { SquarePicture } from "@/components/plans/ShopPictures";
+import { BuildSheet } from "@/components/BuildSheet";
 import { formatInches, parseInches } from "@/lib/measure";
 import { rectangleDiagonal, squareCheck, threeFourFive } from "@/lib/shop";
 import { useMemo, useState } from "react";
@@ -63,12 +64,27 @@ export function SquareCalc() {
       }
       plan={
         result ? (
-          <SquarePicture
-            width={result.w}
-            height={result.h}
-            expected={result.expected}
-            status={!result.hasDiags ? "unknown" : result.measured.square ? "square" : "out"}
-          />
+          <>
+            <SquarePicture
+              width={result.w}
+              height={result.h}
+              expected={result.expected}
+              status={!result.hasDiags ? "unknown" : result.measured.square ? "square" : "out"}
+            />
+            <BuildSheet
+              storageKey="storystick-cuts-square"
+              rows={[]}
+              steps={[
+                { id: "measure", text: `Pull both diagonals. They should each read ${formatInches(result.expected)}.` },
+                { id: "pull", text: "If they differ, pull the long diagonal (clamp or strap) until they match." },
+                {
+                  id: "345",
+                  text: `Or mark a 3-4-5: ${formatInches(result.tff.a)} · ${formatInches(result.tff.b)} · ${formatInches(result.tff.c)}.`,
+                },
+                { id: "back", text: "On a cabinet, put the back on while it is still square." },
+              ]}
+            />
+          </>
         ) : null
       }
     >

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ShopGuide } from "@/components/ShopGuide";
 import { BoardFeetCalc } from "@/components/calcs/BoardFeetCalc";
+import { CabinetBoxCalc } from "@/components/calcs/CabinetBoxCalc";
 import { CabinetDoorCalc } from "@/components/calcs/CabinetDoorCalc";
 import { CircleCalc } from "@/components/calcs/CircleCalc";
 import { DovetailCalc } from "@/components/calcs/DovetailCalc";
@@ -35,6 +36,7 @@ export async function generateMetadata({ params }: PageProps<"/tools/[slug]">) {
 
 const CALCS: Record<string, ComponentType> = {
   "kitchen-plan": KitchenPlanner,
+  "cabinet-box": CabinetBoxCalc,
   "cabinet-doors": CabinetDoorCalc,
   "shaker-door": ShakerDoorCalc,
   drawers: DrawerCalc,

@@ -34,6 +34,12 @@ export default function Home() {
                 Kitchen planner
               </Link>
               <Link
+                href="/tools/cabinet-box"
+                className="rounded-full border border-rule bg-paper/80 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-walnut"
+              >
+                Box builder
+              </Link>
+              <Link
                 href="#tools"
                 className="rounded-full border border-rule bg-paper/80 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-walnut"
               >

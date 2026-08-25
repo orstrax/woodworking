@@ -8,7 +8,7 @@ export const TOOL_GROUPS: ToolGroup[] = [
   {
     id: "cabinets",
     title: "Cabinets",
-    blurb: "Doors, drawers, overlays, and hinges — drawn like the cupboard in front of you.",
+    blurb: "The whole cabinet: box, face, doors, drawers, and a kitchen of them.",
   },
   {
     id: "lumber",
@@ -51,6 +51,15 @@ export const TOOLS: Tool[] = [
     summary: "Measure every opening, then print a cut list grouped by cabinet and rolled up for the shop.",
     description:
       "Plan the kitchen: doors, pairs, and drawer stacks. Each hole keeps its own parts, then a summary gangs matching sizes.",
+  },
+  {
+    slug: "cabinet-box",
+    name: "Cabinet box",
+    tag: "Cabinets",
+    group: "cabinets",
+    summary: "A whole cabinet: plywood box, face frame, and the doors or drawers that hang on it.",
+    description:
+      "Pick a typical layout — 36″ drawer base, sink, upper — then change any measurement. Cut list, pictures, and bench steps.",
   },
   {
     slug: "cabinet-doors",
