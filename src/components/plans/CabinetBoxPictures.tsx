@@ -197,15 +197,37 @@ function cellFace(
 function ExplodedBox({ plan }: { plan: CabinetBoxPlan }) {
   const viewW = 560;
   const viewH = 420;
+  const joinHint =
+    plan.assembly === "pocket"
+      ? "Pocket-screw the bottom and stretchers between the sides. Screw the back on last."
+      : plan.assembly === "screws"
+        ? "Screw through the sides into the bottom and stretchers. Screw the back on last."
+        : "Dados hold the bottom. A rabbet holds the back.";
   return (
     <Picture
       title="Take the box apart — the plywood and the frame"
-      caption="Two sides, a bottom, stretchers or a top, and a thin back. The face frame glues on last. Orange numbers match the cut list."
+      caption={`Two sides, a bottom, stretchers or a top, and a thin back. ${joinHint} The face frame glues on last. Orange numbers match the cut list.`}
       viewBox={`0 0 ${viewW} ${viewH}`}
       legend={[
         { n: 1, label: "Sides", hint: `2 pc · ${formatInches(plan.boxD)} × ${formatInches(plan.boxH)}` },
-        { n: 2, label: "Bottom", hint: "Sits in dados, at the top of the toe kick on a base." },
-        { n: 3, label: "Back", hint: "¼″ plywood. This is what squares the cabinet." },
+        {
+          n: 2,
+          label: "Bottom",
+          hint:
+            plan.assembly === "dado"
+              ? "Sits in dados, at the top of the toe kick on a base."
+              : plan.assembly === "pocket"
+                ? "Butt between the sides. Pocket screws from underneath."
+                : "Butt between the sides. Screws through the sides.",
+        },
+        {
+          n: 3,
+          label: "Back",
+          hint:
+            plan.assembly === "dado"
+              ? "¼″ plywood. This is what squares the cabinet."
+              : "¼″ plywood, screwed on. This is still what squares the cabinet.",
+        },
         {
           n: 4,
           label: plan.kind === "upper" || plan.kind === "tall" ? "Top" : "Stretchers",

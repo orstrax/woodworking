@@ -31,6 +31,17 @@ export function MeasureCalc() {
           </>
         )
       }
+      printFacts={
+        inches === null
+          ? undefined
+          : [
+              { label: "Decimal inches", value: `${formatNumber(inches, 4)}"` },
+              { label: "Nearest 32nd", value: formatInches(inches, 32) },
+              { label: "Nearest 16th", value: formatInches(inches, 16) },
+              { label: "Millimeters", value: `${formatNumber(inches * 25.4, 2)} mm` },
+              { label: "Quarter scale", value: `${toFraction(inches, 4)}`, note: "4/4 = 1″ rough" },
+            ]
+      }
       plan={inches !== null && inches > 0 ? <MeasurePicture inches={inches} /> : null}
     >
       <Field label="Measurement" hint='1 7/16, 19mm, 5/4'>

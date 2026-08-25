@@ -14,7 +14,6 @@ import { KitchenPlanner } from "@/components/calcs/KitchenPlanner";
 import { MeasureCalc } from "@/components/calcs/MeasureCalc";
 import { MiterCalc } from "@/components/calcs/MiterCalc";
 import { MovementCalc } from "@/components/calcs/MovementCalc";
-import { ShakerDoorCalc } from "@/components/calcs/ShakerDoorCalc";
 import { SpacingCalc } from "@/components/calcs/SpacingCalc";
 import { SquareCalc } from "@/components/calcs/SquareCalc";
 import { WeightCalc } from "@/components/calcs/WeightCalc";
@@ -38,7 +37,6 @@ const CALCS: Record<string, ComponentType> = {
   "kitchen-plan": KitchenPlanner,
   "cabinet-box": CabinetBoxCalc,
   "cabinet-doors": CabinetDoorCalc,
-  "shaker-door": ShakerDoorCalc,
   drawers: DrawerCalc,
   "board-feet": BoardFeetCalc,
   "glue-up": GlueUpCalc,
@@ -60,7 +58,7 @@ export default async function ToolPage({ params }: PageProps<"/tools/[slug]">) {
   if (!tool || !Calc) notFound();
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
+    <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14 print:max-w-none print:p-0">
       <div className="flex flex-wrap items-center gap-4 print:hidden">
         <Link
           href="/#tools"
@@ -75,7 +73,7 @@ export default async function ToolPage({ params }: PageProps<"/tools/[slug]">) {
           Shop words
         </Link>
       </div>
-      <div className="mt-6">
+      <div className="mt-6 print:mt-0">
         <Calc />
       </div>
       <ShopGuide slug={slug} />

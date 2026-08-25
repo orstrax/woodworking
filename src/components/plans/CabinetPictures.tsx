@@ -191,92 +191,128 @@ function CabinetFront({ plan, hinges }: { plan: DoorPlan; hinges: HingeAdvice })
 
 function OverlayCutaway({ plan }: { plan: DoorPlan }) {
   const inset = plan.doorW < plan.openingW;
-  const frame = 58;
-  const box = 78;
-  const overlay = inset ? 0 : Math.max(16, (plan.overlayX / Math.max(plan.stile, 0.25)) * frame);
-  const reveal = inset ? 0 : Math.max(10, frame - overlay);
-  const gap = inset ? 14 : 0;
-  const ox = 48;
-  const oy = 58;
-  const doorX = inset ? ox + box + frame + gap : ox + box + reveal;
-  const doorW = 118;
+  const ox = 28;
+  const oy = 62;
+  const insideW = 96;
+  const sideW = 26;
+  const frameW = 78;
+  const bodyH = 128;
+  const doorBodyW = 168;
+  const doorBodyH = 104;
+  const stile = Math.max(plan.stile, 0.001);
+  const overlayW = inset ? 0 : Math.max(0, Math.min(frameW, (plan.overlayX / stile) * frameW));
+  const revealW = inset ? 0 : Math.max(0, frameW - overlayW);
+  const gapW = inset ? 18 : 0;
+  const sideX = ox + insideW;
+  const frameX = sideX + sideW;
+  const doorX = inset ? frameX + frameW + gapW : frameX + revealW;
+  const doorY = oy + (bodyH - doorBodyH) / 2;
+  const cupX = doorX + 16;
+  const cupY = doorY + doorBodyH / 2;
 
   return (
     <Picture
       title="Looking down from the ceiling"
       caption={
         inset
-          ? "The door tucks inside the opening, like a lid that sits in a box. The empty strip is the gap so it can swing without scraping."
-          : "The door covers part of the face frame. Overlay is the covered part. Reveal is the strip of frame you still see."
+          ? "Left is inside the cupboard. Then the plywood side, the face frame, a swing gap, and the door sitting in the opening."
+          : "Left is inside the cupboard. Then the plywood side, the face frame, and the door coming in from the kitchen. Overlay is how much frame the door covers. Reveal is what you still see."
       }
-      viewBox="0 0 460 250"
+      viewBox="0 0 560 320"
       legend={
         inset
           ? [
-              { n: 1, label: "Inside the cabinet", hint: "Shelves, dishes — the dark box" },
-              { n: 2, label: "Face frame", hint: `${formatInches(plan.stile)} stile, looking down on its thickness` },
-              { n: 3, label: "Gap", hint: formatInches(plan.revealX) },
-              { n: 4, label: "Door", hint: "Sits in the opening, not on the face" },
+              { n: 1, label: "Inside", hint: "The cupboard box" },
+              { n: 2, label: "Box side", hint: "Plywood end, looking down on its thickness" },
+              { n: 3, label: "Face frame", hint: `${formatInches(plan.stile)} stile` },
+              { n: 4, label: "Door", hint: `${formatInches(plan.revealX)} gap so it can swing` },
             ]
           : [
-              { n: 1, label: "Inside the cabinet", hint: "The cupboard box" },
-              { n: 2, label: "Face frame", hint: `${formatInches(plan.stile)} stile` },
-              { n: 3, label: "Reveal", hint: `${formatInches(plan.revealX)} still showing` },
-              { n: 4, label: "Overlay", hint: `${formatInches(plan.overlayX)} covered by the door` },
+              { n: 1, label: "Inside", hint: "The cupboard box" },
+              { n: 2, label: "Box side", hint: "Plywood end, looking down on its thickness" },
+              { n: 3, label: "Face frame", hint: `${formatInches(plan.stile)} stile` },
+              { n: 4, label: "Door", hint: `${formatInches(plan.overlayX)} overlay · ${formatInches(plan.revealX)} reveal` },
             ]
       }
     >
-      <rect x={ox} y={oy} width={box} height={118} fill="url(#hatch-box)" stroke="#8a7355" strokeWidth="1.1" />
-      <rect x={ox + box} y={oy} width={frame} height={118} fill="url(#grain-frame)" stroke="#6b3a1f" strokeWidth="1.5" />
+      <rect x={ox} y={oy} width={insideW} height={bodyH} fill="url(#hatch-box)" stroke="#8a7355" strokeWidth="1.1" />
+      <rect x={sideX} y={oy} width={sideW} height={bodyH} fill="url(#grain-panel)" stroke="#6b3a1f" strokeWidth="1.2" />
+      <rect x={frameX} y={oy} width={frameW} height={bodyH} fill="url(#grain-frame)" stroke="#6b3a1f" strokeWidth="1.5" />
       {inset ? (
         <rect
-          x={ox + box + frame}
+          x={frameX + frameW}
           y={oy}
-          width={gap}
-          height={118}
+          width={gapW}
+          height={bodyH}
           fill="#f3ead7"
           stroke="#c45c26"
           strokeDasharray="3 2"
         />
-      ) : (
-        <rect x={ox + box} y={oy} width={reveal} height={118} fill="#c45c26" fillOpacity="0.2" />
-      )}
+      ) : revealW > 0.5 ? (
+        <rect x={frameX} y={oy} width={revealW} height={bodyH} fill="#c45c26" fillOpacity="0.22" />
+      ) : null}
       <rect
         x={doorX}
-        y={oy + 10}
-        width={doorW}
-        height={98}
+        y={doorY}
+        width={doorBodyW}
+        height={doorBodyH}
         fill="url(#grain-door)"
         stroke="#24180f"
         strokeWidth="1.5"
         filter="url(#lift)"
       />
-      {!inset ? (
-        <rect x={doorX} y={oy + 10} width={overlay} height={98} fill="#c45c26" fillOpacity="0.18" />
+      {!inset && overlayW > 0.5 ? (
+        <rect x={doorX} y={doorY} width={overlayW} height={doorBodyH} fill="#c45c26" fillOpacity="0.2" />
       ) : null}
-      <circle cx={doorX + 12} cy={oy + 59} r="8" fill="#e8d7b5" stroke="#6b3a1f" strokeWidth="1.1" />
-      <circle cx={doorX + 12} cy={oy + 59} r="2.5" fill="#6b3a1f" />
-      <Callout n={1} x={ox + 18} y={oy + 18} />
-      <Callout n={2} x={ox + box + frame / 2} y={oy + 18} />
-      <Callout n={3} x={inset ? ox + box + frame + gap / 2 : ox + box + reveal / 2} y={oy + 59} />
-      <Callout n={4} x={doorX + 28} y={oy + 22} />
-      <Chip x={ox + box / 2} y={oy - 18} text="inside" />
-      <Chip x={ox + box + frame / 2} y={oy - 18} text="face frame" fill="#6b3a1f" />
-      <Chip x={doorX + doorW / 2} y={oy - 18} text="door" fill="#c45c26" />
+      <circle cx={cupX} cy={cupY} r="9" fill="#e8d7b5" stroke="#6b3a1f" strokeWidth="1.1" />
+      <circle cx={cupX} cy={cupY} r="3" fill="#6b3a1f" />
+      <Callout n={1} x={ox + 22} y={oy + 22} />
+      <Callout n={2} x={sideX + sideW / 2} y={oy + 22} />
+      <Callout n={3} x={frameX + frameW / 2} y={oy + 22} />
+      <Callout n={4} x={doorX + 48} y={doorY + 20} />
+      <Chip x={ox + insideW / 2} y={oy - 22} text="inside" />
+      <Chip x={sideX + sideW / 2} y={oy - 22} text="box" fill="#8b5a32" />
+      <Chip x={frameX + frameW / 2} y={oy - 22} text="face frame" fill="#6b3a1f" />
+      <Chip x={doorX + doorBodyW - 40} y={oy - 22} text="door" fill="#c45c26" />
       {!inset ? (
         <>
-          <Chip
-            x={doorX + overlay / 2}
-            y={oy + 140}
-            text={`overlay ${formatInches(plan.overlayX)}`}
-            fill="#c45c26"
-          />
-          <Chip x={ox + box + reveal / 2} y={oy + 164} text={`reveal ${formatInches(plan.revealX)}`} />
+          {overlayW > 0.5 ? (
+            <Chip
+              x={doorX + overlayW / 2}
+              y={oy + bodyH + 28}
+              text={`overlay ${formatInches(plan.overlayX)}`}
+              fill="#c45c26"
+            />
+          ) : null}
+          {revealW > 8 ? (
+            <Chip
+              x={frameX + revealW / 2}
+              y={oy + bodyH + 54}
+              text={`reveal ${formatInches(plan.revealX)}`}
+            />
+          ) : plan.revealX <= 0.02 ? (
+            <Chip x={frameX + frameW / 2} y={oy + bodyH + 54} text="no reveal — full overlay" />
+          ) : (
+            <Chip
+              x={Math.max(frameX + 70, doorX + overlayW + 70)}
+              y={oy + bodyH + 54}
+              text={`reveal ${formatInches(plan.revealX)}`}
+            />
+          )}
         </>
       ) : (
-        <Chip x={ox + box + frame + gap / 2} y={oy + 140} text={`gap ${formatInches(plan.revealX)}`} fill="#c45c26" />
+        <Chip
+          x={frameX + frameW + gapW / 2}
+          y={oy + bodyH + 28}
+          text={`gap ${formatInches(plan.revealX)}`}
+          fill="#c45c26"
+        />
       )}
-      <Caption x={ox} y={228} text="Left = inside the cupboard. Right = the kitchen. The hinge cup sits on the door." />
+      <Caption
+        x={ox}
+        y={304}
+        text="Left = inside the cupboard. Right = the kitchen. The circle is the 35mm hinge cup in the door."
+      />
     </Picture>
   );
 }

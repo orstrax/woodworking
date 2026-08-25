@@ -43,6 +43,28 @@ export function WeightCalc() {
           <Result label="Need dimensions" value="—" />
         )
       }
+      printFacts={
+        result
+          ? [
+              { label: "Weight", value: `${formatNumber(result.pounds, 1)} lb` },
+              { label: "Metric", value: `${formatNumber(result.kg, 1)} kg` },
+              {
+                label: "Volume",
+                value: `${formatNumber(result.volumeFt3, 3)} ft³`,
+                note: `${formatNumber(result.bf, 2)} board feet of ${species.name.toLowerCase()}.`,
+              },
+            ]
+          : undefined
+      }
+      printSteps={
+        result
+          ? [
+              { text: `Plan on about ${formatNumber(result.pounds, 0)} lb. Oak is heavy; pine is not.` },
+              { text: "Check tabletop fasteners, casters, and wall cabinets against this number." },
+              { text: "A second pair of hands is cheaper than a cracked panel." },
+            ]
+          : undefined
+      }
       plan={
         result ? (
           <>

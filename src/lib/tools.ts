@@ -67,18 +67,9 @@ export const TOOLS: Tool[] = [
     tag: "Cabinets",
     group: "cabinets",
     startHere: true,
-    summary: "Opening to door size: overlay, reveal, or inset, plus which hinges to buy.",
+    summary: "Opening to finished door: overlay, hinges, and shaker stiles and rails if you want them.",
     description:
-      "Measure the hole in the face frame. Pick how the door sits. Get the door, the overlay, hinge cups, and pictures of the front.",
-  },
-  {
-    slug: "shaker-door",
-    name: "Shaker door",
-    tag: "Cabinets",
-    group: "cabinets",
-    summary: "Stiles, rails, and the center panel — assembled, exploded, and cut to size.",
-    description:
-      "A picture-frame door. Micro or classic widths. Cope-and-stick or an applied frame on a slab.",
+      "Measure the hole. Pick how the door sits. Get the size, the hinges, and — if it is a shaker — the frame and panel cut list.",
   },
   {
     slug: "drawers",

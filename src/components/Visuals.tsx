@@ -280,14 +280,14 @@ export function Picture({
   legend?: { n: number; label: string; hint?: string }[];
 }) {
   return (
-    <figure className="overflow-hidden rounded-sm border border-rule bg-[#fbf6eb] shadow-[4px_4px_0_rgba(36,24,15,0.06)]">
-      <figcaption className="border-b border-rule px-4 py-4 sm:px-6">
+    <figure className="print-break overflow-hidden rounded-sm border border-rule bg-[#fbf6eb] shadow-[4px_4px_0_rgba(36,24,15,0.06)] print:overflow-visible print:shadow-none">
+      <figcaption className="border-b border-rule px-4 py-4 sm:px-6 print:px-3 print:py-2">
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-shellac">Picture</p>
-        <h3 className="mt-1 font-display text-2xl tracking-tight sm:text-3xl">{title}</h3>
-        <p className="mt-2 max-w-2xl text-base leading-7 text-ink-soft">{caption}</p>
+        <h3 className="mt-1 font-display text-2xl tracking-tight sm:text-3xl print:text-xl">{title}</h3>
+        <p className="mt-2 max-w-2xl text-base leading-7 text-ink-soft print:mt-1 print:text-sm print:leading-5">{caption}</p>
       </figcaption>
-      <div className="px-2 py-6 sm:px-5">
-        <svg viewBox={viewBox} className="mx-auto h-auto w-full max-w-4xl" role="img" aria-label={title}>
+      <div className="px-2 py-6 sm:px-5 print:px-1 print:py-2">
+        <svg viewBox={viewBox} className="mx-auto h-auto w-full max-w-4xl print:max-h-[3.4in]" role="img" aria-label={title}>
           <WoodDefs />
           <rect width="100%" height="100%" fill="url(#paper-grid)" />
           {children}

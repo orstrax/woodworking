@@ -52,6 +52,29 @@ export function SpacingCalc() {
           <Result label="Need a span" value="—" />
         )
       }
+      printFacts={
+        result
+          ? [
+              { label: "On-center spacing", value: formatInches(result.oc) },
+              { label: "Usable span", value: formatInches(result.usable) },
+              {
+                label: "Centers from left",
+                value: result.centers.map((center, index) => `${index + 1}. ${formatInches(center)}`).join("   "),
+              },
+            ]
+          : undefined
+      }
+      printSteps={
+        result
+          ? [
+              { text: "Mark from the left edge as zero. The leftover on each end is the inset." },
+              {
+                text: `Centers: ${result.centers.map((center, index) => `${index + 1} at ${formatInches(center)}`).join(" · ")}`,
+              },
+              { text: `On-center step is ${formatInches(result.oc)}. Matching insets mean the run looks even.` },
+            ]
+          : undefined
+      }
       plan={
         result ? (
           <SpacingPicture span={parseInches(span) ?? 0} inset={parseInches(inset) ?? 0} centers={result.centers} oc={result.oc} />

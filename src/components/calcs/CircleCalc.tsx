@@ -52,6 +52,41 @@ export function CircleCalc() {
           <Result label="Need a diameter" value="—" />
         )
       }
+      printFacts={
+        result
+          ? [
+              { label: "Circumference", value: formatInches(result.circ) },
+              { label: "Radius", value: formatInches(result.r) },
+              {
+                label: "Segment miter",
+                value: `${formatNumber(result.miter, 2)}°`,
+                note: `${segments} pieces. Chord ${formatInches(result.chord)}.`,
+              },
+              { label: "Arc per segment", value: formatInches(result.outerArc) },
+            ]
+          : undefined
+      }
+      printRows={
+        result
+          ? [
+              {
+                name: "Ring segments",
+                qty: Math.max(3, Math.round(segments)),
+                size: `Chord ${formatInches(result.chord)} · miter ${formatNumber(result.miter, 2)}°`,
+                note: "The chord is the inside face of each board before the miters.",
+              },
+            ]
+          : undefined
+      }
+      printSteps={
+        result
+          ? [
+              { text: "Cut every segment to the same chord. A stop block matters more than a tape here." },
+              { text: `Miter ${formatNumber(result.miter, 2)}° on both ends of each piece.` },
+              { text: "Dry-fit the ring. Glue in halves if it is large, then join the halves." },
+            ]
+          : undefined
+      }
       plan={
         result ? (
           <>

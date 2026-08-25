@@ -123,33 +123,37 @@ export function KitchenPlanner() {
               note="Same-size parts roll together. Notes say which cabinet they belong to."
             />
           )}
-          <div className="mt-4 flex flex-wrap gap-2">
-            <button
-              type="button"
-              className="rounded-full bg-paper px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-iron"
-              onClick={() => window.print()}
-            >
-              Print cut list
-            </button>
-            <button
-              type="button"
-              className="rounded-full border border-ticket-tan/40 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-ticket-tan"
-              onClick={() => writeKitchen(defaultKitchen())}
-            >
-              Reset sample
-            </button>
-          </div>
+          <button
+            type="button"
+            className="mt-4 rounded-full border border-ticket-tan/40 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-ticket-tan"
+            onClick={() => writeKitchen(defaultKitchen())}
+          >
+            Reset sample
+          </button>
         </>
       }
+      printFacts={[
+        {
+          label: state.defaults.name.trim() || "Kitchen",
+          value: `${totals.doors} door${totals.doors === 1 ? "" : "s"}`,
+          note: `${totals.drawers} drawer fronts · ${totals.openings} openings`,
+        },
+      ]}
+      printRows={summary}
+      printSections={results
+        .filter((result) => !result.error && result.parts.length > 0)
+        .map((result) => ({
+          heading: result.name,
+          rows: result.parts.map(({ name, qty, size, note }) => ({ name, qty, size, note })),
+        }))}
+      printSteps={[
+        { text: "Gang matching sizes from the shop summary — all matching stiles in one stack." },
+        { text: "Keep a painter’s-tape label on each bundle with the cabinet names from the note column." },
+        { text: "Check the list against the kitchen so no opening is missing a door." },
+      ]}
+      note={`${totals.doors} doors · ${totals.drawers} drawer fronts · ${totals.openings} openings`}
       plan={
         <>
-          <div className="hidden print:block print-break">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-shellac">Story Stick</p>
-            <h2 className="font-display text-3xl tracking-tight">{state.defaults.name.trim() || "Kitchen"} cut list</h2>
-            <p className="mt-1 text-sm text-ink-soft">
-              {totals.doors} doors · {totals.drawers} drawer fronts · {totals.openings} openings
-            </p>
-          </div>
           <div className="print:hidden">
             <KitchenPictures results={results} />
           </div>

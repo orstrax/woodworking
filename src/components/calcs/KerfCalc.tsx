@@ -58,6 +58,44 @@ export function KerfCalc() {
           <Result label="Need sizes" value="—" />
         )
       }
+      printFacts={
+        rips
+          ? [
+              {
+                label: "Strips from this board",
+                value: `${rips.count}`,
+                note: `${rips.rips} rips · leftover ${formatInches(rips.leftover)}`,
+              },
+              { label: "Used by strips + kerfs", value: formatInches(rips.used) },
+              ...(cross
+                ? [
+                    {
+                      label: "Stick for crosscuts",
+                      value: formatInches(cross.needed),
+                      note: `${pieces} pieces plus ${formatInches(cross.waste)} of kerf`,
+                    },
+                  ]
+                : []),
+            ]
+          : undefined
+      }
+      printRows={
+        rips
+          ? [
+              {
+                name: "Rip strips",
+                qty: rips.count,
+                size: formatInches(rips.p),
+                note: `From ${formatInches(rips.s)} stock · ${formatInches(rips.k)} kerf · leftover ${formatInches(rips.leftover)}.`,
+              },
+            ]
+          : undefined
+      }
+      printSteps={[
+        { text: "Count the rips before you start. Every cut eats a kerf." },
+        { text: "Rip the strips. Do not assume the last one equals the first." },
+        { text: "For crosscuts, use a stop block. Still add kerf to the stick you buy." },
+      ]}
       plan={
         rips && rips.count > 0 ? (
           <>

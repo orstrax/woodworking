@@ -66,6 +66,50 @@ export function DrawerCalc() {
           <Result label="Need an opening" value="—" />
         )
       }
+      printFacts={
+        plan
+          ? [
+              {
+                label: "Drawer front",
+                value: `${formatInches(plan.frontW)} × ${formatInches(plan.frontH)}`,
+                note: plan.count > 1 ? `${plan.count} fronts with ${formatInches(plan.gap)} gaps` : "Single front",
+              },
+              { label: "Box width", value: formatInches(plan.boxW) },
+              { label: "Box depth × height", value: `${formatInches(plan.boxD)} × ${formatInches(plan.boxH)}` },
+            ]
+          : undefined
+      }
+      printRows={
+        plan
+          ? [
+              ...plan.fronts.map((front) => ({
+                name: front.label,
+                qty: 1,
+                size: `${formatInches(front.width)} × ${formatInches(front.height)} × 3/4"`,
+                note: `${formatInches(plan.overlayX)} overlay`,
+              })),
+              ...(drawerBoxParts(plan)?.parts.map((part) => ({
+                name: part.name,
+                qty: part.qty,
+                size: `${part.thickness} × ${formatInches(part.width)} × ${formatInches(part.length)}`,
+                note: part.note,
+              })) ?? []),
+            ]
+          : undefined
+      }
+      printSteps={
+        plan
+          ? [
+              { text: "Cut the pretty fronts first so they match the doors in the same run." },
+              { text: "Build the boxes smaller than the fronts. Groove the bottom so it can float." },
+              {
+                text: "Install slides in the cabinet, then the boxes, then overlay the fronts last.",
+                detail: slide === "side" ? "Side-mount: 1/2″ each side." : "Undermount: opening minus about 3/8″.",
+              },
+              { text: "Number from the top. Drawer 1 is the highest front." },
+            ]
+          : undefined
+      }
       plan={
         plan ? (
           <>

@@ -75,9 +75,9 @@ export function BuildSheet({
   const doneSteps = (steps ?? []).filter((step) => checks[`s-${step.id}`]).length;
 
   return (
-    <div className="grid gap-5">
+    <div className="grid gap-5 print:hidden">
       {items.length > 0 ? (
-        <div className="overflow-x-auto border border-rule">
+        <div className="print-break overflow-x-auto border border-rule">
           <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-rule bg-paper-2/60 px-3 py-2">
             <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-soft">{title}</p>
             <p className="font-mono text-[11px] text-ink-soft print:hidden">
@@ -123,7 +123,7 @@ export function BuildSheet({
         </div>
       ) : null}
       {steps && steps.length > 0 ? (
-        <div className="border border-rule bg-paper/80">
+        <div className="print-break border border-rule bg-paper/80">
           <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-rule px-4 py-3">
             <div>
               <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-shellac">On the bench</p>

@@ -15,6 +15,7 @@ import {
   TipGap,
   TipNailer,
   TipOverhang,
+  TipPocket,
   TipRail,
   TipShaker,
   TipSlides,
@@ -28,17 +29,32 @@ import {
   getLayout,
   layoutsFor,
   planCabinetBox,
+  type AssemblyJoin,
   type CabinetKind,
   type Construction,
 } from "@/lib/cabinetBox";
 import { formatInches, parseInches } from "@/lib/measure";
 
 const FIT_OPTIONS: { id: string; label: string; fit: FitStyle; amount: string }[] = [
-  { id: "r8", label: '1/8" reveal', fit: "reveal", amount: "1/8" },
+  { id: "full", label: "Full overlay (covers the face frame)", fit: "reveal", amount: "0" },
   { id: "r16", label: '1/16" reveal', fit: "reveal", amount: "1/16" },
-  { id: "full", label: "Full overlay", fit: "reveal", amount: "0" },
-  { id: "o12", label: '1/2" overlay', fit: "overlay", amount: "1/2" },
-  { id: "in8", label: "Inset, 1/8\" gap", fit: "inset", amount: "1/8" },
+  { id: "r8", label: '1/8" reveal', fit: "reveal", amount: "1/8" },
+  { id: "r4", label: '1/4" reveal', fit: "reveal", amount: "1/4" },
+  { id: "o12", label: '1/2" overlay (standard face-frame)', fit: "overlay", amount: "1/2" },
+  { id: "o38", label: '3/8" overlay', fit: "overlay", amount: "3/8" },
+  { id: "in16", label: 'Inset, 1/16" gap', fit: "inset", amount: "1/16" },
+  { id: "in8", label: 'Inset, 1/8" gap', fit: "inset", amount: "1/8" },
+  { id: "custom", label: "Custom amount", fit: "reveal", amount: "1/8" },
+];
+
+const DOOR_STYLES: { id: string; label: string; stile: string; rail: string; shaker: boolean }[] = [
+  { id: "slab", label: "Flat slab", stile: "3/4", rail: "3/4", shaker: false },
+  { id: "micro", label: 'Micro shaker — 3/4" frame', stile: "3/4", rail: "3/4", shaker: true },
+  { id: "narrow", label: 'Narrow — 1" frame', stile: "1", rail: "1", shaker: true },
+  { id: "slim", label: 'Slim shaker — 1 1/4" frame', stile: "1 1/4", rail: "1 1/4", shaker: true },
+  { id: "classic", label: 'Classic shaker — 2 1/4" frame', stile: "2 1/4", rail: "2 1/4", shaker: true },
+  { id: "wide", label: 'Wide shaker — 2 1/2" frame', stile: "2 1/2", rail: "2 1/2", shaker: true },
+  { id: "custom", label: "Custom shaker frame", stile: "3/4", rail: "3/4", shaker: true },
 ];
 
 export function CabinetBoxCalc() {
@@ -72,15 +88,18 @@ function CabinetBoxInner() {
   const [toeH, setToeH] = useState(KIND_DEFAULTS[startKind].toe);
   const [toeD, setToeD] = useState("3");
   const [fitId, setFitId] = useState("r8");
+  const [customFit, setCustomFit] = useState<FitStyle>("reveal");
+  const [customAmount, setCustomAmount] = useState("1/8");
   const [midGap, setMidGap] = useState("1/8");
   const [slide, setSlide] = useState<"undermount" | "side">("undermount");
   const [shelves, setShelves] = useState(String(getLayout(search.get("layout") ?? "base-drawers-3")?.shelves ?? KIND_DEFAULTS[startKind].shelves));
-  const [makeShaker, setMakeShaker] = useState("shaker");
+  const [doorStyle, setDoorStyle] = useState("micro");
   const [shakerBuild, setShakerBuild] = useState<ShakerBuild>("applied-miter");
   const [shakerStile, setShakerStile] = useState("3/4");
   const [shakerRail, setShakerRail] = useState("3/4");
   const [faceThick, setFaceThick] = useState("3/4");
   const [drawerStock, setDrawerStock] = useState("5/8");
+  const [assembly, setAssembly] = useState<AssemblyJoin>("dado");
   const [includeDoorFaces, setIncludeDoorFaces] = useState(true);
   const [includeDrawerFaces, setIncludeDrawerFaces] = useState(true);
   const [includeDrawerBoxes, setIncludeDrawerBoxes] = useState(true);
@@ -90,7 +109,13 @@ function CabinetBoxInner() {
 
   const available = layoutsFor(kind);
   const layout = getLayout(layoutId) ?? available[0] ?? CABINET_LAYOUTS[0];
-  const fit = FIT_OPTIONS.find((item) => item.id === fitId) ?? FIT_OPTIONS[0];
+  const selectedFit = FIT_OPTIONS.find((item) => item.id === fitId) ?? FIT_OPTIONS[2];
+  const fit = fitId === "custom" ? customFit : selectedFit.fit;
+  const fitAmount = fitId === "custom" ? customAmount : selectedFit.amount;
+  const selectedDoor = DOOR_STYLES.find((item) => item.id === doorStyle) ?? DOOR_STYLES[1];
+  const makeShaker = selectedDoor.shaker;
+  const shakerStileText = doorStyle === "custom" ? shakerStile : selectedDoor.stile;
+  const shakerRailText = doorStyle === "custom" ? shakerRail : selectedDoor.rail;
   const hasDoors = layout.cells.some((cell) => cell.kind === "doors");
   const hasDrawerFaces = layout.cells.some((cell) => cell.kind === "drawer" || cell.kind === "false-front");
   const hasDrawerBoxes = layout.cells.some((cell) => cell.kind === "drawer");
@@ -119,18 +144,19 @@ function CabinetBoxInner() {
           toeH: parseInches(toeH) ?? 0,
           toeD: parseInches(toeD) ?? 3,
           stretcherW: 4,
-          fit: fit.fit,
-          amount: parseInches(fit.amount) ?? 0.125,
+          fit,
+          amount: parseInches(fitAmount) ?? 0.125,
           midGap: parseInches(midGap) ?? 0.125,
           drawerGap: parseInches(midGap) ?? 0.125,
           slide,
           shelves: Math.max(0, Math.round(Number(shelves) || 0)),
-          makeShaker: makeShaker === "shaker",
+          makeShaker,
           shakerBuild,
-          shakerStile: parseInches(shakerStile) ?? 0.75,
-          shakerRail: parseInches(shakerRail) ?? 0.75,
+          shakerStile: parseInches(shakerStileText) ?? 0.75,
+          shakerRail: parseInches(shakerRailText) ?? 0.75,
           faceThick: parseInches(faceThick) ?? 0.75,
           drawerStock: parseInches(drawerStock) ?? 0.625,
+          assembly,
           includeDoorFaces: wantDoorFaces,
           includeDrawerFaces: wantDrawerFaces,
           includeDrawerBoxes: hasDrawerBoxes && includeDrawerBoxes,
@@ -178,7 +204,7 @@ function CabinetBoxInner() {
   return (
     <>
       {plan ? (
-        <div className="lg:hidden sticky top-16 z-20 -mx-5 mb-4 border-b border-rule bg-[#f6efe4]/95 px-5 py-2 backdrop-blur-md print:hidden sm:-mx-8 sm:px-8">
+        <div className="lg:hidden sticky top-[var(--site-header-h)] z-20 -mx-5 mb-4 border-b border-rule bg-[#f6efe4] px-5 py-1.5 print:hidden sm:-mx-8 sm:px-8">
           <StickyFace plan={plan} />
         </div>
       ) : null}
@@ -208,27 +234,46 @@ function CabinetBoxInner() {
                 value={`${doorOpenings} door${doorOpenings === 1 ? "" : "s"} · ${drawerOpenings} drawer${drawerOpenings === 1 ? "" : "s"}`}
                 note={laterBits.length ? laterBits.join(" · ") : plan.layout.blurb}
               />
-              <button
-                type="button"
-                className="mt-4 rounded-full bg-paper px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-iron"
-                onClick={() => window.print()}
-              >
-                Print cut list
-              </button>
             </>
           ) : (
             <Result label="Need a width, height, and depth" value="—" />
           )
         }
+        printFacts={
+          plan
+            ? [
+                {
+                  label: "The box",
+                  value: `${formatInches(plan.boxW)} × ${formatInches(plan.boxH)} × ${formatInches(plan.boxD)}`,
+                  note:
+                    plan.construction === "face-frame"
+                      ? `Face ${formatInches(plan.overallW)} wide`
+                      : "Frameless — box is the overall size",
+                },
+                {
+                  label: "Inside",
+                  value: `${formatInches(plan.interiorW)} wide`,
+                  note: `Depth ${formatInches(plan.interiorD)} · opening height ${formatInches(plan.faceH)}`,
+                },
+                {
+                  label: "Layout",
+                  value: plan.layout.label,
+                  note: laterBits.length ? laterBits.join(" · ") : plan.layout.blurb,
+                },
+                {
+                  label: "Joinery",
+                  value: plan.assembly === "pocket" ? "Pocket holes" : plan.assembly === "screws" ? "Screws through sides" : "Dados and rabbet",
+                },
+              ]
+            : undefined
+        }
+        printRows={plan?.parts.map(({ name, qty, size, note }) => ({ name, qty, size, note }))}
+        printSteps={plan?.steps.map(({ text, detail }) => ({ text, detail }))}
+        note={plan ? `${formatInches(plan.overallW)} ${plan.layout.label}` : undefined}
         plan={
           plan ? (
             <>
-              <div className="hidden print:block">
-                <h2 className="font-display text-3xl tracking-tight">
-                  {formatInches(plan.overallW)} {plan.layout.label}
-                </h2>
-              </div>
-              <CabinetBoxPictures plan={plan} />
+            <CabinetBoxPictures plan={plan} />
               <BuildSheet
                 storageKey="storystick-cuts-cabinet-box"
                 rows={plan.parts}
@@ -305,6 +350,22 @@ function CabinetBoxInner() {
               <option value="frameless">Frameless (Euro / full overlay)</option>
             </SelectInput>
           </Field>
+          <Field
+            label="How the box goes together"
+            tip={
+              <InfoTip
+                title="Joinery is a choice"
+                body="Dados and a rabbet are traditional and strong. Pocket holes skip the router table. Screws through the sides are the simplest butt joint. The cut list and steps follow what you pick."
+                picture={<TipPocket />}
+              />
+            }
+          >
+            <SelectInput value={assembly} onChange={(value) => setAssembly(value as AssemblyJoin)}>
+              <option value="dado">Dados and a rabbet (traditional)</option>
+              <option value="pocket">Pocket holes (no dados)</option>
+              <option value="screws">Screws through the sides (butt joints)</option>
+            </SelectInput>
+          </Field>
           <div>
             <span className="flex items-center gap-1.5">
               <span className="text-sm font-medium">Cut now, or later</span>
@@ -366,6 +427,100 @@ function CabinetBoxInner() {
               ) : null}
             </div>
           </div>
+          {wantAnyFaces ? (
+            <>
+              <Field
+                label="How the faces sit"
+                tip={
+                  <InfoTip
+                    title="Reveal, overlay, inset"
+                    body="Reveal: the door sits on the frame with a little brown line showing. Overlay: the door covers the frame. Inset: the door sits in the opening, flush with the frame."
+                    picture={<TipFit />}
+                  />
+                }
+              >
+                <SelectInput
+                  value={fitId}
+                  onChange={(value) => {
+                    setFitId(value);
+                    const next = FIT_OPTIONS.find((item) => item.id === value);
+                    if (next && value !== "custom") {
+                      setCustomFit(next.fit);
+                      setCustomAmount(next.amount);
+                    }
+                  }}
+                >
+                  {FIT_OPTIONS.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.label}
+                    </option>
+                  ))}
+                </SelectInput>
+              </Field>
+              {fitId === "custom" ? (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field label="Measure">
+                    <SelectInput value={customFit} onChange={(value) => setCustomFit(value as FitStyle)}>
+                      <option value="reveal">Reveal of face frame</option>
+                      <option value="overlay">Overlay onto frame</option>
+                      <option value="inset">Inset gap</option>
+                    </SelectInput>
+                  </Field>
+                  <Field label="Amount">
+                    <TextInput value={customAmount} onChange={setCustomAmount} />
+                  </Field>
+                </div>
+              ) : null}
+              <Field
+                label="Door / front style"
+                tip={
+                  <InfoTip
+                    title="Shaker vs slab"
+                    body="Same styles as the cabinet-doors tool. Micro is a ¾″ frame on a slab. Classic is a 2¼″ frame. Slab is one flat piece."
+                    picture={<TipShaker />}
+                  />
+                }
+              >
+                <SelectInput value={doorStyle} onChange={setDoorStyle}>
+                  {DOOR_STYLES.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.label}
+                    </option>
+                  ))}
+                </SelectInput>
+              </Field>
+              {makeShaker ? (
+                <div className={`grid gap-4 ${doorStyle === "custom" ? "sm:grid-cols-3" : ""}`}>
+                  <Field
+                    label="Frame joints"
+                    tip={
+                      <InfoTip
+                        title="Miter, butt, or cope"
+                        body="Applied miters: 45° corners on a slab, like a picture frame. Applied butt: stiles run through. Cope-and-stick: the traditional grooved joint."
+                        picture={<TipShaker />}
+                      />
+                    }
+                  >
+                    <SelectInput value={shakerBuild} onChange={(value) => setShakerBuild(value as ShakerBuild)}>
+                      <option value="applied-miter">Applied miters (45°)</option>
+                      <option value="applied-butt">Applied, stiles through</option>
+                      <option value="cope">Cope-and-stick</option>
+                    </SelectInput>
+                  </Field>
+                  {doorStyle === "custom" ? (
+                    <>
+                      <Field label="Door stile">
+                        <TextInput value={shakerStile} onChange={setShakerStile} />
+                      </Field>
+                      <Field label="Door rail">
+                        <TextInput value={shakerRail} onChange={setShakerRail} />
+                      </Field>
+                    </>
+                  ) : null}
+                </div>
+              ) : null}
+            </>
+          ) : null}
           <Field
             label="Shelves inside"
             hint="0 is fine"
@@ -380,7 +535,7 @@ function CabinetBoxInner() {
           </Field>
           <details className="rounded-sm border border-rule bg-paper/60 px-4 py-3">
             <summary className="cursor-pointer font-display text-lg tracking-tight">Shop details</summary>
-            <p className="mt-1 text-sm text-ink-soft">Plywood, dados, overlay, and door-frame sizes. Defaults are typical kitchen numbers.</p>
+            <p className="mt-1 text-sm text-ink-soft">Plywood, toe kick, and stock sizes. Defaults are typical kitchen numbers.</p>
             <div className="mt-4 grid gap-4">
               {construction === "face-frame" ? (
                 <div className="grid gap-4 sm:grid-cols-3">
@@ -425,25 +580,27 @@ function CabinetBoxInner() {
                   </Field>
                 </div>
               ) : null}
-              <div className="grid gap-4 sm:grid-cols-3">
+              <div className={`grid gap-4 ${assembly === "dado" ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
                 <Field label="Side / bottom plywood">
                   <TextInput value={sideThick} onChange={setSideThick} />
                 </Field>
                 <Field label="Back">
                   <TextInput value={backThick} onChange={setBackThick} />
                 </Field>
-                <Field
-                  label="Dado / rabbet"
-                  tip={
-                    <InfoTip
-                      title="Dado and rabbet"
-                      body="A dado is a groove the bottom (and top) sit in. A rabbet is a step on the back edge for the ¼″ back. ⅜″ deep is a solid kitchen default."
-                      picture={<TipDado />}
-                    />
-                  }
-                >
-                  <TextInput value={dado} onChange={setDado} />
-                </Field>
+                {assembly === "dado" ? (
+                  <Field
+                    label="Dado / rabbet"
+                    tip={
+                      <InfoTip
+                        title="Dado and rabbet"
+                        body="A dado is a groove the bottom (and top) sit in. A rabbet is a step on the back edge for the ¼″ back. ⅜″ deep is a solid kitchen default."
+                        picture={<TipDado />}
+                      />
+                    }
+                  >
+                    <TextInput value={dado} onChange={setDado} />
+                  </Field>
+                ) : null}
               </div>
               {kind !== "upper" ? (
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -480,25 +637,7 @@ function CabinetBoxInner() {
                 </Field>
               )}
               {wantAnyFaces ? (
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <Field
-                    label="How the faces sit"
-                    tip={
-                      <InfoTip
-                        title="Reveal, overlay, inset"
-                        body="Reveal: the door sits on the frame with a little brown line showing. Overlay: the door covers the frame. Inset: the door sits in the opening, flush with the frame."
-                        picture={<TipFit />}
-                      />
-                    }
-                  >
-                    <SelectInput value={fitId} onChange={setFitId}>
-                      {FIT_OPTIONS.map((item) => (
-                        <option key={item.id} value={item.id}>
-                          {item.label}
-                        </option>
-                      ))}
-                    </SelectInput>
-                  </Field>
+                <div className="grid gap-4 sm:grid-cols-2">
                   <Field
                     label="Pair / drawer gap"
                     tip={
@@ -527,62 +666,27 @@ function CabinetBoxInner() {
                         <option value="side">Side-mount</option>
                       </SelectInput>
                     </Field>
-                  ) : null}
-                </div>
-              ) : null}
-              {wantAnyFaces ? (
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <Field
-                    label="Faces"
-                    tip={
-                      <InfoTip
-                        title="Shaker vs slab"
-                        body="Shaker is a flat panel in a picture frame — the usual kitchen door. Slab is one flat piece. Applied miters are 45° corners on a plywood slab."
-                        picture={<TipShaker />}
-                      />
-                    }
-                  >
-                    <SelectInput value={makeShaker} onChange={setMakeShaker}>
-                      <option value="shaker">Shaker / applied frame</option>
-                      <option value="slab">Flat slabs only</option>
-                    </SelectInput>
-                  </Field>
-                  <Field label="Face stock" hint="doors & frame">
-                    <TextInput value={faceThick} onChange={setFaceThick} />
-                  </Field>
+                  ) : (
+                    <Field label="Face stock" hint="doors & frame">
+                      <TextInput value={faceThick} onChange={setFaceThick} />
+                    </Field>
+                  )}
                 </div>
               ) : (
                 <Field label="Face stock" hint="frame, if any">
                   <TextInput value={faceThick} onChange={setFaceThick} />
                 </Field>
               )}
-              {wantAnyFaces && makeShaker === "shaker" ? (
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <Field
-                    label="Frame joints"
-                    tip={
-                      <InfoTip
-                        title="Miter, butt, or cope"
-                        body="Applied miters: 45° corners on a slab, like a picture frame. Applied butt: stiles run through. Cope-and-stick: the traditional grooved joint. All three can look like a shaker door."
-                        picture={<TipShaker />}
-                      />
-                    }
-                  >
-                    <SelectInput value={shakerBuild} onChange={(value) => setShakerBuild(value as ShakerBuild)}>
-                      <option value="applied-miter">Applied miters (45°)</option>
-                      <option value="applied-butt">Applied, stiles through</option>
-                      <option value="cope">Cope-and-stick</option>
-                    </SelectInput>
+              {wantAnyFaces && hasDrawerBoxes && includeDrawerBoxes ? (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field label="Face stock" hint="doors & frame">
+                    <TextInput value={faceThick} onChange={setFaceThick} />
                   </Field>
-                  <Field label="Door stile">
-                    <TextInput value={shakerStile} onChange={setShakerStile} />
-                  </Field>
-                  <Field label="Door rail">
-                    <TextInput value={shakerRail} onChange={setShakerRail} />
+                  <Field label="Drawer-box stock">
+                    <TextInput value={drawerStock} onChange={setDrawerStock} />
                   </Field>
                 </div>
-              ) : null}
-              {hasDrawerBoxes && includeDrawerBoxes ? (
+              ) : hasDrawerBoxes && includeDrawerBoxes ? (
                 <Field label="Drawer-box stock">
                   <TextInput value={drawerStock} onChange={setDrawerStock} />
                 </Field>

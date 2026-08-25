@@ -62,6 +62,31 @@ export function SquareCalc() {
           <Result label="Need a rectangle" value="—" />
         )
       }
+      printFacts={
+        result
+          ? [
+              { label: "Expected diagonal", value: formatInches(result.expected), note: `${formatInches(result.w)} × ${formatInches(result.h)}` },
+              {
+                label: result.hasDiags ? (result.measured.square ? "Square" : "Out of square") : "Measured spread",
+                value: result.hasDiags ? formatInches(result.measured.spread) : "—",
+              },
+              {
+                label: "3-4-5 from the short side",
+                value: `${formatInches(result.tff.a)} · ${formatInches(result.tff.b)} · ${formatInches(result.tff.c)}`,
+              },
+            ]
+          : undefined
+      }
+      printSteps={
+        result
+          ? [
+              { text: `Pull both diagonals. They should each read ${formatInches(result.expected)}.` },
+              { text: "If they differ, pull the long diagonal until they match." },
+              { text: `Or mark a 3-4-5: ${formatInches(result.tff.a)} · ${formatInches(result.tff.b)} · ${formatInches(result.tff.c)}.` },
+              { text: "On a cabinet, put the back on while it is still square." },
+            ]
+          : undefined
+      }
       plan={
         result ? (
           <>
