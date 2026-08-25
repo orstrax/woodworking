@@ -48,6 +48,41 @@ export function GlueUpCalc() {
           <Result label="Need widths" value="—" />
         )
       }
+      printFacts={
+        result && finishedIn && boardIn
+          ? [
+              { label: "Boards", value: `${result.count}`, note: `${result.joints} glue lines` },
+              {
+                label: "Panel before trim",
+                value: formatInches(result.panel),
+                note: `${formatInches(result.extra)} extra to flatten`,
+              },
+              { label: "Each board", value: formatInches(boardIn) },
+            ]
+          : undefined
+      }
+      printRows={
+        result && finishedIn && boardIn
+          ? [
+              {
+                name: "Jointed boards",
+                qty: result.count,
+                size: `${formatInches(boardIn)} after jointing`,
+                note: `Glue into ${formatInches(result.panel)}, then flatten and rip to ${formatInches(finishedIn)}.`,
+              },
+            ]
+          : undefined
+      }
+      printSteps={
+        result && finishedIn
+          ? [
+              { text: "Joint both edges straight. Dry-fit — no light should show in the joint." },
+              { text: "Alternate end-grain smile / frown so the panel fights cupping." },
+              { text: "Glue, clamp, and use cauls to keep it flat. Do not cut to finished width yet." },
+              { text: `Flatten after a full cure, then rip to ${formatInches(finishedIn)}.` },
+            ]
+          : undefined
+      }
       plan={
         result && finishedIn && boardIn ? (
           <>

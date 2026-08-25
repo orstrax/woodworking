@@ -63,33 +63,40 @@ input[type="number"] {
 @media print {
   @page {
     size: letter;
-    margin: 0.45in;
+    margin: 0.5in;
   }
 
   html,
-  body {
+  body,
+  main {
     background: #fff !important;
-    color: #24180f;
+    color: #000 !important;
   }
 
-  .print-break {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-
-  figure,
-  table,
-  tr {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-
-  h1,
-  h2 {
-    break-after: avoid;
+  body > header,
+  body > footer {
+    display: none !important;
   }
 
   a[href]::after {
     content: none !important;
+  }
+
+  .print-sheet {
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  .print-sheet table {
+    page-break-inside: auto;
+  }
+
+  .print-sheet tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .print-sheet thead {
+    display: table-header-group;
   }
 }

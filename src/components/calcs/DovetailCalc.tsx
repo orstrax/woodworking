@@ -66,6 +66,39 @@ export function DovetailCalc() {
           <Result label="Need a width" value="—" />
         )
       }
+      printFacts={
+        result
+          ? [
+              { label: "Tail width", value: formatInches(result.tailW) },
+              { label: "Pin / half-pin", value: formatInches(result.pinW) },
+              { label: "Slope", value: `1:${result.slope}`, note: `${result.angle.toFixed(1)}° off square` },
+              {
+                label: "Marks from edge",
+                value: result.marks.map((mark) => `${mark.kind} ${formatInches(mark.start)}–${formatInches(mark.end)}`).join(" · "),
+              },
+            ]
+          : undefined
+      }
+      printRows={
+        result
+          ? result.marks.map((mark, index) => ({
+              name: `${mark.kind} ${index + 1}`,
+              qty: 1,
+              size: `${formatInches(mark.start)} – ${formatInches(mark.end)}`,
+              note: mark.kind === "pin" ? "Half-pins sit on both ends." : `Tail about ${formatInches(result.tailW)} wide.`,
+            }))
+          : undefined
+      }
+      printSteps={
+        result
+          ? [
+              { text: "Mark the baseline with a gauge. Hardwood often 1:8, softwood 1:6." },
+              { text: "Saw the tails first. Stay on the waste side of every line." },
+              { text: "Stand the tail board on the pin board and knife the pins from the tails." },
+              { text: "Saw and chop the pins. Pare to the knife line — do not sneak past it." },
+            ]
+          : undefined
+      }
       plan={
         result ? (
           <>

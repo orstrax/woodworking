@@ -61,7 +61,7 @@ function renderThumb(slug: string) {
           <line x1="246" y1="100" x2="246" y2="148" stroke="#6b3a1f" />
         </Frame>
       );
-    case "shaker-door":
+    case "cabinet-doors":
       return (
         <Frame slug={slug} label="Shaker door">
           <rect x="96" y="18" width="128" height="144" fill={f.oak} stroke="#6b3a1f" strokeWidth="1.8" />

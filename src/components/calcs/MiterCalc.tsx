@@ -47,6 +47,38 @@ export function MiterCalc() {
           <Result label="Need sizes" value="—" />
         )
       }
+      printFacts={
+        result
+          ? [
+              { label: "Miter (saw setting)", value: `${formatNumber(result.miter, 2)}°` },
+              { label: "Included corner", value: `${formatNumber(result.included, 2)}°` },
+              { label: "Bevel complement", value: `${formatNumber(result.bevel, 2)}°` },
+              { label: "Inside opening", value: formatInches(result.inside), note: `${result.n} sides` },
+            ]
+          : undefined
+      }
+      printRows={
+        result
+          ? [
+              {
+                name: "Frame parts",
+                qty: result.n,
+                size: `${formatInches(parseInches(width) ?? 0)} wide · long point ${formatInches(parseInches(outside) ?? 0)}`,
+                note: `Saw at ${formatNumber(result.miter, 2)}°. Inside ${formatInches(result.inside)}.`,
+              },
+            ]
+          : undefined
+      }
+      printSteps={
+        result
+          ? [
+              { text: `Set the saw to ${formatNumber(result.miter, 2)}° — that is the miter, not the corner.` },
+              { text: "Cut one piece, then use a stop so every long point matches." },
+              { text: "Dry-fit the whole frame. Gaps at a corner mean the saw is off, not the length." },
+              { text: "Glue and strap. Check diagonals before the glue sets." },
+            ]
+          : undefined
+      }
       plan={
         result ? (
           <>

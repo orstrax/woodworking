@@ -75,7 +75,7 @@ export function BuildSheet({
   const doneSteps = (steps ?? []).filter((step) => checks[`s-${step.id}`]).length;
 
   return (
-    <div className="grid gap-5">
+    <div className="grid gap-5 print:hidden">
       {items.length > 0 ? (
         <div className="print-break overflow-x-auto border border-rule">
           <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-rule bg-paper-2/60 px-3 py-2">

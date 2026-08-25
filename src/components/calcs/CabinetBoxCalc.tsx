@@ -234,27 +234,46 @@ function CabinetBoxInner() {
                 value={`${doorOpenings} door${doorOpenings === 1 ? "" : "s"} · ${drawerOpenings} drawer${drawerOpenings === 1 ? "" : "s"}`}
                 note={laterBits.length ? laterBits.join(" · ") : plan.layout.blurb}
               />
-              <button
-                type="button"
-                className="mt-4 rounded-full bg-paper px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-iron"
-                onClick={() => window.print()}
-              >
-                Print cut list
-              </button>
             </>
           ) : (
             <Result label="Need a width, height, and depth" value="—" />
           )
         }
+        printFacts={
+          plan
+            ? [
+                {
+                  label: "The box",
+                  value: `${formatInches(plan.boxW)} × ${formatInches(plan.boxH)} × ${formatInches(plan.boxD)}`,
+                  note:
+                    plan.construction === "face-frame"
+                      ? `Face ${formatInches(plan.overallW)} wide`
+                      : "Frameless — box is the overall size",
+                },
+                {
+                  label: "Inside",
+                  value: `${formatInches(plan.interiorW)} wide`,
+                  note: `Depth ${formatInches(plan.interiorD)} · opening height ${formatInches(plan.faceH)}`,
+                },
+                {
+                  label: "Layout",
+                  value: plan.layout.label,
+                  note: laterBits.length ? laterBits.join(" · ") : plan.layout.blurb,
+                },
+                {
+                  label: "Joinery",
+                  value: plan.assembly === "pocket" ? "Pocket holes" : plan.assembly === "screws" ? "Screws through sides" : "Dados and rabbet",
+                },
+              ]
+            : undefined
+        }
+        printRows={plan?.parts.map(({ name, qty, size, note }) => ({ name, qty, size, note }))}
+        printSteps={plan?.steps.map(({ text, detail }) => ({ text, detail }))}
+        note={plan ? `${formatInches(plan.overallW)} ${plan.layout.label}` : undefined}
         plan={
           plan ? (
             <>
-              <div className="hidden print:block">
-                <h2 className="font-display text-3xl tracking-tight">
-                  {formatInches(plan.overallW)} {plan.layout.label}
-                </h2>
-              </div>
-              <CabinetBoxPictures plan={plan} />
+            <CabinetBoxPictures plan={plan} />
               <BuildSheet
                 storageKey="storystick-cuts-cabinet-box"
                 rows={plan.parts}
@@ -457,7 +476,7 @@ function CabinetBoxInner() {
                 tip={
                   <InfoTip
                     title="Shaker vs slab"
-                    body="Same styles as the shaker-door tool. Micro is a ¾″ frame on a slab. Classic is a 2¼″ frame. Slab is one flat piece."
+                    body="Same styles as the cabinet-doors tool. Micro is a ¾″ frame on a slab. Classic is a 2¼″ frame. Slab is one flat piece."
                     picture={<TipShaker />}
                   />
                 }
