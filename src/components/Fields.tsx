@@ -5,20 +5,25 @@ import type { ReactNode } from "react";
 export function Field({
   label,
   hint,
+  tip,
   children,
 }: {
   label: string;
   hint?: string;
+  tip?: ReactNode;
   children: ReactNode;
 }) {
   return (
-    <label className="block">
-      <span className="flex items-baseline justify-between gap-3">
-        <span className="text-sm font-medium">{label}</span>
+    <div className="block">
+      <span className="flex items-center justify-between gap-3">
+        <span className="flex items-center gap-1.5">
+          <span className="text-sm font-medium">{label}</span>
+          {tip}
+        </span>
         {hint ? <span className="font-mono text-[11px] text-ink-soft">{hint}</span> : null}
       </span>
-      <span className="mt-1.5 block">{children}</span>
-    </label>
+      <label className="mt-1.5 block">{children}</label>
+    </div>
   );
 }
 
@@ -64,6 +69,33 @@ export function NumberInput({
       value={Number.isFinite(value) ? value : ""}
       onChange={(event) => onChange(Number(event.target.value))}
     />
+  );
+}
+
+export function OptionToggle({
+  checked,
+  onChange,
+  label,
+  hint,
+}: {
+  checked: boolean;
+  onChange: (value: boolean) => void;
+  label: string;
+  hint?: string;
+}) {
+  return (
+    <label className="flex cursor-pointer items-start gap-3 rounded-sm border border-rule bg-paper/70 px-3 py-3">
+      <input
+        type="checkbox"
+        className="mt-1 h-4 w-4 accent-[#6b3a1f]"
+        checked={checked}
+        onChange={(event) => onChange(event.target.checked)}
+      />
+      <span>
+        <span className="block text-sm font-medium">{label}</span>
+        {hint ? <span className="mt-0.5 block text-xs leading-5 text-ink-soft">{hint}</span> : null}
+      </span>
+    </label>
   );
 }
 
