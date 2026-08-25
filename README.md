@@ -4,6 +4,12 @@ Online woodworking calculators for the bench: board feet, layout, joinery, and w
 
 ## Tools
 
+### Cabinets
+- Cabinet doors (overlay, reveal, inset, hinges)
+- Shaker door (micro / classic, frame and panel)
+- Drawer fronts & boxes
+
+### Shop
 - Board feet
 - Measure converter (fractions / decimal / mm)
 - Even spacing

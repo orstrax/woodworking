@@ -102,25 +102,30 @@ export function ToolFrame({
   description,
   children,
   results,
+  plan,
 }: {
   title: string;
   description: string;
   children: ReactNode;
   results: ReactNode;
+  plan?: ReactNode;
 }) {
   return (
-    <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-      <section>
-        <h1 className="font-display text-4xl tracking-tight sm:text-5xl">
-          {title}
-        </h1>
-        <p className="mt-3 max-w-xl text-base leading-7 text-ink-soft">{description}</p>
-        <div className="mt-8 grid gap-4">{children}</div>
-      </section>
-      <aside className="h-fit border border-iron bg-iron text-paper p-6 shadow-[8px_8px_0_rgba(107,58,31,0.25)]">
-        <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-sawdust">Ticket</p>
-        <div className="mt-4">{results}</div>
-      </aside>
+    <div className="grid gap-8">
+      <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+        <section>
+          <h1 className="font-display text-4xl tracking-tight sm:text-5xl">
+            {title}
+          </h1>
+          <p className="mt-3 max-w-xl text-base leading-7 text-ink-soft">{description}</p>
+          <div className="mt-8 grid gap-4">{children}</div>
+        </section>
+        <aside className="h-fit border border-iron bg-iron text-paper p-6 shadow-[8px_8px_0_rgba(107,58,31,0.25)]">
+          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-sawdust">Ticket</p>
+          <div className="mt-4">{results}</div>
+        </aside>
+      </div>
+      {plan ? <div className="grid gap-4">{plan}</div> : null}
     </div>
   );
 }
