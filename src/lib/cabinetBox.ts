@@ -238,6 +238,12 @@ export type CabinetBoxInput = {
   shakerRail: number;
   faceThick: number;
   drawerStock: number;
+  includeDoorFaces: boolean;
+  includeDrawerFaces: boolean;
+  includeDrawerBoxes: boolean;
+  includeToeSkin: boolean;
+  includeNailer?: boolean;
+  includeFaceFrame?: boolean;
 };
 
 export type CabinetBoxPlan = {
@@ -263,6 +269,9 @@ export type CabinetBoxPlan = {
   doors: { label: string; width: number; height: number; hinges: number }[];
   drawers: { label: string; width: number; height: number; box: DrawerPlan }[];
   steps: BuildStep[];
+  includeDoorFaces: boolean;
+  includeDrawerFaces: boolean;
+  includeDrawerBoxes: boolean;
 };
 
 function cut(
@@ -309,6 +318,10 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
     shakerRail,
     faceThick,
     drawerStock,
+    includeDoorFaces,
+    includeDrawerFaces,
+    includeDrawerBoxes,
+    includeToeSkin,
   } = input;
   if ([overallW, overallH, overallD, sideThick, stile, rail].some((n) => !Number.isFinite(n) || n <= 0)) {
     return null;
@@ -317,6 +330,7 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
   const toeH = kind === "upper" ? 0 : Math.max(0, input.toeH);
   const toeD = toeH > 0 ? Math.max(0, input.toeD) : 0;
   const faceFrame = construction === "face-frame";
+  const includeFaceFrame = faceFrame && input.includeFaceFrame !== false;
   const boxW = faceFrame ? Math.max(overallW - overhang * 2, sideThick * 2 + 2) : overallW;
   const boxH = overallH;
   const boxD = overallD;
@@ -429,7 +443,7 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
     ),
   );
 
-  if (toeH > 0) {
+  if (toeH > 0 && includeToeSkin) {
     parts.push(
       cut(
         "Toe kick skin",
@@ -443,7 +457,7 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
     );
   }
 
-  if (kind === "upper") {
+  if (kind === "upper" && input.includeNailer !== false) {
     parts.push(
       cut(
         "Hanging rail",
@@ -472,7 +486,7 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
     );
   }
 
-  if (faceFrame) {
+  if (includeFaceFrame) {
     parts.push(
       cut(
         "Face-frame stiles",
@@ -561,15 +575,17 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
         const label =
           plan.doorCount === 1 ? `${cell.label}` : `${cell.label} · ${i === 0 ? "left" : "right"}`;
         doors.push({ label, width: door.width, height: door.height, hinges: hinges.count });
-        addShaker(door.width, door.height, label);
+        if (includeDoorFaces) addShaker(door.width, door.height, label);
       });
-      parts.push({
-        name: "Hinges",
-        qty: hinges.count * plan.doorCount,
-        size: hinges.cup,
-        note: hinges.euro,
-        kind: "hinge",
-      });
+      if (includeDoorFaces) {
+        parts.push({
+          name: "Hinges",
+          qty: hinges.count * plan.doorCount,
+          size: hinges.cup,
+          note: hinges.euro,
+          kind: "hinge",
+        });
+      }
     } else if (cell.kind === "drawer" || cell.kind === "false-front") {
       const plan = drawerPlan({
         openingW,
@@ -588,8 +604,8 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
       if (cell.kind === "drawer") {
         drawers.push({ label, width: front.width, height: front.height, box: plan });
       }
-      addShaker(front.width, front.height, label);
-      if (cell.kind === "drawer") {
+      if (includeDrawerFaces) addShaker(front.width, front.height, label);
+      if (cell.kind === "drawer" && includeDrawerBoxes) {
         const box = drawerBoxParts(plan, drawerStock);
         if (box) {
           box.parts.forEach((part) => {
@@ -616,10 +632,14 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
     kind,
     toeH,
     layout,
-    doors,
-    drawers,
+    doors: includeDoorFaces ? doors : [],
+    drawers: includeDrawerBoxes || includeDrawerFaces ? drawers : [],
     shelfCount,
     makeShaker,
+    includeDoorFaces,
+    includeDrawerFaces,
+    includeDrawerBoxes,
+    includeFaceFrame,
   });
 
   return {
@@ -645,6 +665,9 @@ export function planCabinetBox(input: CabinetBoxInput): CabinetBoxPlan | null {
     doors,
     drawers,
     steps,
+    includeDoorFaces,
+    includeDrawerFaces,
+    includeDrawerBoxes,
   };
 }
 
@@ -657,6 +680,10 @@ function buildSteps(input: {
   drawers: CabinetBoxPlan["drawers"];
   shelfCount: number;
   makeShaker: boolean;
+  includeDoorFaces: boolean;
+  includeDrawerFaces: boolean;
+  includeDrawerBoxes: boolean;
+  includeFaceFrame: boolean;
 }): BuildStep[] {
   const steps: BuildStep[] = [
     {
@@ -683,14 +710,19 @@ function buildSteps(input: {
       detail: "The back is what keeps the box from turning into a parallelogram.",
     },
   ];
-  if (input.faceFrame) {
+  if (input.includeFaceFrame) {
     steps.push({
       id: "face-frame",
       text: "Cut and glue the face frame. Stiles run through; rails fit between them.",
       detail: "Sand the joints flush on the face. Then glue and clamp the frame to the box, overhanging each side equally.",
     });
+  } else if (input.faceFrame) {
+    steps.push({
+      id: "face-later",
+      text: "The box is sized for a face frame. Cut the stiles and rails when you are ready to glue them on.",
+    });
   }
-  if (input.doors.length > 0) {
+  if (input.includeDoorFaces && input.doors.length > 0) {
     steps.push({
       id: "doors",
       text: input.makeShaker
@@ -698,11 +730,18 @@ function buildSteps(input: {
         : "Cut the door(s). Bore 35mm cups and hang them after finishing.",
     });
   }
-  if (input.drawers.length > 0) {
+  if (input.includeDrawerBoxes && input.drawers.length > 0) {
     steps.push({
       id: "drawers",
-      text: "Build each drawer box, then cut the pretty fronts. Install slides and overlay the fronts last.",
+      text: input.includeDrawerFaces
+        ? "Build each drawer box, then cut the pretty fronts. Install slides and overlay the fronts last."
+        : "Build each drawer box and install the slides. Fronts can wait.",
       detail: "Number the boxes from the top. Front 1 is the top drawer.",
+    });
+  } else if (input.includeDrawerFaces && input.drawers.length > 0) {
+    steps.push({
+      id: "fronts-later",
+      text: "Cut the drawer fronts when you are ready to hang them. The openings are already sized.",
     });
   }
   if (input.shelfCount > 0) {
