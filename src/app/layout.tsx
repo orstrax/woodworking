@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s — Story Stick",
   },
   description:
-    "Woodworking calculators with labeled pictures: cabinet doors, shaker frames, board feet, layout, and joinery.",
+    "Modern woody shop calculators with labeled pictures — cabinets, lumber, layout, and joinery for beginners through fine furniture.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

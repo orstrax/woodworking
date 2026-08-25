@@ -2,12 +2,12 @@ import Link from "next/link";
 
 export function SiteHeader() {
   return (
-    <header className="border-b border-rule/80 bg-paper/80 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 py-4 sm:px-8">
+    <header className="sticky top-0 z-30 border-b border-rule/70 bg-[#f6efe4]/90 backdrop-blur-md">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 py-3.5 sm:px-8">
         <Link href="/" className="group flex items-center gap-3">
           <span
             aria-hidden
-            className="grid h-9 w-9 place-items-center rounded-sm border border-walnut/40 bg-iron text-paper shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
+            className="grid h-9 w-9 place-items-center rounded-lg border border-walnut/30 bg-iron text-paper shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
           >
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
               <path d="M2 14.5h14" stroke="currentColor" strokeWidth="1.4" />
@@ -17,17 +17,23 @@ export function SiteHeader() {
             </svg>
           </span>
           <span className="leading-tight">
-            <span className="block font-display text-lg tracking-tight">
-              Story Stick
-            </span>
+            <span className="block font-display text-lg tracking-tight">Story Stick</span>
             <span className="block text-[11px] uppercase tracking-[0.22em] text-ink-soft">
-              Shop calculators
+              Modern woody shop math
             </span>
           </span>
         </Link>
-        <p className="hidden max-w-xs text-right text-sm text-ink-soft sm:block">
-          Labeled pictures for doors, lumber, and layout — kept next to the bench.
-        </p>
+        <nav className="flex items-center gap-5 font-mono text-[11px] uppercase tracking-[0.16em] text-walnut">
+          <Link href="/#tools" className="hover:text-shellac">
+            Tools
+          </Link>
+          <Link href="/#start" className="hover:text-shellac">
+            Start here
+          </Link>
+          <Link href="/shop-words" className="hover:text-shellac">
+            Shop words
+          </Link>
+        </nav>
       </div>
     </header>
   );

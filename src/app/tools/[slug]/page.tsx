@@ -1,17 +1,21 @@
 import type { ComponentType } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ShopGuide } from "@/components/ShopGuide";
+import { BoardFeetCalc } from "@/components/calcs/BoardFeetCalc";
 import { CabinetDoorCalc } from "@/components/calcs/CabinetDoorCalc";
 import { CircleCalc } from "@/components/calcs/CircleCalc";
 import { DovetailCalc } from "@/components/calcs/DovetailCalc";
 import { DrawerCalc } from "@/components/calcs/DrawerCalc";
+import { GlueUpCalc } from "@/components/calcs/GlueUpCalc";
+import { KerfCalc } from "@/components/calcs/KerfCalc";
 import { MeasureCalc } from "@/components/calcs/MeasureCalc";
 import { MiterCalc } from "@/components/calcs/MiterCalc";
 import { MovementCalc } from "@/components/calcs/MovementCalc";
 import { ShakerDoorCalc } from "@/components/calcs/ShakerDoorCalc";
 import { SpacingCalc } from "@/components/calcs/SpacingCalc";
+import { SquareCalc } from "@/components/calcs/SquareCalc";
 import { WeightCalc } from "@/components/calcs/WeightCalc";
-import { BoardFeetCalc } from "@/components/calcs/BoardFeetCalc";
 import { getTool, TOOLS } from "@/lib/tools";
 
 export function generateStaticParams() {
@@ -33,13 +37,16 @@ const CALCS: Record<string, ComponentType> = {
   "shaker-door": ShakerDoorCalc,
   drawers: DrawerCalc,
   "board-feet": BoardFeetCalc,
+  "glue-up": GlueUpCalc,
   measure: MeasureCalc,
   spacing: SpacingCalc,
+  kerf: KerfCalc,
   miter: MiterCalc,
   dovetail: DovetailCalc,
   movement: MovementCalc,
   circle: CircleCalc,
   weight: WeightCalc,
+  square: SquareCalc,
 };
 
 export default async function ToolPage({ params }: PageProps<"/tools/[slug]">) {
@@ -50,15 +57,24 @@ export default async function ToolPage({ params }: PageProps<"/tools/[slug]">) {
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
-      <Link
-        href="/"
-        className="font-mono text-[11px] uppercase tracking-[0.18em] text-walnut hover:text-shellac"
-      >
-        ← All tools
-      </Link>
+      <div className="flex flex-wrap items-center gap-4">
+        <Link
+          href="/#tools"
+          className="font-mono text-[11px] uppercase tracking-[0.18em] text-walnut hover:text-shellac"
+        >
+          ← All tools
+        </Link>
+        <Link
+          href="/shop-words"
+          className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft hover:text-shellac"
+        >
+          Shop words
+        </Link>
+      </div>
       <div className="mt-6">
         <Calc />
       </div>
+      <ShopGuide slug={slug} />
     </div>
   );
 }

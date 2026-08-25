@@ -415,3 +415,165 @@ export function WeightPicture({
     </Picture>
   );
 }
+
+export function SquarePicture({
+  width,
+  height,
+  expected,
+  status,
+}: {
+  width: number;
+  height: number;
+  expected: number;
+  status: "unknown" | "square" | "out";
+}) {
+  const s = Math.min(10, 220 / width, 140 / height);
+  const w = width * s;
+  const h = height * s;
+  const ox = (480 - w) / 2;
+  const oy = 48;
+  return (
+    <Picture
+      title="Both diagonals should match"
+      caption="Tape from corner to opposite corner, then the other pair. If the two numbers are the same, the box is square — even if you never use a try square."
+      viewBox="0 0 480 260"
+      legend={[
+        { n: 1, label: "Width", hint: formatInches(width) },
+        { n: 2, label: "Height", hint: formatInches(height) },
+        { n: 3, label: "Diagonal", hint: formatInches(expected) },
+      ]}
+    >
+      <rect x={ox} y={oy} width={w} height={h} fill="url(#grain-frame)" stroke="#6b3a1f" strokeWidth="1.6" />
+      <line x1={ox} y1={oy} x2={ox + w} y2={oy + h} stroke="#c45c26" strokeWidth="1.6" />
+      <line
+        x1={ox + w}
+        y1={oy}
+        x2={ox}
+        y2={oy + h}
+        stroke="#c45c26"
+        strokeWidth="1.6"
+        strokeDasharray="4 3"
+      />
+      <Callout n={1} x={ox + w / 2} y={oy - 6} />
+      <Callout n={2} x={ox - 10} y={oy + h / 2} />
+      <Callout n={3} x={ox + w * 0.62} y={oy + h * 0.38} />
+      <Chip
+        x={240}
+        y={oy + h + 28}
+        text={
+          status === "square"
+            ? "diagonals match — square"
+            : status === "out"
+              ? "pull the long diagonal"
+              : `diagonal should be ${formatInches(expected)}`
+        }
+        fill="#c45c26"
+      />
+      <Caption x={40} y={246} text="The solid orange line and the dashed line should be the same length." />
+    </Picture>
+  );
+}
+
+export function GluePicture({
+  count,
+  boardWidth,
+  finished,
+  extra,
+}: {
+  count: number;
+  boardWidth: number;
+  finished: number;
+  extra: number;
+}) {
+  const n = Math.min(8, Math.max(2, count));
+  const bw = Math.min(64, 360 / n);
+  const ox = (480 - n * bw) / 2;
+  return (
+    <Picture
+      title="Boards side by side make the top"
+      caption="Joint the edges straight. Glue them into a panel a little wider than you need, flatten, then cut to the finished width."
+      viewBox="0 0 480 240"
+      legend={[
+        { n: 1, label: "Each board", hint: formatInches(boardWidth) + " after jointing" },
+        { n: 2, label: "How many", hint: `${count} boards · ${count - 1} glue lines` },
+        { n: 3, label: "Extra to leave", hint: formatInches(extra) + " to flatten and trim" },
+      ]}
+    >
+      {Array.from({ length: n }, (_, i) => (
+        <rect
+          key={i}
+          x={ox + i * bw}
+          y={44}
+          width={bw - 3}
+          height={120}
+          fill={i % 2 ? "url(#grain-frame)" : "url(#grain-door)"}
+          stroke="#6b3a1f"
+          strokeWidth="1.2"
+        />
+      ))}
+      <Callout n={1} x={ox + bw / 2} y={70} />
+      <Callout n={2} x={240} y={36} />
+      <Callout n={3} x={ox + n * bw - 8} y={164} />
+      <Chip x={240} y={186} text={`${count} @ ${formatInches(boardWidth)} → ${formatInches(finished)}`} fill="#c45c26" />
+      <Caption x={40} y={222} text="Alternate the end-grain smile and frown so the panel does not cup as one." />
+    </Picture>
+  );
+}
+
+export function KerfPicture({
+  stock,
+  piece,
+  kerf,
+  count,
+}: {
+  stock: number;
+  piece: number;
+  kerf: number;
+  count: number;
+}) {
+  const s = Math.min(16, 380 / stock);
+  const ox = 50;
+  const y = 70;
+  let cursor = 0;
+  const bands: { x: number; w: number; kind: "piece" | "kerf" }[] = [];
+  for (let i = 0; i < count; i += 1) {
+    bands.push({ x: cursor, w: piece, kind: "piece" });
+    cursor += piece;
+    if (i < count - 1) {
+      bands.push({ x: cursor, w: kerf, kind: "kerf" });
+      cursor += kerf;
+    }
+  }
+  return (
+    <Picture
+      title="The blade eats a strip between pieces"
+      caption="Each orange slot is a kerf — wood that becomes sawdust. Count the rips, not just the strips, or the last piece comes out skinny."
+      viewBox={`0 0 ${stock * s + 100} 220`}
+      legend={[
+        { n: 1, label: "Stock", hint: formatInches(stock) + " wide" },
+        { n: 2, label: "Each strip", hint: formatInches(piece) },
+        { n: 3, label: "Kerf", hint: formatInches(kerf) + " per rip" },
+      ]}
+    >
+      <rect x={ox} y={y} width={stock * s} height="48" fill="url(#grain-door)" stroke="#24180f" strokeWidth="1.4" />
+      {bands.map((band, i) =>
+        band.kind === "kerf" ? (
+          <rect
+            key={i}
+            x={ox + band.x * s}
+            y={y}
+            width={Math.max(3, band.w * s)}
+            height="48"
+            fill="#c45c26"
+            fillOpacity="0.45"
+          />
+        ) : null,
+      )}
+      <Callout n={1} x={ox + 12} y={y - 12} />
+      <Callout n={2} x={ox + (piece * s) / 2} y={y + 24} />
+      {count > 1 ? <Callout n={3} x={ox + piece * s + Math.max(4, (kerf * s) / 2)} y={y + 24} /> : null}
+      <Chip x={ox + (stock * s) / 2} y={y + 78} text={`${count} strips`} fill="#c45c26" />
+      <Caption x={ox} y={200} text="Orange is gone. Do not count it as a strip." />
+    </Picture>
+  );
+}
