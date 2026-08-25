@@ -61,6 +61,12 @@ input[type="number"] {
 }
 
 @media print {
+  @page {
+    size: letter;
+    margin: 0.45in;
+  }
+
+  html,
   body {
     background: #fff !important;
     color: #24180f;
@@ -69,6 +75,18 @@ input[type="number"] {
   .print-break {
     break-inside: avoid;
     page-break-inside: avoid;
+  }
+
+  figure,
+  table,
+  tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  h1,
+  h2 {
+    break-after: avoid;
   }
 
   a[href]::after {

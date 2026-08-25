@@ -124,6 +124,15 @@ export function TipShaker() {
   );
 }
 
+export function TipPocket() {
+  return (
+    <svg viewBox="0 0 88 52" className="h-12 w-[5.5rem]" aria-hidden>
+      <rect x="12" y="8" width="12" height="36" fill="#c4a06a" stroke="#6b3a1f" />
+      <rect x="24" y="22" width="48" height="10" fill="#8b5a32" stroke="#24180f" />
+      <path d="M18 24 L28 28 L18 32" fill="none" stroke="#c45c26" strokeWidth="1.4" />
+    </svg>
+  );
+}
 export function TipNailer() {
   return (
     <svg viewBox="0 0 88 52" className="h-12 w-[5.5rem]" aria-hidden>

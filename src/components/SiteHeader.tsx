@@ -50,16 +50,13 @@ export function SiteHeader() {
         </nav>
         <button
           type="button"
-          className="flex h-7 items-center gap-1 rounded-md border border-walnut/25 bg-paper/80 px-1.5 md:hidden"
+          className="grid h-8 w-8 place-items-center text-walnut md:hidden"
           aria-expanded={open}
           aria-controls={menuId}
           aria-label={open ? "Close menu" : "Open menu"}
           onClick={() => setOpen((value) => !value)}
         >
-          <LogMenuIcon open={open} />
-          <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-walnut">
-            {open ? "Close" : "Menu"}
-          </span>
+          <MenuIcon open={open} />
         </button>
       </div>
       {open ? (
@@ -82,23 +79,19 @@ export function SiteHeader() {
   );
 }
 
-function LogMenuIcon({ open }: { open: boolean }) {
+function MenuIcon({ open }: { open: boolean }) {
   return (
-    <svg viewBox="0 0 22 22" className="h-5 w-5" aria-hidden>
-      <ellipse cx="11" cy="6" rx="7" ry="3" fill="#6b3a1f" />
-      <rect x="4" y="6" width="14" height="10" fill="#8b5a32" />
-      <ellipse cx="11" cy="16" rx="7" ry="3" fill="#c4a06a" stroke="#6b3a1f" strokeWidth="0.8" />
-      <ellipse cx="11" cy="6" rx="7" ry="3" fill="#b88955" stroke="#6b3a1f" strokeWidth="0.8" />
+    <svg viewBox="0 0 20 20" className="h-5 w-5" fill="none" aria-hidden>
       {open ? (
         <>
-          <path d="M7 8.5 L15 14.5" stroke="#24180f" strokeWidth="1.6" strokeLinecap="round" />
-          <path d="M15 8.5 L7 14.5" stroke="#24180f" strokeWidth="1.6" strokeLinecap="round" />
+          <path d="M5 5 L15 15" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+          <path d="M15 5 L5 15" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
         </>
       ) : (
         <>
-          <line x1="6.5" y1="9" x2="15.5" y2="9" stroke="#24180f" strokeWidth="1.6" strokeLinecap="round" />
-          <line x1="6.5" y1="11.5" x2="15.5" y2="11.5" stroke="#24180f" strokeWidth="1.6" strokeLinecap="round" />
-          <line x1="6.5" y1="14" x2="15.5" y2="14" stroke="#24180f" strokeWidth="1.6" strokeLinecap="round" />
+          <path d="M4 6 H16" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+          <path d="M4 10 H16" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+          <path d="M4 14 H16" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
         </>
       )}
     </svg>
