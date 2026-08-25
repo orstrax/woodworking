@@ -70,6 +70,17 @@ export function BoardFeetCalc() {
         { text: "Pay for rough thickness. 4/4 that finishes 13/16″ is still billed as 1″." },
         { text: "Pick grain and color at the rack. The calculator cannot see the board." },
       ]}
+      printFigures={
+        result ? (
+          <BoardPicture
+            thickness={result.t}
+            width={result.w}
+            lengthFt={Number(length)}
+            bf={result.bf}
+            qty={qty}
+          />
+        ) : undefined
+      }
       plan={
         result ? (
           <>

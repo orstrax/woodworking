@@ -79,6 +79,16 @@ export function MiterCalc() {
             ]
           : undefined
       }
+      printFigures={
+        result ? (
+          <MiterPicture
+            sides={result.n}
+            miter={result.miter}
+            outside={parseInches(outside) ?? 0}
+            inside={result.inside}
+          />
+        ) : undefined
+      }
       plan={
         result ? (
           <>

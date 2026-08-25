@@ -96,6 +96,11 @@ export function KerfCalc() {
         { text: "Rip the strips. Do not assume the last one equals the first." },
         { text: "For crosscuts, use a stop block. Still add kerf to the stick you buy." },
       ]}
+      printFigures={
+        rips && rips.count > 0 ? (
+          <KerfPicture stock={rips.s} piece={rips.p} kerf={rips.k} count={rips.count} />
+        ) : undefined
+      }
       plan={
         rips && rips.count > 0 ? (
           <>

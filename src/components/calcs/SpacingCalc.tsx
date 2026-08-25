@@ -75,6 +75,11 @@ export function SpacingCalc() {
             ]
           : undefined
       }
+      printFigures={
+        result ? (
+          <SpacingPicture span={parseInches(span) ?? 0} inset={parseInches(inset) ?? 0} centers={result.centers} oc={result.oc} />
+        ) : undefined
+      }
       plan={
         result ? (
           <SpacingPicture span={parseInches(span) ?? 0} inset={parseInches(inset) ?? 0} centers={result.centers} oc={result.oc} />

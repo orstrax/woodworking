@@ -87,6 +87,16 @@ export function CircleCalc() {
             ]
           : undefined
       }
+      printFigures={
+        result ? (
+          <CirclePicture
+            diameter={parseInches(diameter) ?? 0}
+            segments={Math.max(3, Math.round(segments))}
+            chord={result.chord}
+            miter={result.miter}
+          />
+        ) : undefined
+      }
       plan={
         result ? (
           <>

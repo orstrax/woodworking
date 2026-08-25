@@ -249,6 +249,14 @@ function CabinetDoorInner() {
       }
       printRows={cutRows}
       printSteps={steps.map(({ text, detail }) => ({ text, detail }))}
+      printFigures={
+        plan && hinges ? (
+          <>
+            {measure !== "finished" ? <CabinetPictures plan={plan} hinges={hinges} /> : null}
+            {shaker ? <ShakerPictures plan={shaker} build={build} /> : null}
+          </>
+        ) : undefined
+      }
       plan={
         plan && hinges ? (
           <>

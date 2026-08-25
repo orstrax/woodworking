@@ -87,6 +87,16 @@ export function SquareCalc() {
             ]
           : undefined
       }
+      printFigures={
+        result ? (
+          <SquarePicture
+            width={result.w}
+            height={result.h}
+            expected={result.expected}
+            status={!result.hasDiags ? "unknown" : result.measured.square ? "square" : "out"}
+          />
+        ) : undefined
+      }
       plan={
         result ? (
           <>
