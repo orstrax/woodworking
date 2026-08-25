@@ -12,6 +12,7 @@
   --sawdust: #d8c39a;
   --ticket-tan: #f6edd8;
   --ticket-muted: #ead9b4;
+  --site-header-h: 2.5rem;
 }
 
 @theme inline {

@@ -178,7 +178,7 @@ function CabinetBoxInner() {
   return (
     <>
       {plan ? (
-        <div className="lg:hidden sticky top-16 z-20 -mx-5 mb-4 border-b border-rule bg-[#f6efe4]/95 px-5 py-2 backdrop-blur-md print:hidden sm:-mx-8 sm:px-8">
+        <div className="lg:hidden sticky top-[var(--site-header-h)] z-20 -mx-5 mb-4 border-b border-rule bg-[#f6efe4] px-5 py-1.5 print:hidden sm:-mx-8 sm:px-8">
           <StickyFace plan={plan} />
         </div>
       ) : null}
