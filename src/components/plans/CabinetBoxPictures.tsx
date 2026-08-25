@@ -1,4 +1,4 @@
-import { Callout, Caption, Chip, DimH, DimV, Picture } from "@/components/Visuals";
+import { Callout, Caption, Chip, DimH, DimV, Picture, WoodDefs } from "@/components/Visuals";
 import type { CabinetBoxPlan, FaceCell } from "@/lib/cabinetBox";
 import { formatInches } from "@/lib/measure";
 
@@ -11,7 +11,48 @@ export function CabinetBoxPictures({ plan }: { plan: CabinetBoxPlan }) {
   );
 }
 
-function FaceElevation({ plan }: { plan: CabinetBoxPlan }) {
+export function StickyFace({ plan }: { plan: CabinetBoxPlan }) {
+  const drawing = faceMetrics(plan, true);
+  return (
+    <div className="flex items-center gap-3">
+      <svg
+        viewBox={drawing.viewBox}
+        className="h-[4.75rem] w-auto max-w-[38vw] shrink-0"
+        role="img"
+        aria-label={`${plan.layout.label} ${formatInches(plan.overallW)} wide`}
+      >
+        <WoodDefs />
+        <FaceDrawing plan={plan} drawing={drawing} compact />
+      </svg>
+      <div className="min-w-0">
+        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-shellac">Live picture</p>
+        <p className="truncate font-display text-lg leading-tight tracking-tight">{plan.layout.label}</p>
+        <p className="font-mono text-[11px] text-ink-soft">
+          {formatInches(plan.overallW)} × {formatInches(plan.overallH)}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function faceMetrics(plan: CabinetBoxPlan, compact = false) {
+  if (compact) {
+    const pad = 3;
+    const s = Math.min(9, 32 / plan.overallW, 46 / plan.overallH);
+    const w = plan.overallW * s;
+    const h = plan.overallH * s;
+    return {
+      s,
+      ox: pad,
+      oy: pad,
+      w,
+      h,
+      toe: plan.toeH * s,
+      stile: plan.stile * s,
+      rail: plan.rail * s,
+      viewBox: `0 0 ${w + pad * 2} ${h + pad * 2}`,
+    };
+  }
   const s = Math.min(12, 280 / plan.overallW, 340 / plan.overallH);
   const ox = 110;
   const oy = 48;
@@ -22,6 +63,63 @@ function FaceElevation({ plan }: { plan: CabinetBoxPlan }) {
   const rail = plan.rail * s;
   const viewW = Math.max(520, w + 220);
   const viewH = Math.max(400, h + 110);
+  return { s, ox, oy, w, h, toe, stile, rail, viewBox: `0 0 ${viewW} ${viewH}` };
+}
+
+function FaceDrawing({
+  plan,
+  drawing,
+  compact,
+}: {
+  plan: CabinetBoxPlan;
+  drawing: ReturnType<typeof faceMetrics>;
+  compact?: boolean;
+}) {
+  const { ox, oy, w, h, toe, stile, rail, s } = drawing;
+  return (
+    <>
+      {!compact ? <rect width="100%" height="100%" fill="url(#paper-grid)" /> : (
+        <rect width="100%" height="100%" fill="#f7eedc" />
+      )}
+      <rect x={ox} y={oy} width={w} height={h} fill="url(#grain-frame)" stroke="#24180f" strokeWidth="1.6" />
+      {toe > 0 ? (
+        <rect x={ox} y={oy + h - toe} width={w} height={toe} fill="#6b3a1f" opacity="0.85" />
+      ) : null}
+      {plan.cells.map((cell, index) => {
+        const y =
+          oy +
+          (index + 1) * rail +
+          plan.cells.slice(0, index).reduce((sum, earlier) => sum + earlier.height, 0) * s;
+        const showFace =
+          cell.kind === "doors" ? plan.includeDoorFaces : plan.includeDrawerFaces;
+        return cellFace(cell, index + 1, ox + stile, y, w - stile * 2, cell.height * s, showFace, compact);
+      })}
+      {compact ? null : (
+        <>
+          <DimH x={ox} y={oy} w={w} label={formatInches(plan.overallW)} />
+          <DimV x={ox} y={oy} h={h} label={formatInches(plan.overallH)} />
+          <Chip x={ox + w / 2} y={oy + h + 28} text={plan.layout.label} fill="#c45c26" />
+          {toe > 0 ? <Chip x={ox + w + 44} y={oy + h - toe / 2} text={`toe ${formatInches(plan.toeH)}`} /> : null}
+          <Caption x={ox} y={Number(drawing.viewBox.split(" ")[3]) - 14} text={`${formatInches(plan.boxW)} box behind a ${formatInches(plan.overallW)} face.`} />
+        </>
+      )}
+    </>
+  );
+}
+
+function faceCaption(plan: CabinetBoxPlan) {
+  const base =
+    plan.construction === "face-frame"
+      ? "The brown border is the face frame. Orange numbers are the openings — drawers, doors, or a false front. The box sits a little behind the frame."
+      : "Frameless: the doors and fronts cover the box edges. Orange numbers are the openings inside.";
+  const skipped = plan.cells.some((cell) =>
+    cell.kind === "doors" ? !plan.includeDoorFaces : !plan.includeDrawerFaces,
+  );
+  return skipped ? `${base} Dark openings are faces you skipped — cut those later.` : base;
+}
+
+function FaceElevation({ plan }: { plan: CabinetBoxPlan }) {
+  const drawing = faceMetrics(plan);
   const legend = plan.cells.map((cell, i) => ({
     n: i + 1,
     label: cell.label,
@@ -34,36 +132,34 @@ function FaceElevation({ plan }: { plan: CabinetBoxPlan }) {
   return (
     <Picture
       title="The finished cabinet — what you see from the front"
-      caption={
-        plan.construction === "face-frame"
-          ? "The brown border is the face frame. Orange numbers are the openings — drawers, doors, or a false front. The box sits a little behind the frame."
-          : "Frameless: the doors and fronts cover the box edges. Orange numbers are the openings inside."
-      }
-      viewBox={`0 0 ${viewW} ${viewH}`}
+      caption={faceCaption(plan)}
+      viewBox={drawing.viewBox}
       legend={legend}
     >
-      <rect x={ox} y={oy} width={w} height={h} fill="url(#grain-frame)" stroke="#24180f" strokeWidth="1.6" filter="url(#lift)" />
-      {toe > 0 ? (
-        <rect x={ox} y={oy + h - toe} width={w} height={toe} fill="#6b3a1f" opacity="0.85" />
-      ) : null}
-      {plan.cells.map((cell, index) => {
-        const y =
-          oy +
-          (index + 1) * rail +
-          plan.cells.slice(0, index).reduce((sum, earlier) => sum + earlier.height, 0) * s;
-        return cellFace(cell, index + 1, ox + stile, y, w - stile * 2, cell.height * s);
-      })}
-      <DimH x={ox} y={oy} w={w} label={formatInches(plan.overallW)} />
-      <DimV x={ox} y={oy} h={h} label={formatInches(plan.overallH)} />
-      <Chip x={ox + w / 2} y={oy + h + 28} text={plan.layout.label} fill="#c45c26" />
-      {toe > 0 ? <Chip x={ox + w + 44} y={oy + h - toe / 2} text={`toe ${formatInches(plan.toeH)}`} /> : null}
-      <Caption x={ox} y={viewH - 14} text={`${formatInches(plan.boxW)} box behind a ${formatInches(plan.overallW)} face.`} />
+      <FaceDrawing plan={plan} drawing={drawing} />
     </Picture>
   );
 }
 
-function cellFace(cell: FaceCell, n: number, x: number, y: number, w: number, h: number) {
+function cellFace(
+  cell: FaceCell,
+  n: number,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  showFace: boolean,
+  compact?: boolean,
+) {
   const gap = 4;
+  if (!showFace) {
+    return (
+      <g key={cell.id}>
+        <rect x={x} y={y} width={w} height={h} fill="#6d5a46" stroke="#4a3424" strokeWidth="0.9" />
+        {compact ? null : <Callout n={n} x={x + w / 2} y={y + h / 2} />}
+      </g>
+    );
+  }
   if (cell.kind === "doors") {
     const count = cell.count <= 1 ? 1 : 2;
     const dw = (w - (count - 1) * gap) / count;
@@ -81,7 +177,7 @@ function cellFace(cell: FaceCell, n: number, x: number, y: number, w: number, h:
             strokeWidth="1.1"
           />
         ))}
-        <Callout n={n} x={x + w / 2} y={y + h / 2} />
+        {compact ? null : <Callout n={n} x={x + w / 2} y={y + h / 2} />}
       </g>
     );
   }
@@ -93,7 +189,7 @@ function cellFace(cell: FaceCell, n: number, x: number, y: number, w: number, h:
       ) : (
         <rect x={x + 8} y={y + h / 2 - 1} width={w - 16} height="2" fill="#c45c26" opacity="0.7" />
       )}
-      <Callout n={n} x={x + w / 2} y={y + h / 2} />
+      {compact ? null : <Callout n={n} x={x + w / 2} y={y + h / 2} />}
     </g>
   );
 }
