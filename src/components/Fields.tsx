@@ -364,7 +364,7 @@ export function ToolFrame({
     <div className={`rounded-[12px] border border-rule bg-surface p-5 shadow-[var(--shadow-sm)] ${ticketClassName ?? ""}`}>
       <p className={kickerClass}>Build summary</p>
       <div className="mt-2">{results}</div>
-      <div className="mt-4 hidden lg:block">
+      <div className="mt-4">
         <PrintButton />
       </div>
     </div>
@@ -372,7 +372,7 @@ export function ToolFrame({
 
   return (
     <>
-      <div className="grid gap-6 pb-20 print:hidden lg:gap-8 lg:pb-0">
+      <div className="grid gap-6 pb-24 print:hidden lg:gap-8 lg:pb-0">
         <header className="max-w-2xl">
           <h1 className="font-display text-4xl tracking-tight sm:text-5xl">{title}</h1>
           <p className="mt-3 text-base leading-7 text-ink-soft">{description}</p>
@@ -399,23 +399,27 @@ export function ToolFrame({
           {summaryCard}
         </div>
 
-        <div className="sticky bottom-0 z-20 -mx-5 border-t border-rule bg-paper/95 px-5 py-3 backdrop-blur-sm lg:hidden sm:-mx-8 sm:px-8">
-          <PrintButton />
-        </div>
-
         {plan ? (
           <section className="grid gap-5">
-            <div>
-              <p className={kickerClass}>Pictures & plans</p>
-              <h2 className="mt-1 font-display text-3xl tracking-tight">See it before you cut it.</h2>
-              <p className="mt-2 max-w-2xl text-base leading-7 text-ink-soft">
-                Orange numbers match the key under each picture. Orange chips are the sizes to cut.
-                Change the numbers above and the pictures move with them.
-              </p>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className={kickerClass}>Pictures & plans</p>
+                <h2 className="mt-1 font-display text-3xl tracking-tight">See it before you cut it.</h2>
+                <p className="mt-2 max-w-2xl text-base leading-7 text-ink-soft">
+                  Orange numbers match the key under each picture. Orange chips are the sizes to cut.
+                  Change the numbers above and the pictures move with them.
+                </p>
+              </div>
+              <div className="w-full shrink-0 sm:w-auto">
+                <PrintButton />
+              </div>
             </div>
             {plan}
           </section>
         ) : null}
+      </div>
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-rule bg-paper px-5 py-3 print:hidden lg:hidden sm:px-8">
+        <PrintButton />
       </div>
       {canPrint ? (
         <PrintSheet

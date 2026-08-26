@@ -28,7 +28,7 @@ export function PrintSheet({
 }) {
   const hasCuts = Boolean((rows && rows.length) || (sections && sections.length));
   return (
-    <article className="print-sheet hidden print:block text-black">
+    <article className="print-sheet hidden print:!block text-black">
       <section className="print-page">
         <p className="text-[9px] uppercase tracking-[0.2em]">Story Stick · shop copy · overview</p>
         <h1 className="font-display text-2xl leading-tight tracking-tight">{title}</h1>
@@ -120,6 +120,10 @@ function CutTable({ heading, rows }: { heading: string; rows: PrintRow[] }) {
   );
 }
 
+export function printShopCopy() {
+  window.print();
+}
+
 export function PrintButton({
   children = "Print Shop Copy",
   className,
@@ -133,11 +137,15 @@ export function PrintButton({
   return (
     <button
       type="button"
+      aria-label="Print Shop Copy"
       className={
         className ??
-        "inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-[12px] bg-walnut px-4 py-3 text-paper transition hover:bg-walnut-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-walnut"
+        "relative z-10 inline-flex min-h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-[12px] bg-walnut px-4 py-3 text-paper transition hover:bg-walnut-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-walnut"
       }
-      onClick={() => window.print()}
+      onClick={(event) => {
+        event.preventDefault();
+        printShopCopy();
+      }}
     >
       <PrinterIcon />
       <span className={caption ? "text-left" : undefined}>
@@ -151,9 +159,9 @@ export function PrintButton({
 function PrinterIcon() {
   return (
     <svg viewBox="0 0 20 20" className="h-5 w-5 shrink-0" fill="none" aria-hidden>
-      <path d="M6 8.5V3.5h8V8.5" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="4" y="8.5" width="12" height="7" rx="1.2" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M7 12.5h6M7 15.5h6V18H7v-2.5Z" stroke="currentColor" strokeWidth="1.5" />
+      <rect x="6" y="2.5" width="8" height="5" rx="0.8" stroke="currentColor" strokeWidth="1.5" />
+      <rect x="4" y="8.5" width="12" height="6.5" rx="1.2" stroke="currentColor" strokeWidth="1.5" />
+      <rect x="7" y="13.5" width="6" height="4" stroke="currentColor" strokeWidth="1.5" />
     </svg>
   );
 }
