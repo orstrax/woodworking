@@ -58,7 +58,7 @@ export default async function ToolPage({ params }: PageProps<"/tools/[slug]">) {
   if (!tool || !Calc) notFound();
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12 print:max-w-none print:p-0">
+    <div className="mx-auto max-w-6xl px-5 py-8 pb-28 sm:px-8 sm:py-12 lg:pb-12 print:max-w-none print:p-0">
       <div className="flex flex-wrap items-center gap-3 print:hidden">
         <Link
           href="/#tools"
