@@ -160,7 +160,7 @@ export const TOOL_GUIDES: ToolGuide[] = [
   {
     slug: "kitchen-plan",
     firstTime:
-      "Walk the kitchen with a tape. Each hole inside a face frame is one opening. Write the name on the cabinet (Sink base, Upper L1) so the cut list matches the room.",
+      "Tap typical cabinets onto the wall — a 36″ drawer base, a sink, an upper. Then open a cabinet to change its width or doors. Print the shop summary and gang matching stile lengths.",
     shopHabit:
       "Same overlay on every door so the kitchen reads as one. Pair doors need a mid-gap. Print the shop summary and gang matching stile lengths, then cut cabinet by cabinet so parts do not wander.",
     finePoint:

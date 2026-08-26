@@ -320,3 +320,168 @@ export function kitchenTotals(results: OpeningResult[]) {
     errors: results.filter((row) => row.error).length,
   };
 }
+
+export function stileInches(stile: string) {
+  return parseInches(stile) ?? 1.5;
+}
+
+/** Face-frame overall width — the size a kitchen planner thinks in. */
+export function overallWidthInches(opening: KitchenOpeningInput, stile: string) {
+  const ow = parseInches(opening.openingW);
+  if (!ow) return null;
+  return ow + stileInches(stile) * 2;
+}
+
+export function openingWidthFromOverall(overall: number, stile: string) {
+  return formatInches(Math.max(0.5, overall - stileInches(stile) * 2)).replace(/"/g, "");
+}
+
+export const STANDARD_CAB_WIDTHS = [12, 15, 18, 21, 24, 27, 30, 33, 36] as const;
+
+export type KitchenCatalogItem = {
+  id: string;
+  label: string;
+  blurb: string;
+  row: KitchenRow;
+  overallW: number;
+  openingH: string;
+  openingD: string;
+  doorCount: KitchenOpeningInput["doorCount"];
+  drawerCount: KitchenOpeningInput["drawerCount"];
+  name: string;
+};
+
+export const KITCHEN_CATALOG: KitchenCatalogItem[] = [
+  {
+    id: "base-36-doors",
+    label: "36″ doors",
+    blurb: "Pair of doors",
+    row: "base",
+    overallW: 36,
+    openingH: "22",
+    openingD: "21",
+    doorCount: "2",
+    drawerCount: "0",
+    name: "36″ base",
+  },
+  {
+    id: "base-36-drawers",
+    label: "36″ drawers",
+    blurb: "Three even fronts",
+    row: "base",
+    overallW: 36,
+    openingH: "22",
+    openingD: "21",
+    doorCount: "0",
+    drawerCount: "3",
+    name: "36″ drawers",
+  },
+  {
+    id: "base-sink",
+    label: "Sink base",
+    blurb: "Pair of doors, 36″",
+    row: "base",
+    overallW: 36,
+    openingH: "22",
+    openingD: "21",
+    doorCount: "2",
+    drawerCount: "0",
+    name: "Sink base",
+  },
+  {
+    id: "base-24-mix",
+    label: "24″ drawer + doors",
+    blurb: "Drawer over a pair",
+    row: "base",
+    overallW: 24,
+    openingH: "18",
+    openingD: "21",
+    doorCount: "2",
+    drawerCount: "1",
+    name: "24″ base",
+  },
+  {
+    id: "base-18-drawers",
+    label: "18″ drawers",
+    blurb: "Three drawers",
+    row: "base",
+    overallW: 18,
+    openingH: "22",
+    openingD: "21",
+    doorCount: "0",
+    drawerCount: "3",
+    name: "18″ drawers",
+  },
+  {
+    id: "base-15-door",
+    label: "15″ door",
+    blurb: "Narrow single door",
+    row: "base",
+    overallW: 15,
+    openingH: "22",
+    openingD: "21",
+    doorCount: "1",
+    drawerCount: "0",
+    name: "15″ base",
+  },
+  {
+    id: "upper-36",
+    label: "36″ upper",
+    blurb: "Pair of doors",
+    row: "upper",
+    overallW: 36,
+    openingH: "30",
+    openingD: "12",
+    doorCount: "2",
+    drawerCount: "0",
+    name: "36″ upper",
+  },
+  {
+    id: "upper-30",
+    label: "30″ upper",
+    blurb: "Pair of doors",
+    row: "upper",
+    overallW: 30,
+    openingH: "30",
+    openingD: "12",
+    doorCount: "2",
+    drawerCount: "0",
+    name: "30″ upper",
+  },
+  {
+    id: "upper-18",
+    label: "18″ upper",
+    blurb: "Single door",
+    row: "upper",
+    overallW: 18,
+    openingH: "30",
+    openingD: "12",
+    doorCount: "1",
+    drawerCount: "0",
+    name: "18″ upper",
+  },
+  {
+    id: "tall-24",
+    label: "24″ pantry",
+    blurb: "Full-height pair",
+    row: "tall",
+    overallW: 24,
+    openingH: "70",
+    openingD: "21",
+    doorCount: "2",
+    drawerCount: "0",
+    name: "Pantry",
+  },
+];
+
+export function openingFromCatalog(item: KitchenCatalogItem, stile: string): KitchenOpeningInput {
+  return newOpening({
+    name: item.name,
+    row: item.row,
+    openingW: openingWidthFromOverall(item.overallW, stile),
+    openingH: item.openingH,
+    openingD: item.openingD,
+    doorCount: item.doorCount,
+    drawerCount: item.drawerCount,
+  });
+}

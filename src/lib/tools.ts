@@ -48,9 +48,9 @@ export const TOOLS: Tool[] = [
     name: "Kitchen planner",
     tag: "Cabinets",
     group: "cabinets",
-    summary: "Measure every opening, then print a cut list grouped by cabinet and rolled up for the shop.",
+    summary: "Place typical cabinets on a kitchen wall, then print a cut list grouped by cabinet and rolled up for the shop.",
     description:
-      "Plan the kitchen: doors, pairs, and drawer stacks. Each hole keeps its own parts, then a summary gangs matching sizes.",
+      "Plan the kitchen visually: tap standard bases, uppers, and pantries onto a run. Each cabinet keeps its own parts, then a summary gangs matching sizes.",
   },
   {
     slug: "cabinet-box",
