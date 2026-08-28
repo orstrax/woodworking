@@ -454,6 +454,234 @@ export type DrawerBoxParts = {
   parts: { name: string; qty: number; thickness: string; width: number; length: number; note: string }[];
 };
 
+/** Opening height that makes doorPlan / drawerPlan cover exactly `coveredH`. */
+function openingForCoveredHeight(
+  coveredH: number,
+  fit: FitStyle,
+  amount: number,
+  frame: number,
+): number | null {
+  if (!Number.isFinite(coveredH) || coveredH <= 0) return null;
+  let openingH: number;
+  if (fit === "inset") {
+    openingH = coveredH + amount * 2;
+  } else if (fit === "overlay") {
+    openingH = coveredH - amount * 2;
+  } else {
+    openingH = coveredH - frame * 2 + amount * 2;
+  }
+  if (!Number.isFinite(openingH) || openingH <= 0) return null;
+  return openingH;
+}
+
+export type DoorDrawerSplit = "two-openings" | "one-opening";
+
+export type DoorDrawerPlan = {
+  split: DoorDrawerSplit;
+  fit: FitStyle;
+  openingW: number;
+  totalOpeningH: number;
+  drawerOpeningH: number;
+  doorOpeningH: number;
+  stile: number;
+  rail: number;
+  midRail: number;
+  overallW: number;
+  overallH: number;
+  overlayX: number;
+  overlayY: number;
+  revealX: number;
+  revealY: number;
+  stackGap: number;
+  overlap: number;
+  door: DoorPlan;
+  drawer: DrawerPlan;
+};
+
+/**
+ * Drawer over door(s) on one cabinet face. Reuses doorPlan and drawerPlan so overlay,
+ * pair-gap, hinges, and box clearance match the standalone door and drawer tools.
+ */
+export function doorDrawerPlan(input: {
+  openingW: number;
+  stile: number;
+  rail: number;
+  fit: FitStyle;
+  amount: number;
+  doorCount: number;
+  midGap: number;
+  openingD: number;
+  slide: "undermount" | "side";
+  split: DoorDrawerSplit;
+  drawerOpeningH?: number;
+  doorOpeningH?: number;
+  midRail?: number;
+  totalOpeningH?: number;
+  drawerFrontH?: number;
+  stackGap?: number;
+}): DoorDrawerPlan | null {
+  const { openingW, stile, rail, fit, amount, openingD, slide, split } = input;
+  if ([openingW, stile, rail, amount, openingD].some((n) => !Number.isFinite(n) || n < 0)) {
+    return null;
+  }
+  if (openingW <= 0) return null;
+
+  const doorCount = input.doorCount <= 1 ? 1 : 2;
+  const midGap = doorCount === 2 ? Math.max(0, input.midGap) : 0;
+
+  if (split === "two-openings") {
+    const drawerOpeningH = input.drawerOpeningH ?? 0;
+    const doorOpeningH = input.doorOpeningH ?? 0;
+    const midRail = Math.max(0, input.midRail ?? rail);
+    if (drawerOpeningH <= 0 || doorOpeningH <= 0) return null;
+
+    const drawer = drawerPlan({
+      openingW,
+      openingH: drawerOpeningH,
+      openingD,
+      stile,
+      fit,
+      amount,
+      count: 1,
+      gap: 0,
+      slide,
+    });
+    const door = doorPlan({
+      openingW,
+      openingH: doorOpeningH,
+      stile,
+      rail,
+      fit,
+      amount,
+      doorCount,
+      midGap,
+    });
+    if (!drawer || !door) return null;
+
+    const overallW = openingW + stile * 2;
+    const overallH = rail * 2 + drawerOpeningH + midRail + doorOpeningH;
+    const naturalGap =
+      fit === "inset" ? midRail + drawer.reveal + door.revealY : midRail - drawer.overlayY - door.overlayY;
+
+    // Same overlay on the stiles (from doorPlan / drawerPlan). On the mid-rail, split
+    // the leftover so the faces meet at the gap you typed instead of overlapping.
+    const wantedGap = input.stackGap;
+    const useGap = wantedGap != null && Number.isFinite(wantedGap) && wantedGap >= 0 && fit !== "inset";
+    const stackGap = useGap ? wantedGap : naturalGap;
+    const ontoMid = midRail - stackGap;
+    let stackedDrawer = drawer;
+    let stackedDoor = door;
+    if (useGap && ontoMid >= 0) {
+      const drawerH = drawerOpeningH + drawer.overlayY + ontoMid / 2;
+      const doorH = doorOpeningH + ontoMid / 2 + door.overlayY;
+      if (drawerH > 0 && doorH > 0) {
+        stackedDrawer = {
+          ...drawer,
+          frontH: drawerH,
+          fronts: drawer.fronts.map((front) => ({ ...front, height: drawerH })),
+          boxH: Math.max(1, drawerH - 0.5),
+        };
+        stackedDoor = {
+          ...door,
+          doorH,
+          doors: door.doors.map((leaf) => ({ ...leaf, height: doorH })),
+        };
+      }
+    }
+
+    return {
+      split,
+      fit,
+      openingW,
+      totalOpeningH: drawerOpeningH + midRail + doorOpeningH,
+      drawerOpeningH,
+      doorOpeningH,
+      stile,
+      rail,
+      midRail,
+      overallW,
+      overallH,
+      overlayX: door.overlayX,
+      overlayY: door.overlayY,
+      revealX: door.revealX,
+      revealY: door.revealY,
+      stackGap,
+      overlap: Math.max(0, -stackGap),
+      door: stackedDoor,
+      drawer: stackedDrawer,
+    };
+  }
+
+  const totalOpeningH = input.totalOpeningH ?? 0;
+  const drawerFrontH = input.drawerFrontH ?? 0;
+  const stackGap = Math.max(0, input.stackGap ?? 1 / 8);
+  if (totalOpeningH <= 0 || drawerFrontH <= 0) return null;
+
+  const envelope = doorPlan({
+    openingW,
+    openingH: totalOpeningH,
+    stile,
+    rail,
+    fit,
+    amount,
+    doorCount: 1,
+    midGap: 0,
+  });
+  if (!envelope) return null;
+
+  const doorH = envelope.doorH - drawerFrontH - stackGap;
+  if (doorH <= 0) return null;
+
+  const drawerOpeningH = openingForCoveredHeight(drawerFrontH, fit, amount, stile);
+  const doorOpeningH = openingForCoveredHeight(doorH, fit, amount, rail);
+  if (drawerOpeningH === null || doorOpeningH === null) return null;
+
+  const drawer = drawerPlan({
+    openingW,
+    openingH: drawerOpeningH,
+    openingD,
+    stile,
+    fit,
+    amount,
+    count: 1,
+    gap: 0,
+    slide,
+  });
+  const door = doorPlan({
+    openingW,
+    openingH: doorOpeningH,
+    stile,
+    rail,
+    fit,
+    amount,
+    doorCount,
+    midGap,
+  });
+  if (!drawer || !door) return null;
+
+  return {
+    split,
+    fit,
+    openingW,
+    totalOpeningH,
+    drawerOpeningH,
+    doorOpeningH,
+    stile,
+    rail,
+    midRail: 0,
+    overallW: envelope.overallW,
+    overallH: envelope.overallH,
+    overlayX: envelope.overlayX,
+    overlayY: envelope.overlayY,
+    revealX: envelope.revealX,
+    revealY: envelope.revealY,
+    stackGap,
+    overlap: 0,
+    door,
+    drawer,
+  };
+}
+
 export function drawerBoxParts(
   plan: DrawerPlan,
   stock = 0.625,

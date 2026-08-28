@@ -8,6 +8,7 @@ Online woodworking calculators for the bench: board feet, layout, joinery, and w
 - Kitchen planner
 - Cabinet box (plywood box, face frame, doors / drawers)
 - Cabinet doors (overlay, reveal, inset, hinges, and shaker frame if you want one)
+- Door + drawer (replace a stacked drawer and door so they fit together)
 - Drawer fronts & boxes
 
 ### Shop

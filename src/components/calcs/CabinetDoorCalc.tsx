@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useMemo, useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { BuildSheet } from "@/components/BuildSheet";
 import { Field, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
@@ -274,6 +275,13 @@ function CabinetDoorInner() {
         ) : null
       }
     >
+      <p className="rounded-[10px] border border-rule bg-paper-2/70 px-4 py-3 text-sm leading-6 text-ink-soft">
+        Replacing a drawer and a door on the same cabinet? Use{" "}
+        <Link href="/tools/door-drawer" className="font-semibold text-walnut hover:text-ink">
+          Door + drawer
+        </Link>{" "}
+        so they share overlay and stack with the right gap.
+      </p>
       <Field label="What you measured">
         <SelectInput value={measure} onChange={(value) => setMeasure(value as "opening" | "overall" | "finished")}>
           <option value="opening">Inside opening (between the face frame)</option>

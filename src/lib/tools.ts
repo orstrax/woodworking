@@ -72,6 +72,15 @@ export const TOOLS: Tool[] = [
       "Measure the hole. Pick how the door sits. Get the size, the hinges, and — if it is a shaker — the frame and panel cut list.",
   },
   {
+    slug: "door-drawer",
+    name: "Door + drawer",
+    tag: "Cabinets",
+    group: "cabinets",
+    summary: "Replace a drawer and door together so they share overlay, line up, and stack with the right gap.",
+    description:
+      "Measure the drawer hole and the door hole — or one opening and the drawer-front height. Same overlay on both faces, then the drawer box and hinges.",
+  },
+  {
     slug: "drawers",
     name: "Drawer fronts & boxes",
     tag: "Cabinets",

@@ -7,6 +7,7 @@ import { CabinetBoxCalc } from "@/components/calcs/CabinetBoxCalc";
 import { CabinetDoorCalc } from "@/components/calcs/CabinetDoorCalc";
 import { CircleCalc } from "@/components/calcs/CircleCalc";
 import { DovetailCalc } from "@/components/calcs/DovetailCalc";
+import { DoorDrawerCalc } from "@/components/calcs/DoorDrawerCalc";
 import { DrawerCalc } from "@/components/calcs/DrawerCalc";
 import { GlueUpCalc } from "@/components/calcs/GlueUpCalc";
 import { KerfCalc } from "@/components/calcs/KerfCalc";
@@ -37,6 +38,7 @@ const CALCS: Record<string, ComponentType> = {
   "kitchen-plan": KitchenPlanner,
   "cabinet-box": CabinetBoxCalc,
   "cabinet-doors": CabinetDoorCalc,
+  "door-drawer": DoorDrawerCalc,
   drawers: DrawerCalc,
   "board-feet": BoardFeetCalc,
   "glue-up": GlueUpCalc,

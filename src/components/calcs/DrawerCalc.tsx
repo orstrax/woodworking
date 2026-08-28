@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Field, Result, SelectInput, TextInput, ToolFrame } from "@/components/Fields";
 import { DrawerPictures } from "@/components/plans/DrawerPictures";
 import { BuildSheet } from "@/components/BuildSheet";
@@ -144,6 +145,13 @@ export function DrawerCalc() {
         ) : null
       }
     >
+      <p className="rounded-[10px] border border-rule bg-paper-2/70 px-4 py-3 text-sm leading-6 text-ink-soft">
+        Building a drawer over a door as one replacement? Use{" "}
+        <Link href="/tools/door-drawer" className="font-semibold text-walnut hover:text-ink">
+          Door + drawer
+        </Link>{" "}
+        so the front and the door share overlay and line up.
+      </p>
       <div className="grid gap-4 sm:grid-cols-3">
         <Field label="Opening width">
           <TextInput value={openingW} onChange={setOpeningW} />

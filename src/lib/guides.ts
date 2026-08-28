@@ -171,7 +171,7 @@ export const TOOL_GUIDES: ToolGuide[] = [
       "Cutting every stile to the first door on the list.",
     ],
     words: ["Opening", "Face frame", "Overlay", "Reveal", "Stile", "Rail", "Story stick"],
-    related: ["cabinet-box", "cabinet-doors", "drawers"],
+    related: ["cabinet-box", "cabinet-doors", "door-drawer", "drawers"],
   },
   {
     slug: "cabinet-box",
@@ -187,7 +187,7 @@ export const TOOL_GUIDES: ToolGuide[] = [
       "Cutting the back to the inside of the dados instead of the rabbet width.",
     ],
     words: ["Face frame", "Opening", "Stile", "Rail", "Square", "Story stick", "Carcass", "Dado", "Toe kick"],
-    related: ["kitchen-plan", "cabinet-doors", "drawers", "square"],
+    related: ["kitchen-plan", "cabinet-doors", "door-drawer", "drawers", "square"],
   },
   {
     slug: "cabinet-doors",
@@ -204,7 +204,23 @@ export const TOOL_GUIDES: ToolGuide[] = [
       "Cutting a shaker panel to the visible size, then wondering why it rattles out of the groove.",
     ],
     words: ["Opening", "Face frame", "Overlay", "Reveal", "Inset", "Cup hinge (35mm)", "Stile", "Rail", "Cope-and-stick"],
-    related: ["kitchen-plan", "cabinet-box", "drawers", "square", "movement"],
+    related: ["kitchen-plan", "cabinet-box", "door-drawer", "drawers", "square", "movement"],
+  },
+  {
+    slug: "door-drawer",
+    firstTime:
+      "This is the door builder plus a drawer on the same cabinet. Measure both holes (or one hole and how tall the drawer front should be). The overlay is shared so the drawer and door line up.",
+    shopHabit:
+      "Cut the drawer front and the door(s) in the same setup. Hang the door first, then the slides and box, then overlay the drawer front so the gap matches the picture.",
+    finePoint:
+      "Two openings: each hole gets the same overlay math as the standalone door and drawer tools. The gap you see between faces is the mid-rail minus those overlays. One opening: the covered height of the hole is split into drawer + gap + door.",
+    mistakes: [
+      "Sizing the drawer and the door with two different overlays, so the edges do not line up.",
+      "Forgetting the mid-rail, so the two faces overlap or leave a fat stripe.",
+      "Making the drawer box the same size as the pretty front.",
+    ],
+    words: ["Opening", "Face frame", "Overlay", "Reveal", "Inset", "Stile", "Rail", "Cup hinge (35mm)"],
+    related: ["cabinet-doors", "drawers", "cabinet-box", "kitchen-plan", "square"],
   },
   {
     slug: "drawers",
@@ -220,7 +236,7 @@ export const TOOL_GUIDES: ToolGuide[] = [
       "Numbering stacked fronts from the bottom. This site numbers top as 1.",
     ],
     words: ["Overlay", "Reveal", "Inset", "Undermount slide", "Opening"],
-    related: ["kitchen-plan", "cabinet-box", "cabinet-doors", "square", "spacing"],
+    related: ["kitchen-plan", "cabinet-box", "cabinet-doors", "door-drawer", "square", "spacing"],
   },
   {
     slug: "board-feet",

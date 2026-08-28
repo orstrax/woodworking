@@ -70,6 +70,16 @@ function renderThumb(slug: string) {
           <rect x="202" y="18" width="22" height="144" fill={f.oak} stroke="#6b3a1f" />
         </Frame>
       );
+    case "door-drawer":
+      return (
+        <Frame slug={slug} label="Drawer over a door">
+          <rect x="88" y="18" width="144" height="144" fill={f.oak} stroke="#6b3a1f" strokeWidth="1.8" />
+          <rect x="100" y="28" width="120" height="36" fill={f.maple} stroke="#24180f" />
+          <rect x="148" y="42" width="24" height="6" rx="1" fill="#6b3a1f" />
+          <rect x="100" y="72" width="120" height="78" fill={f.maple} stroke="#24180f" />
+          <rect x="118" y="88" width="84" height="48" fill={f.panel} stroke="#8a6a3a" />
+        </Frame>
+      );
     case "drawers":
       return (
         <Frame slug={slug} label="Drawer fronts">
